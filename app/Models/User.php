@@ -21,6 +21,20 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin',
+        'cep',
+        'numero',
+        'logradouro',
+        'bairro',
+        'cidade',
+        'estado',
+        'complemento',
+        'telefone',
+        'data_nascimento',
+        'cpf',
+        'saldo',
+        'foto',
+        'created_by',
     ];
 
     /**
@@ -31,6 +45,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'cpf'
     ];
 
     /**
@@ -43,6 +58,14 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
+            'data_nascimento' => 'date',
+            'saldo' => 'deciaml:2',
         ];
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }
