@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -29,6 +30,21 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+
+            'is_admin' => false,
+            'cep' => fake()->numerify('#####-###'),
+            'numero' => (string) fake()->numberBetween(1, 2000),
+            'logradouro' => fake()->streetName(),
+            'bairro' => fake()->citySuffix(),
+            'cidade' => fake()->city(),
+            'estado' => fake()->stateAbbr(),
+            'complemento' => fake()->optional()->secondaryAddress(),
+            'telefone' => fake()->numerify('(##) #####-####'),
+            'data_nascimento' => fake()->dateTimeBetween('-70 years', '-18 years')->format('Y-m-d'),
+            'cpf' => fake()->numerify('###.###.###-##'),
+            'saldo' => fake()->randomFloat(2, 0, 5000),
+            'foto' => null,
+            'created_by' => null,
         ];
     }
 
@@ -37,8 +53,28 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is an admin.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'is_admin' => true,
+        ]);
+    }
+
+    /**
+     * Indicate that the user was created by another user (e.g. an admin).
+     */
+    public function createdBy(User $user): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'created_by' => $user->id,
         ]);
     }
 }

@@ -60,7 +60,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_admin' => 'boolean',
             'data_nascimento' => 'date',
-            'saldo' => 'deciaml:2',
+            'saldo' => 'decimal:2',
         ];
     }
 
