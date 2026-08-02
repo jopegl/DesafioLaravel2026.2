@@ -12,9 +12,7 @@ class IndexController extends Controller
 
     public function index(Request $request)
     {
-        if (!Auth::check()) {
-            return redirect('/login');
-        }
+
 
         $produtos = Product::query()
             ->buscar($request->busca)

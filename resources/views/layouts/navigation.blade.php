@@ -30,12 +30,15 @@
                 </form>
             </div>
 
+            @if(Auth::check())
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-300 bg-gray-800 hover:text-white focus:outline-none transition ease-in-out duration-150">
+
                             <div>{{ Auth::user()->name }}</div>
+
 
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -63,6 +66,11 @@
                     </x-slot>
                 </x-dropdown>
             </div>
+            @else
+            <div class="text-white">
+                Olá visitante! <a class="underline" href="/login">Logar</a>
+            </div>
+            @endif
 
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
@@ -87,8 +95,10 @@
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-700">
             <div class="px-4">
+                @if(Auth::check())
                 <div class="font-medium text-base text-white">{{ Auth::user()->name }}</div>
                 <div class="font-medium text-sm text-gray-400">{{ Auth::user()->email }}</div>
+                @endif
             </div>
 
             <div class="mt-3 space-y-1">
