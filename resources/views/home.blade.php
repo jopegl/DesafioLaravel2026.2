@@ -12,17 +12,30 @@
 
             {{-- Filtros --}}
             <div class="mb-8 relative" x-data="{ open: false }">
-                <button @click="open = !open" type="button"
-                    class="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-gray-300 text-sm px-4 py-2 rounded-full transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                    </svg>
-                    Filtrar
-                    @if(request('categoria') || request('preco_min') || request('preco_max') || request('em_estoque') || (request('ordenar') && request('ordenar') != 'recentes'))
-                    <span class="w-2 h-2 rounded-full bg-primary-500"></span>
-                    @endif
-                </button>
+                <div class="flex items-center gap-3">
+                    <button @click="open = !open" type="button"
+                        class="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-gray-300 text-sm px-4 py-2 rounded-full transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                        </svg>
+                        Filtrar
+                        @if(request('categoria') || request('preco_min') || request('preco_max') || request('em_estoque') || (request('ordenar') && request('ordenar') != 'recentes'))
+                        <span class="w-2 h-2 rounded-full bg-primary-500"></span>
+                        @endif
+                    </button>
+                    <!-- Busca -->
+                    <div class="flex-1 flex justify-center sm:justify-start max-w-xs">
+                        <form method="GET" action="{{ route('home') }}" class="w-full">
+                            <input
+                                type="text"
+                                name="busca"
+                                value="{{ request('busca') }}"
+                                placeholder="Buscar produtos..."
+                                class="w-full bg-gray-800 border border-gray-700 rounded-full px-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary-500">
+                        </form>
+                    </div>
+                </div>
 
                 {{-- Dropdown --}}
                 <div x-show="open" @click.outside="open = false" x-transition
