@@ -141,7 +141,8 @@
                 </div>
             </div>
 
-            @if(!request('busca'))
+
+            <!--   @if(!request('busca'))
             {{-- Banner 2 / Promoções (carrossel) --}}
             <div class="mt-16" x-data="{ slide: 0, slides: 3 }" x-init="setInterval(() => slide = (slide + 1) % slides, 4000)">
                 <h2 class="text-lg text-gray-400 mb-4">Banner 2</h2>
@@ -188,7 +189,7 @@
                     </div>
                 </div>
             </div>
-            @endif
+            @endif -->
 
         </div>
     </div>
