@@ -111,7 +111,7 @@
                     <div class="bg-gray-800 rounded-xl p-4 flex flex-col">
                         <div class="block mb-3">
                             <img
-                                src="{{ file_exists($produto->foto) ? asset('storage/' . $produto->foto) : asset('images/placeholder-produto.png') }}"
+                                src="{{ urlFotoProduto($produto->foto) }}"
                                 alt="{{ $produto->nome }}"
                                 class="w-full h-32 object-contain">
                         </div>
@@ -121,7 +121,7 @@
                         </h3>
 
                         <p class="text-lg font-bold text-white mt-2">
-                            R${{ number_format($produto->preco, 0, ',', '.') }}
+                            {{ formatarPreco($produto->preco )}}
                         </p>
 
                         <button type="button" class="w-full bg-primary-500 hover:opacity-90 text-white text-sm py-2 rounded-full transition mt-3" disabled>
