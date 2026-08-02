@@ -121,12 +121,12 @@
                 {{-- Grid de produtos --}}
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                     @forelse ($produtos as $produto)
-                    <div class="bg-gray-800 rounded-xl p-4 flex flex-col">
-                        <div class="block mb-3">
+                    <div class="group bg-gray-800 rounded-xl p-4 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary-500/20 hover:bg-gray-700">
+                        <div class="block mb-3 overflow-hidden rounded-lg">
                             <img
                                 src="{{ urlFotoProduto($produto->foto) }}"
                                 alt="{{ $produto->nome }}"
-                                class="w-full h-32 object-contain">
+                                class="w-full h-32 object-contain transition-transform duration-300 group-hover:scale-110">
                         </div>
 
                         <h3 class="text-sm text-gray-300 line-clamp-2">
@@ -137,8 +137,8 @@
                             {{ formatarPreco($produto->preco )}}
                         </p>
 
-                        <button type="button" class="w-full bg-primary-500 hover:opacity-90 text-white text-sm py-2 rounded-full transition mt-3" disabled>
-                            Comprar agora
+                        <button type="button" class="w-full bg-primary-500 hover:bg-primary-400 text-white text-sm py-2 rounded-full transition-colors duration-300 mt-3" disabled>
+                            Comprar
                         </button>
                     </div>
                     @empty
