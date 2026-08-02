@@ -15,9 +15,9 @@ class UsersSeeder extends Seeder
     {
         $admin = User::firstOrCreate(
             ['email' => 'admin@emporio.com'],
-            User::factory()->admin()->make([
+            User::factory()->admin()->raw([
                 'name' => 'Administrador',
-            ])->toArray()
+            ])
         );
 
         User::factory()->count(10)->create();

@@ -9,14 +9,19 @@ use Illuminate\Support\Facades\Auth;
 
 class IndexController extends Controller
 {
+
     public function index(Request $request)
     {
         if (!Auth::check()) {
             return redirect('/login');
         }
+
         $produtos = Product::query()
             ->buscar($request->busca)
             ->daCategoria($request->categoria)
+            ->precoEntre($request->preco_min, $request->preco_max)
+            ->emEstoque($request->em_estoque)
+            ->ordenar($request->ordenar)
             ->paginate(12);
 
         $categorias = Category::all();

@@ -4,52 +4,93 @@
         @if(!request('busca'))
         {{-- Banner Hero (topo) --}}
         <div class="relative bg-gradient-to-r from-gray-900 to-gray-800 overflow-hidden">
-            <div class="max-w-7xl mx-auto px-6 py-16 flex items-center justify-between">
-                <div class="hidden md:block">
-                    {{-- Substitua pela imagem do produto em destaque --}}
-                    <img src="{{ asset('images/hero-iphone.png') }}" alt="Produto em destaque" class="h-64 object-contain">
-                </div>
-            </div>
+            <img src="{{ asset('images/hero-iphone.png') }}" alt="Produto em destaque" class="w-full h-64 md:h-96 object-cover">
         </div>
         @endif
 
         <div class="max-w-7xl mx-auto px-6 py-10">
 
+            {{-- Filtros --}}
+            <div class="mb-8 relative" x-data="{ open: false }">
+                <button @click="open = !open" type="button"
+                    class="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-gray-300 text-sm px-4 py-2 rounded-full transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                    </svg>
+                    Filtrar
+                    @if(request('categoria') || request('preco_min') || request('preco_max') || request('em_estoque') || (request('ordenar') && request('ordenar') != 'recentes'))
+                    <span class="w-2 h-2 rounded-full bg-primary-500"></span>
+                    @endif
+                </button>
 
-            {{-- Categorias --}}
-            <div class="mb-8">
-                <h2 class="text-lg text-gray-400 mb-4">Category</h2>
+                {{-- Dropdown --}}
+                <div x-show="open" @click.outside="open = false" x-transition
+                    class="absolute z-20 mt-2 w-80 bg-gray-800 border border-gray-700 rounded-xl shadow-lg p-5"
+                    style="display: none;">
 
-                <div class="bg-gray-800 rounded-xl p-6">
-                    <div class="flex items-center justify-between mb-6">
-                        <p class="text-sm text-gray-400">
-                            Filtrar por <span class="text-primary-500">categoria</span>
-                        </p>
-                    </div>
+                    <form method="GET" action="{{ route('home') }}" class="space-y-4">
 
-                    <div class="flex items-center justify-between gap-4 overflow-x-auto pb-2">
-                        <a href="{{ route('home') }}"
-                            class="flex flex-col items-center gap-2 text-xs {{ !request('categoria') ? 'text-primary-500' : 'text-gray-400' }} hover:text-primary-500 transition">
-                            <div class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-700">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                                </svg>
+                        {{-- Preserva busca ativa --}}
+                        @if(request('busca'))
+                        <input type="hidden" name="busca" value="{{ request('busca') }}">
+                        @endif
+
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-2">Categoria</label>
+                            <select name="categoria"
+                                class="bg-gray-700 text-white text-sm rounded-md border-gray-600 w-full focus:border-primary-500 focus:ring-primary-500">
+                                <option value="">Todas</option>
+                                @foreach ($categorias as $categoria)
+                                <option value="{{ $categoria->id }}" {{ request('categoria') == $categoria->id ? 'selected' : '' }}>
+                                    {{ $categoria->nome }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-2">Faixa de preço</label>
+                            <div class="flex items-center gap-2">
+                                <input type="number" name="preco_min" value="{{ request('preco_min') }}"
+                                    placeholder="Min"
+                                    class="bg-gray-700 text-white text-sm rounded-md border-gray-600 w-full focus:border-primary-500 focus:ring-primary-500">
+                                <span class="text-gray-500">—</span>
+                                <input type="number" name="preco_max" value="{{ request('preco_max') }}"
+                                    placeholder="Max"
+                                    class="bg-gray-700 text-white text-sm rounded-md border-gray-600 w-full focus:border-primary-500 focus:ring-primary-500">
                             </div>
-                            Todos
-                        </a>
+                        </div>
 
-                        @foreach ($categorias as $categoria)
-                        <a href="{{ route('home', ['categoria' => $categoria->id]) }}"
-                            class="flex flex-col items-center gap-2 text-xs {{ request('categoria') == $categoria->id ? 'text-primary-500' : 'text-gray-400' }} hover:text-primary-500 transition whitespace-nowrap">
-                            <div class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-700">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                </svg>
-                            </div>
-                            {{ $categoria->nome }}
-                        </a>
-                        @endforeach
-                    </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-2">Ordenar por</label>
+                            <select name="ordenar"
+                                class="bg-gray-700 text-white text-sm rounded-md border-gray-600 w-full focus:border-primary-500 focus:ring-primary-500">
+                                <option value="recentes" {{ request('ordenar') == 'recentes' ? 'selected' : '' }}>Mais recentes</option>
+                                <option value="menor_preco" {{ request('ordenar') == 'menor_preco' ? 'selected' : '' }}>Menor preço</option>
+                                <option value="maior_preco" {{ request('ordenar') == 'maior_preco' ? 'selected' : '' }}>Maior preço</option>
+                            </select>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" name="em_estoque" id="em_estoque" value="1" {{ request('em_estoque') ? 'checked' : '' }}
+                                class="rounded border-gray-600 text-primary-500 focus:ring-primary-500">
+                            <label for="em_estoque" class="text-sm text-gray-300">Apenas em estoque</label>
+                        </div>
+
+                        <div class="flex items-center gap-2 pt-2">
+                            <button type="submit"
+                                class="flex-1 bg-primary-500 hover:opacity-90 text-white text-sm py-2 rounded-full transition">
+                                Aplicar
+                            </button>
+                            @if(request('categoria') || request('preco_min') || request('preco_max') || request('em_estoque') || request('ordenar'))
+                            <a href="{{ route('home', array_filter(['busca' => request('busca')])) }}"
+                                class="text-xs text-gray-400 hover:text-white transition px-2">
+                                Limpar
+                            </a>
+                            @endif
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -60,7 +101,7 @@
             {{-- Produtos + Busca --}}
             <div id="produtos">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-lg text-gray-400">Products</h2>
+                    <h2 class="text-lg text-gray-400">Produtos</h2>
 
                 </div>
 
@@ -68,29 +109,24 @@
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                     @forelse ($produtos as $produto)
                     <div class="bg-gray-800 rounded-xl p-4 flex flex-col">
-                        <a href="{{ route('products.show', $produto) }}" class="block mb-3">
+                        <div class="block mb-3">
                             <img
-                                src="{{ $produto->foto ? asset('storage/' . $produto->foto) : asset('images/placeholder.png') }}"
+                                src="{{ file_exists($produto->foto) ? asset('storage/' . $produto->foto) : asset('images/placeholder-produto.png') }}"
                                 alt="{{ $produto->nome }}"
                                 class="w-full h-32 object-contain">
-                        </a>
+                        </div>
 
-                        <a href="{{ route('products.show', $produto) }}">
-                            <h3 class="text-sm text-gray-300 hover:text-white transition line-clamp-2">
-                                {{ $produto->nome }}
-                            </h3>
-                        </a>
+                        <h3 class="text-sm text-gray-300 line-clamp-2">
+                            {{ $produto->nome }}
+                        </h3>
 
                         <p class="text-lg font-bold text-white mt-2">
                             R${{ number_format($produto->preco, 0, ',', '.') }}
                         </p>
 
-                        <form method="POST" action="{{ route('cart.store', $produto) }}" class="mt-3">
-                            @csrf
-                            <button type="submit" class="w-full bg-primary-500 hover:opacity-90 text-white text-sm py-2 rounded-full transition">
-                                Comprar agora
-                            </button>
-                        </form>
+                        <button type="button" class="w-full bg-primary-500 hover:opacity-90 text-white text-sm py-2 rounded-full transition mt-3" disabled>
+                            Comprar agora
+                        </button>
                     </div>
                     @empty
                     <p class="col-span-4 text-center text-gray-500 py-10">
@@ -101,7 +137,7 @@
 
                 {{-- Paginação --}}
                 <div class="mt-8">
-                    {{ $produtos->links() }}
+                    {{ $produtos->appends(request()->query())->links() }}
                 </div>
             </div>
 
@@ -115,7 +151,6 @@
 
                         {{-- Slide 1 --}}
                         <div class="w-full flex-shrink-0 flex items-center justify-between px-10 py-12">
-                            <img src="{{ asset('images/promo-tablet.png') }}" alt="Promoção tablet" class="h-32 hidden md:block">
                             <div class="text-center flex-1">
                                 <h3 class="text-3xl font-bold">Promoções</h3>
                                 <p class="text-gray-400 mt-2">Confira as melhores promoções do site</p>
@@ -123,7 +158,6 @@
                                     Ir agora
                                 </a>
                             </div>
-                            <img src="{{ asset('images/promo-watch.png') }}" alt="Promoção relógio" class="h-32 hidden md:block">
                         </div>
 
                         {{-- Slide 2 --}}
