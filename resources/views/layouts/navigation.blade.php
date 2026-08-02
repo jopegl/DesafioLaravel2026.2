@@ -18,7 +18,7 @@
                 </div>
             </div>
 
-            <!-- Busca (sempre visível, desktop e mobile) -->
+            <!-- Busca -->
             <div class="flex-1 flex justify-center sm:justify-start max-w-xs">
                 <form method="GET" action="{{ route('home') }}" class="w-full">
                     <input
