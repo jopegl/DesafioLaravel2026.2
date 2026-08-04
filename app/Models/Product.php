@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use GuzzleHttp\Psr7\Query;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -75,5 +76,25 @@ class Product extends Model
             'recentes' => $query->orderBy('created_at', 'desc'),
             default => $query->orderBy('created_at', 'desc'),
         };
+    }
+
+    public function scopePorId(Builder $query, int $id)
+    {
+        if ($id < 0) {
+            return $query;
+        }
+        return $query->where('id', $id);
+    }
+
+    public function scopeVisibleTo(Builder $query, User $user): Builder
+    {
+        return $user->is_admin
+            ? $query
+            : $query->where('user_id', $user->id);
+    }
+
+    public function scopeWithDetails(Builder $query): Builder
+    {
+        return $query->with(['category', 'user']);
     }
 }

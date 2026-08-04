@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -24,8 +25,56 @@ class Sale extends Model
     {
         return [
             'valor_unitario' => 'decimal:2',
-            'valor_total' => 'decimal:2',
-            'data_compra' => 'datetime',
+            'valor_total'    => 'decimal:2',
+            'data_compra'    => 'datetime',
         ];
+    }
+
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function buyer()
+    {
+        return $this->belongsTo(User::class, 'buyer_id');
+    }
+
+    public function seller()
+    {
+        return $this->belongsTo(User::class, 'seller_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+
+    public function scopeVisibleTo(Builder $query, User $user): Builder
+    {
+        return $user->is_admin
+            ? $query
+            : $query->where('seller_id', $user->id);
+    }
+
+    public function scopeWithDetails(Builder $query): Builder
+    {
+        return $query->with(['product', 'buyer', 'seller', 'category']);
+    }
+
+
+    public function scopePeriodo(Builder $query, ?string $inicio, ?string $fim): Builder
+    {
+        if ($inicio) {
+            $query->where('data_compra', '>=', $inicio);
+        }
+
+        if ($fim) {
+            $query->where('data_compra', '<=', $fim);
+        }
+
+        return $query;
     }
 }
