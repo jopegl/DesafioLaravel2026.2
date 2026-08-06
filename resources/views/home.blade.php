@@ -121,26 +121,28 @@
                 {{-- Grid de produtos --}}
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                     @forelse ($produtos as $produto)
-                    <div class="group bg-gray-800 rounded-xl p-4 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary-500/20 hover:bg-gray-700">
-                        <div class="block mb-3 overflow-hidden rounded-lg">
-                            <img
-                                src="{{ urlFotoProduto($produto->foto) }}"
-                                alt="{{ $produto->nome }}"
-                                class="w-full h-32 object-contain transition-transform duration-300 group-hover:scale-110">
+                    <a href="{{ route('product.page', $produto) }}">
+                        <div class="group bg-gray-800 rounded-xl p-4 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary-500/20 hover:bg-gray-700">
+                            <div class="block mb-3 overflow-hidden rounded-lg">
+                                <img
+                                    src="{{ urlFotoProduto($produto->foto) }}"
+                                    alt="{{ $produto->nome }}"
+                                    class="w-full h-32 object-contain transition-transform duration-300 group-hover:scale-110">
+                            </div>
+
+                            <h3 class="text-sm text-gray-300 line-clamp-2">
+                                {{ $produto->nome }}
+                            </h3>
+
+                            <p class="text-lg font-bold text-white mt-2">
+                                {{ formatarPreco($produto->preco )}}
+                            </p>
+
+                            <span class="block w-full bg-primary-500 group-hover:bg-primary-400 text-white text-sm py-2 rounded-full transition-colors duration-300 mt-3 text-center">
+                                Comprar
+                            </span>
                         </div>
-
-                        <h3 class="text-sm text-gray-300 line-clamp-2">
-                            {{ $produto->nome }}
-                        </h3>
-
-                        <p class="text-lg font-bold text-white mt-2">
-                            {{ formatarPreco($produto->preco )}}
-                        </p>
-
-                        <button type="button" class="w-full bg-primary-500 hover:bg-primary-400 text-white text-sm py-2 rounded-full transition-colors duration-300 mt-3" disabled>
-                            Comprar
-                        </button>
-                    </div>
+                    </a>
                     @empty
                     <p class="col-span-4 text-center text-gray-500 py-10">
                         Nenhum produto encontrado.

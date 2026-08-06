@@ -44,10 +44,10 @@ class ProductController extends Controller
     }
 
 
-    public function show(Product $produto)
+    public function show(Product $produto) //pagina de produto 
     {
         if ($produto != null)
-            return view('product-page', $produto);
+            return view('product-page', compact('produto'));
         return null;
     }
 
