@@ -10,9 +10,6 @@ use Symfony\Component\Process\Exception\ProcessTimedOutException;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $user = Auth::user();
@@ -47,9 +44,7 @@ class ProductController extends Controller
         Product::create($dadosValidados);
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(Product $produto)
     {
         if ($produto != null)
@@ -57,9 +52,6 @@ class ProductController extends Controller
         return null;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Product $produto)
     {
         if (!$produto) {
@@ -68,9 +60,6 @@ class ProductController extends Controller
         //return view('products.edit', compact('produto'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Product $produto)
     {
 
@@ -96,9 +85,6 @@ class ProductController extends Controller
         $produto->update($dadosValidados);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Product $produto)
     {
 
