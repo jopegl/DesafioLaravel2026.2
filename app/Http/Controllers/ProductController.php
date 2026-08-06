@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\Process\Exception\ProcessTimedOutException;
 
 class ProductController extends Controller
 {
@@ -24,6 +26,8 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('create', Product::class);
+
         $dadosValidados = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'nome'        => 'required|string|max:255',
@@ -46,9 +50,8 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Product $produto)
     {
-        $produto = Product::query()->porId($id);
         if ($produto != null)
             return view('product-page', $produto);
         return null;
@@ -57,9 +60,8 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Product $produto)
     {
-        $produto = Product::query()->porId($id);
         if (!$produto) {
             abort(404);
         }
@@ -69,9 +71,10 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Product $produto)
     {
-        $produto = Product::query()->porId($id);
+
+        $this->authorize('update', $produto);
 
         $dadosValidados = $request->validate([
             'category_id' => 'required|exists:categories,id',
@@ -81,6 +84,10 @@ class ProductController extends Controller
             'preco'       => 'required|numeric|min:0',
             'quantidade'  => 'required|integer|min:0',
         ]);
+
+        if ($produto->foto) {
+            Storage::disk('public')->delete($produto->foto);
+        }
 
         if ($request->hasFile('foto')) {
             $dadosValidados['foto'] = $request->file('foto')->store('produtos', 'public');
@@ -92,9 +99,14 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Product $produto)
     {
-        $produto = Product::query()->porId($id);
+
+        $this->authorize('delete', $produto);
+
+        if ($produto->foto) {
+            Storage::disk('public')->delete($produto->foto);
+        }
         $produto->delete();
     }
 }

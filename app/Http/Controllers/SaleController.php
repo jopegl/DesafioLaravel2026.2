@@ -11,7 +11,7 @@ class SaleController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $sales = Sale::visibleTo($user)
+        $sales = Sale::asSeller($user)
             ->withDetails()
             ->periodo($request->input('inicio'), $request->input('fim'))
             ->orderByDesc('data_compra')
@@ -20,10 +20,10 @@ class SaleController extends Controller
         //return view()
     }
 
-    public function show($id)
+    public function show(string $id)
     {
         $user = Auth::user();
-        $venda = Sale::visibleTo($user)
+        $venda = Sale::asSeller($user)
             ->withDetails()
             ->find($id);
 

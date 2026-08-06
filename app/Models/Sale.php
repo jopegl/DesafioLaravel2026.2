@@ -52,11 +52,18 @@ class Sale extends Model
     }
 
 
-    public function scopeVisibleTo(Builder $query, User $user): Builder
+    public function scopeAsSeller(Builder $query, User $user): Builder
     {
         return $user->is_admin
             ? $query
             : $query->where('seller_id', $user->id);
+    }
+
+    public function scopeAsBuyer(Builder $query, User $user): Builder
+    {
+        return $user->is_admin
+            ? $query
+            : $query->where('buyer_id', $user->id);
     }
 
     public function scopeWithDetails(Builder $query): Builder
