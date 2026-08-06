@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SalesExport;
 use App\Models\Sale;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Excel;
 
 class SaleController extends Controller
 {
@@ -34,13 +37,31 @@ class SaleController extends Controller
         //return view
     }
 
-    public function gerarRelatiorioPDF()
+    public function gerarRelatiorioPDF(Request $request)
     {
-        //
+        $user = Auth::user();
+
+        $vendas = Sale::asSeller($user)
+            ->withDetails()
+            ->periodo($request->input('inicio'), $request->input('fim'))
+            ->orderByDesc('data_compra')
+            ->get();
+
+        $pdf = Pdf::loadView('sales.pdf-sales', [
+            'vendas' => $vendas,
+            'inicio' => $request->input('inicio'),
+            'fim'    => $request->input('fim'),
+        ]);
+
+        return $pdf->stream('relatorio-vendas.pdf');
     }
 
-    public function  gerarRelatorioXlsx()
+    public function  gerarRelatorioXlsx(Request $request)
     {
-        //
+        $this->authorize('exportXlsx', Sale::class);
+        return Excel::download(
+            new SalesExport($request->input('inicio'), $request->input('fim')),
+            'relatorio-vendas.xlsx'
+        );
     }
 }
