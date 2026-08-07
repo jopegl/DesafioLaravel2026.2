@@ -17,7 +17,7 @@ class ProductController extends Controller
             ->withDetails()
             ->paginate(10);
 
-        //return view('productsindex', $products);
+        return view('product-list', compact('products'));
     }
 
     public function store(Request $request)
@@ -41,6 +41,7 @@ class ProductController extends Controller
 
 
         Product::create($dadosValidados);
+        return redirect()->route('products.index')->with('success', 'Produto cadastrado com sucesso!');
     }
 
 
