@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,9 @@ class ProductController extends Controller
             ->withDetails()
             ->paginate(10);
 
-        return view('product-list', compact('products'));
+        $categories = Category::all();
+
+        return view('product-list', compact('products', 'categories'));
     }
 
     public function store(Request $request)

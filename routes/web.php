@@ -16,7 +16,9 @@ Route::get('/contact', [ContactController::class, 'index'])->name('contact.index
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
 Route::get('/product/{produto}', [ProductController::class, 'show'])->name('product.page');
+
 Route::get('/dashboard/products', [ProductController::class, 'index'])->name('products.index');
+Route::post('/dashboard/products', [ProductController::class, 'store'])->name('products.store');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
 
 if (! function_exists('formatarPreco')) {
 
@@ -20,7 +21,7 @@ if (! function_exists('produtoEmEstoque')) {
 if (! function_exists('urlFotoProduto')) {
     function urlFotoProduto(?string $foto): string
     {
-        return file_exists($foto)
+        return $foto && Storage::disk('public')->exists($foto)
             ? asset('storage/' . $foto)
             : asset('images/placeholder-produto.png');
     }

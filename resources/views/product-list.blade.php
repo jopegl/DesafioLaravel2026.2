@@ -39,6 +39,16 @@
                 </div>
                 @endif
 
+                @if ($errors->any())
+                <div class="mb-4 rounded-lg bg-red-500/10 border border-red-500/40 text-red-300 text-sm px-4 py-3">
+                    <ul class="list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-xl font-semibold text-white">Produtos cadastrados</h2>
                     @if(!auth()->user()->is_admin)
@@ -56,7 +66,6 @@
                                 <th class="px-5 py-4 font-medium w-20"></th>
                                 <th class="px-5 py-4 font-medium">Nome</th>
                                 <th class="px-5 py-4 font-medium">Descrição</th>
-                                <th class="px-5 py-4 font-medium">Especificações</th>
                                 <th class="px-5 py-4 font-medium">Preço</th>
                                 <th class="px-5 py-4 font-medium">Usuário</th>
                                 <th class="px-5 py-4 font-medium">Data de criação</th>
@@ -67,15 +76,14 @@
                             @forelse ($products as $product)
                             <tr class="border-b border-gray-800/40 last:border-0 hover:bg-white/[0.02]">
                                 <td class="px-5 py-4">
-                                    <img src="{{ $product->foto_url ?? asset('images/product-placeholder.png') }}"
+                                    <img src="{{ urlFotoProduto($product->foto) }}"
                                         alt="{{ $product->nome }}"
                                         class="w-10 h-10 rounded object-cover bg-gray-700">
                                 </td>
                                 <td class="px-5 py-4">{{ $product->nome }}</td>
                                 <td class="px-5 py-4 text-gray-400 max-w-[160px] truncate">{{ $product->descricao }}</td>
-                                <td class="px-5 py-4 text-gray-400 max-w-[160px] truncate">{{ $product->especificacoes }}</td>
-                                <td class="px-5 py-4">R${{ number_format($product->preco, 2, ',', '.') }}</td>
-                                <td class="px-5 py-4 text-gray-400">{{ $product->usuario->name ?? 'nome' }}</td>
+                                <td class="px-5 py-4">{{ formatarPreco($product->preco) }}</td>
+                                <td class="px-5 py-4 text-gray-400">{{ $product->user->name ?? 'nome' }}</td>
                                 <td class="px-5 py-4 text-gray-400">{{ $product->created_at->format('d-M-Y') }}</td>
                                 <td class="px-5 py-4">
                                     <div class="flex items-center justify-end gap-3 text-cyan-400">
@@ -100,7 +108,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="8" class="px-5 py-10 text-center text-gray-500">
+                                <td colspan="7" class="px-5 py-10 text-center text-gray-500">
                                     Nenhum produto cadastrado até o momento.
                                 </td>
                             </tr>
@@ -123,7 +131,7 @@
                     class="bg-[#1c1f2a] w-full max-w-md rounded-xl border border-gray-800 p-6 max-h-[90vh] overflow-y-auto">
                     <h3 class="text-white text-lg font-semibold text-center mb-5">Criar produto</h3>
 
-                    <form method="POST" action="#" enctype="multipart/form-data" class="space-y-4">
+                    <form method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data" class="space-y-4">
                         @csrf
 
                         <label class="block border-2 border-dashed border-gray-700 rounded-lg h-40 flex items-center justify-center text-gray-500 text-sm cursor-pointer hover:border-cyan-400 relative overflow-hidden"
@@ -143,23 +151,36 @@
                         </div>
 
                         <div>
-                            <label class="block text-gray-400 text-xs mb-1">Preço</label>
-                            <div class="flex items-center bg-[#15171e] border border-gray-700 rounded-lg px-3">
-                                <span class="text-gray-400 text-sm mr-1">R$</span>
-                                <input type="number" step="0.01" min="0" name="preco" required
-                                    class="w-full bg-transparent py-2 text-white text-sm focus:outline-none">
+                            <label class="block text-gray-400 text-xs mb-1">Categoria</label>
+                            <select name="category_id" required
+                                class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400">
+                                <option value="">Selecione uma categoria</option>
+                                @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->nome }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <div class="flex-1">
+                                <label class="block text-gray-400 text-xs mb-1">Preço</label>
+                                <div class="flex items-center bg-[#15171e] border border-gray-700 rounded-lg px-3">
+                                    <span class="text-gray-400 text-sm mr-1">R$</span>
+                                    <input type="number" step="0.01" min="0" name="preco" required
+                                        class="w-full bg-transparent py-2 text-white text-sm focus:outline-none">
+                                </div>
+                            </div>
+
+                            <div class="flex-1">
+                                <label class="block text-gray-400 text-xs mb-1">Quantidade</label>
+                                <input type="number" min="0" step="1" name="quantidade" required
+                                    class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400">
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-gray-400 text-xs mb-1">Descrição</label>
                             <textarea name="descricao" rows="3" required
-                                class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400"></textarea>
-                        </div>
-
-                        <div>
-                            <label class="block text-gray-400 text-xs mb-1">Especificações</label>
-                            <textarea name="especificacoes" rows="3"
                                 class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400"></textarea>
                         </div>
 
@@ -188,7 +209,7 @@
 
                     <template x-if="selected">
                         <div class="space-y-4">
-                            <img :src="selected.foto_url ?? '{{ asset('images/product-placeholder.png') }}'"
+                            <img :src="{{urlFotoProduto($product->foto)}}"
                                 class="w-full h-40 object-cover rounded-lg border border-gray-700">
 
                             <div>
@@ -196,18 +217,23 @@
                                 <p class="text-white text-sm" x-text="selected.nome"></p>
                             </div>
                             <div>
-                                <p class="text-gray-400 text-xs mb-1">Preço</p>
-                                <p class="text-white text-sm" x-text="'R$' + Number(selected.preco).toFixed(2).replace('.', ',')"></p>
+                                <p class="text-gray-400 text-xs mb-1">Categoria</p>
+                                <p class="text-white text-sm" x-text="selected.category?.nome ?? selected.category_id"></p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-gray-400 text-xs mb-1">Preço</p>
+                                    <p class="text-white text-sm" x-text="'R$' + Number(selected.preco).toFixed(2).replace('.', ',')"></p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-400 text-xs mb-1">Quantidade</p>
+                                    <p class="text-white text-sm" x-text="selected.quantidade"></p>
+                                </div>
                             </div>
                             <div>
                                 <p class="text-gray-400 text-xs mb-1">Descrição</p>
                                 <p class="text-white text-sm" x-text="selected.descricao"></p>
                             </div>
-                            <div>
-                                <p class="text-gray-400 text-xs mb-1">Especificações</p>
-                                <p class="text-white text-sm" x-text="selected.especificacoes"></p>
-                            </div>
-
                             <button type="button" @click="showView = false"
                                 class="w-full border border-gray-600 text-gray-300 hover:bg-gray-800 text-sm font-medium py-2.5 rounded-lg transition mt-2">
                                 Fechar
@@ -244,23 +270,37 @@
                             </div>
 
                             <div>
-                                <label class="block text-gray-400 text-xs mb-1">Preço</label>
-                                <div class="flex items-center bg-[#15171e] border border-gray-700 rounded-lg px-3">
-                                    <span class="text-gray-400 text-sm mr-1">R$</span>
-                                    <input type="number" step="0.01" min="0" name="preco" required :value="selected.preco"
-                                        class="w-full bg-transparent py-2 text-white text-sm focus:outline-none">
+                                <label class="block text-gray-400 text-xs mb-1">Categoria</label>
+                                <select name="category_id" required
+                                    class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400"
+                                    x-init="$el.value = selected.category_id">
+                                    <option value="">Selecione uma categoria</option>
+                                    @foreach($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->nome }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <div class="flex-1">
+                                    <label class="block text-gray-400 text-xs mb-1">Preço</label>
+                                    <div class="flex items-center bg-[#15171e] border border-gray-700 rounded-lg px-3">
+                                        <span class="text-gray-400 text-sm mr-1">R$</span>
+                                        <input type="number" step="0.01" min="0" name="preco" required :value="selected.preco"
+                                            class="w-full bg-transparent py-2 text-white text-sm focus:outline-none">
+                                    </div>
+                                </div>
+
+                                <div class="flex-1">
+                                    <label class="block text-gray-400 text-xs mb-1">Quantidade</label>
+                                    <input type="number" min="0" step="1" name="quantidade" required :value="selected.quantidade"
+                                        class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400">
                                 </div>
                             </div>
 
                             <div>
                                 <label class="block text-gray-400 text-xs mb-1">Descrição</label>
                                 <textarea name="descricao" rows="3" required x-text="selected.descricao"
-                                    class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400"></textarea>
-                            </div>
-
-                            <div>
-                                <label class="block text-gray-400 text-xs mb-1">Especificações</label>
-                                <textarea name="especificacoes" rows="3" x-text="selected.especificacoes"
                                     class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400"></textarea>
                             </div>
 
