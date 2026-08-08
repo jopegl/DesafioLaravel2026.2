@@ -29,15 +29,15 @@ class ProductController extends Controller
 
         $validatedData = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'nome'        => 'required|string|max:255',
-            'foto'        => 'nullable|image|max:2048',
-            'descricao'   => 'nullable|string',
-            'preco'       => 'required|numeric|min:0',
-            'quantidade'  => 'required|integer|min:0',
+            'name'        => 'required|string|max:255',
+            'photo'       => 'nullable|image|max:2048',
+            'description' => 'nullable|string',
+            'price'       => 'required|numeric|min:0',
+            'quantity'    => 'required|integer|min:0',
         ]);
 
-        if ($request->hasFile('foto')) {
-            $validatedData['foto'] = $request->file('foto')->store('produtos', 'public');
+        if ($request->hasFile('photo')) {
+            $validatedData['photo'] = $request->file('photo')->store('products', 'public');
         }
 
         $validatedData['user_id'] = Auth::id();
@@ -63,20 +63,20 @@ class ProductController extends Controller
 
         $validatedData = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'nome'        => 'required|string|max:255',
-            'foto'        => 'nullable|image|max:2048',
-            'descricao'   => 'nullable|string',
-            'preco'       => 'required|numeric|min:0',
-            'quantidade'  => 'required|integer|min:0',
+            'name'        => 'required|string|max:255',
+            'photo'       => 'nullable|image|max:2048',
+            'description' => 'nullable|string',
+            'price'       => 'required|numeric|min:0',
+            'quantity'    => 'required|integer|min:0',
         ]);
 
-        if ($request->hasFile('foto')) {
-            $validatedData['foto'] = $request->file('foto')->store('produtos', 'public');
-            if ($product->foto) {
-                Storage::disk('public')->delete($product->foto);
+        if ($request->hasFile('photo')) {
+            $validatedData['photo'] = $request->file('photo')->store('products', 'public');
+            if ($product->photo) {
+                Storage::disk('public')->delete($product->photo);
             }
         } else {
-            $validatedData['foto'] = $product->foto;
+            $validatedData['photo'] = $product->photo;
         }
 
         $product->update($validatedData);
@@ -88,8 +88,8 @@ class ProductController extends Controller
 
         $this->authorize('delete', $product);
 
-        if ($product->foto) {
-            Storage::disk('public')->delete($product->foto);
+        if ($product->photo) {
+            Storage::disk('public')->delete($product->photo);
         }
         $product->delete();
     }

@@ -17,10 +17,10 @@ return new class extends Migration
             $table->foreignId('buyer_id')->constrained('users')->restrictOnDelete();
             $table->foreignId('seller_id')->constrained('users')->restrictOnDelete();
             $table->foreignId('category_id')->constrained('categories')->restrictOnDelete();
-            $table->integer('quantidade');
-            $table->decimal('valor_unitario', 10, 2);
-            $table->decimal('valor_total', 10, 2);
-            $table->dateTime('data_compra');
+            $table->integer('quantity');
+            $table->decimal('unit_price', 10, 2);
+            $table->decimal('total_price', 10, 2);
+            $table->dateTime('purchase_date');
         });
     }
 

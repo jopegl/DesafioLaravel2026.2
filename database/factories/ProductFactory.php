@@ -22,18 +22,18 @@ class ProductFactory extends Factory
         return [
             'user_id' => User::factory(),
             'category_id' => Category::factory(),
-            'nome' => fake()->words(3, true),
-            'foto' => fake()->imageUrl(640, 480, 'products', true),
-            'descricao' => fake()->paragraph(),
-            'preco' => fake()->randomFloat(2, 20, 3000),
-            'quantidade' => fake()->numberBetween(0, 50),
+            'name' => fake()->words(3, true),
+            'photo' => fake()->imageUrl(640, 480, 'products', true),
+            'description' => fake()->paragraph(),
+            'price' => fake()->randomFloat(2, 20, 3000),
+            'quantity' => fake()->numberBetween(0, 50),
         ];
     }
 
-    public function semEstoque(): static
+    public function outOfStock(): static
     {
         return $this->state(fn(array $attributes) => [
-            'quantidade' => 0,
+            'quantity' => 0,
         ]);
     }
 }

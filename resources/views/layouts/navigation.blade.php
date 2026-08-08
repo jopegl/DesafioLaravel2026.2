@@ -23,8 +23,8 @@
                 <form method="GET" action="{{ route('home') }}" class="w-full">
                     <input
                         type="text"
-                        name="busca"
-                        value="{{ request('busca') }}"
+                        name="search"
+                        value="{{ request('search') }}"
                         placeholder="Buscar produtos..."
                         class="w-full bg-gray-800 border border-gray-700 rounded-full px-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary-500">
                 </form>

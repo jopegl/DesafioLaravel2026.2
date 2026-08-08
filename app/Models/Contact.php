@@ -11,18 +11,18 @@ class Contact extends Model
 
     protected $fillable = [
         'user_id',
-        'nome',
+        'name',
         'email',
-        'mensagem',
-        'resposta',
-        'respondido_por',
-        'respondido_em',
+        'message',
+        'reply',
+        'replied_by',
+        'replied_at',
     ];
 
     protected function casts(): array
     {
         return [
-            'respondido_em' => 'datetime',
+            'replied_at' => 'datetime',
         ];
     }
 }

@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->string('nome');
+            $table->string('name');
             $table->string('email');
-            $table->text('mensagem');
-            $table->text('resposta')->nullable();
-            $table->foreignId('respondido_por')->nullable()->constrained('users')->nullOnDelete();
-            $table->timestamp('respondido_em')->nullable();
+            $table->text('message');
+            $table->text('reply')->nullable();
+            $table->foreignId('replied_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->timestamp('replied_at')->nullable();
             $table->timestamps();
         });
     }

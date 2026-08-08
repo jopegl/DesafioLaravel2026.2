@@ -13,18 +13,18 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('is_admin')->default(false);
-            $table->string('cep', 9)->nullable();
-            $table->string('numero')->nullable();
-            $table->string('logradouro')->nullable();
-            $table->string('bairro')->nullable();
-            $table->string('cidade')->nullable();
-            $table->string('estado', 2)->nullable();
-            $table->string('complemento')->nullable();
-            $table->string('telefone')->nullable();
-            $table->date('data_nascimento')->nullable();
+            $table->string('zip_code', 9)->nullable();
+            $table->string('number')->nullable();
+            $table->string('street')->nullable();
+            $table->string('neighborhood')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state', 2)->nullable();
+            $table->string('complement')->nullable();
+            $table->string('phone')->nullable();
+            $table->date('birth_date')->nullable();
             $table->string('cpf')->unique()->nullable();
-            $table->decimal('saldo', 10, 2)->default(0);
-            $table->string('foto')->nullable();
+            $table->decimal('balance', 10, 2)->default(0);
+            $table->string('photo')->nullable();
             $table->foreignId('created_by')->nullable()
                 ->constrained('users')->nullOnDelete();
         });
@@ -39,18 +39,18 @@ return new class extends Migration
             $table->dropForeign(['created_by']);
             $table->dropColumn([
                 'is_admin',
-                'cep',
-                'numero',
-                'logradouro',
-                'bairro',
-                'cidade',
-                'estado',
-                'complemento',
-                'telefone',
-                'data_nascimento',
+                'zip_code',
+                'number',
+                'street',
+                'neighborhood',
+                'city',
+                'state',
+                'complement',
+                'phone',
+                'birth_date',
                 'cpf',
-                'saldo',
-                'foto',
+                'balance',
+                'photo',
                 'created_by',
             ]);
         });

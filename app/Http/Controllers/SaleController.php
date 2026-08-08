@@ -7,7 +7,7 @@ use App\Models\Sale;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Maatwebsite\Excel\Excel;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SaleController extends Controller
 {
@@ -16,41 +16,28 @@ class SaleController extends Controller
         $user = Auth::user();
         $sales = Sale::asSeller($user)
             ->withDetails()
-            ->periodo($request->input('inicio'), $request->input('fim'))
-            ->orderByDesc('data_compra')
+            ->period($request->input('start'), $request->input('end'))
+            ->orderByDesc('purchase_date')
             ->paginate(10);
 
         return view('sales', compact('sales'));
     }
 
-    public function show(string $id)
-    {
-        $user = Auth::user();
-        $venda = Sale::asSeller($user)
-            ->withDetails()
-            ->find($id);
-
-        if (!$venda) {
-            abort(404);
-        }
-
-        //return view
-    }
 
     public function generatePDF(Request $request)
     {
         $user = Auth::user();
 
-        $vendas = Sale::asSeller($user)
+        $sales = Sale::asSeller($user)
             ->withDetails()
-            ->periodo($request->input('inicio'), $request->input('fim'))
-            ->orderByDesc('data_compra')
+            ->period($request->input('start'), $request->input('end'))
+            ->orderByDesc('purchase_date')
             ->get();
 
         $pdf = Pdf::loadView('sales.pdf-sales', [
-            'vendas' => $vendas,
-            'inicio' => $request->input('inicio'),
-            'fim'    => $request->input('fim'),
+            'sales' => $sales,
+            'start' => $request->input('start'),
+            'end'   => $request->input('end'),
         ]);
 
         return $pdf->stream('relatorio-vendas.pdf');
@@ -60,7 +47,7 @@ class SaleController extends Controller
     {
         $this->authorize('exportXlsx', Sale::class);
         return Excel::download(
-            new SalesExport($request->input('inicio'), $request->input('fim')),
+            new SalesExport($request->input('start'), $request->input('end')),
             'relatorio-vendas.xlsx'
         );
     }

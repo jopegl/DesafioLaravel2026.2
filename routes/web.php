@@ -16,19 +16,20 @@ Route::get('/dashboard', function () {
 
 Route::get('/product/{product}', [ProductController::class, 'show'])->name('product.page');
 
-Route::get('/dashboard/products', [ProductController::class, 'index'])->name('products.index');
-Route::post('/dashboard/products', [ProductController::class, 'store'])->name('products.store');
-Route::put('/dashboard/products/{product}', [ProductController::class, 'update'])->name('products.update');
-Route::delete('/dashboard/products/{product}', [ProductController::class, 'destroy'])->name('products.delete');
-
-Route::get('/dashboard/sales', [SaleController::class, 'index'])->name('sales.index');
-Route::get('/dashboard/sales/pdf', [SaleController::class, 'generatePdf'])->name('sales.pdf');
-Route::get('/dashboard/sales/xlsx', [SaleController::class, 'generateXlsx'])->name('sales.xlsx');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/dashboard/products', [ProductController::class, 'index'])->name('products.index');
+    Route::post('/dashboard/products', [ProductController::class, 'store'])->name('products.store');
+    Route::put('/dashboard/products/{product}', [ProductController::class, 'update'])->name('products.update');
+    Route::delete('/dashboard/products/{product}', [ProductController::class, 'destroy'])->name('products.delete');
+
+    Route::get('/dashboard/sales', [SaleController::class, 'index'])->name('sales.index');
+    Route::get('/dashboard/sales/pdf', [SaleController::class, 'generatePdf'])->name('sales.pdf');
+    Route::get('/dashboard/sales/xlsx', [SaleController::class, 'generateXlsx'])->name('sales.xlsx');
 });
 
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {

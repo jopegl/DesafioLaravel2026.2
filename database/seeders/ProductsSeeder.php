@@ -28,7 +28,7 @@ class ProductsSeeder extends Seeder
 
         Product::factory()
             ->count(5)
-            ->semEstoque()
+            ->outOfStock()
             ->create([
                 'user_id' => fn() => $userIds->random(),
                 'category_id' => fn() => $categoryIds->random(),

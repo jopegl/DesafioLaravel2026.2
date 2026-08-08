@@ -15,18 +15,18 @@ class Sale extends Model
         'buyer_id',
         'seller_id',
         'category_id',
-        'quantidade',
-        'valor_unitario',
-        'valor_total',
-        'data_compra',
+        'quantity',
+        'unit_price',
+        'total_price',
+        'purchase_date',
     ];
 
     protected function casts(): array
     {
         return [
-            'valor_unitario' => 'decimal:2',
-            'valor_total'    => 'decimal:2',
-            'data_compra'    => 'datetime',
+            'unit_price' => 'decimal:2',
+            'total_price'    => 'decimal:2',
+            'purchase_date'    => 'datetime',
         ];
     }
 
@@ -72,14 +72,14 @@ class Sale extends Model
     }
 
 
-    public function scopePeriodo(Builder $query, ?string $inicio, ?string $fim): Builder
+    public function scopePeriod(Builder $query, ?string $start, ?string $end): Builder
     {
-        if ($inicio) {
-            $query->where('data_compra', '>=', $inicio);
+        if ($start) {
+            $query->where('purchase_date', '>=', $start);
         }
 
-        if ($fim) {
-            $query->where('data_compra', '<=', $fim);
+        if ($end) {
+            $query->where('purchase_date', '<=', $end);
         }
 
         return $query;

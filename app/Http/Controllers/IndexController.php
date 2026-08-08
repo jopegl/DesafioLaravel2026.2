@@ -14,16 +14,16 @@ class IndexController extends Controller
     {
 
 
-        $produtos = Product::query()
-            ->buscar($request->busca)
-            ->daCategoria($request->categoria)
-            ->precoEntre($request->preco_min, $request->preco_max)
-            ->emEstoque($request->em_estoque)
-            ->ordenar($request->ordenar)
+        $products = Product::query()
+            ->search($request->search)
+            ->inCategory($request->category)
+            ->priceBetween($request->price_min, $request->price_max)
+            ->inStock($request->in_stock)
+            ->sortBy($request->sort)
             ->paginate(12);
 
-        $categorias = Category::all();
+        $categories = Category::all();
 
-        return view('home', compact('produtos', 'categorias'));
+        return view('home', compact('products', 'categories'));
     }
 }

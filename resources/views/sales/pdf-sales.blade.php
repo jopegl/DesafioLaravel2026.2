@@ -29,7 +29,7 @@
 
 <body>
     <h2>Relatório de Vendas</h2>
-    <p>Período: {{ $inicio ?? 'início' }} até {{ $fim ?? 'hoje' }}</p>
+    <p>Período: {{ $start ?? 'início' }} até {{ $end ?? 'hoje' }}</p>
 
     <table>
         <thead>
@@ -42,13 +42,13 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($vendas as $venda)
+            @foreach ($sales as $sale)
             <tr>
-                <td>{{ $venda->data_compra->format('d/m/Y') }}</td>
-                <td>R$ {{ number_format($venda->valor_total, 2, ',', '.') }}</td>
-                <td>{{ $venda->category->nome }}</td>
-                <td>{{ $venda->buyer->name }}</td>
-                <td>{{ $venda->seller->name }}</td>
+                <td>{{ $sale->purchase_date->format('d/m/Y') }}</td>
+                <td>R$ {{ number_format($sale->total_price, 2, ',', '.') }}</td>
+                <td>{{ $sale->category->name }}</td>
+                <td>{{ $sale->buyer->name }}</td>
+                <td>{{ $sale->seller->name }}</td>
             </tr>
             @endforeach
         </tbody>

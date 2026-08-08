@@ -14,17 +14,17 @@ class Product extends Model
     protected $fillable = [
         'user_id',
         'category_id',
-        'nome',
-        'foto',
-        'descricao',
-        'preco',
-        'quantidade',
+        'name',
+        'photo',
+        'description',
+        'price',
+        'quantity',
     ];
 
     protected function casts(): array
     {
         return [
-            'preco' => 'decimal:2',
+            'price' => 'decimal:2',
         ];
     }
 
@@ -40,57 +40,57 @@ class Product extends Model
 
 
 
-    public function scopeBuscar(Builder $query, ?string $termo): Builder
+    public function scopeSearch(Builder $query, ?string $term): Builder
     {
-        if (!$termo) {
+        if (!$term) {
             return $query;
         }
 
-        return $query->where('nome', 'like', "%{$termo}%");
+        return $query->where('name', 'like', "%{$term}%");
     }
 
-    public function scopeDaCategoria(Builder $query, ?string $categoriaId): Builder
+    public function scopeInCategory(Builder $query, ?string $categoryId): Builder
     {
-        if (! $categoriaId) {
+        if (! $categoryId) {
             return $query;
         }
 
-        return $query->where('category_id', $categoriaId);
+        return $query->where('category_id', $categoryId);
     }
 
-    public function scopePrecoEntre(Builder $query, ?string $precoMin, ?string $precoMax): Builder
+    public function scopePriceBetween(Builder $query, ?string $priceMin, ?string $priceMax): Builder
     {
-        if ($precoMin) {
-            $query->where('preco', '>=', $precoMin);
+        if ($priceMin) {
+            $query->where('price', '>=', $priceMin);
         }
 
-        if ($precoMax) {
-            $query->where('preco', '<=', $precoMax);
+        if ($priceMax) {
+            $query->where('price', '<=', $priceMax);
         }
 
         return $query;
     }
 
-    public function scopeEmEstoque(Builder $query, ?string $emEstoque): Builder
+    public function scopeInStock(Builder $query, ?string $inStock): Builder
     {
-        if (!$emEstoque) {
+        if (!$inStock) {
             return $query;
         }
 
-        return $query->where('quantidade', '>', 0);
+        return $query->where('quantity', '>', 0);
     }
 
-    public function scopeOrdenar(Builder $query, ?string $ordenacao): Builder
+    public function scopeSortBy(Builder $query, ?string $sort): Builder
     {
-        return match ($ordenacao) {
-            'menor_preco' => $query->orderBy('preco', 'asc'),
-            'maior_preco' => $query->orderBy('preco', 'desc'),
-            'recentes' => $query->orderBy('created_at', 'desc'),
+        return match ($sort) {
+            'price_asc' => $query->orderBy('price', 'asc'),
+            'price_desc' => $query->orderBy('price', 'desc'),
+            'recent' => $query->orderBy('created_at', 'desc'),
             default => $query->orderBy('created_at', 'desc'),
         };
     }
 
-    public function scopePorId(Builder $query, int $id)
+    public function scopeById(Builder $query, int $id)
     {
         if ($id < 0) {
             return $query;

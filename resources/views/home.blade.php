@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="bg-primary-900 min-h-screen text-white">
 
-        @if(!request('busca'))
+        @if(!request('search'))
         {{-- Banner Hero (topo) --}}
         <div class="relative bg-gradient-to-r from-gray-900 to-gray-800 overflow-hidden">
             <img src="{{ asset('images/hero-iphone.png') }}" alt="Produto em destaque" class="w-full h-64 md:h-96 object-cover">
@@ -20,7 +20,7 @@
                                 d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                         </svg>
                         Filtrar
-                        @if(request('categoria') || request('preco_min') || request('preco_max') || request('em_estoque') || (request('ordenar') && request('ordenar') != 'recentes'))
+                        @if(request('category') || request('price_min') || request('price_max') || request('in_stock') || (request('sort') && request('sort') != 'recent'))
                         <span class="w-2 h-2 rounded-full bg-primary-500"></span>
                         @endif
                     </button>
@@ -29,8 +29,8 @@
                         <form method="GET" action="{{ route('home') }}" class="w-full">
                             <input
                                 type="text"
-                                name="busca"
-                                value="{{ request('busca') }}"
+                                name="search"
+                                value="{{ request('search') }}"
                                 placeholder="Buscar produtos..."
                                 class="w-full bg-gray-800 border border-gray-700 rounded-full px-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary-500">
                         </form>
@@ -45,18 +45,18 @@
                     <form method="GET" action="{{ route('home') }}" class="space-y-4">
 
                         {{-- Preserva busca ativa --}}
-                        @if(request('busca'))
-                        <input type="hidden" name="busca" value="{{ request('busca') }}">
+                        @if(request('search'))
+                        <input type="hidden" name="search" value="{{ request('search') }}">
                         @endif
 
                         <div>
                             <label class="block text-xs text-gray-400 mb-2">Categoria</label>
-                            <select name="categoria"
+                            <select name="category"
                                 class="bg-gray-700 text-white text-sm rounded-md border-gray-600 w-full focus:border-primary-500 focus:ring-primary-500">
                                 <option value="">Todas</option>
-                                @foreach ($categorias as $categoria)
-                                <option value="{{ $categoria->id }}" {{ request('categoria') == $categoria->id ? 'selected' : '' }}>
-                                    {{ $categoria->nome }}
+                                @foreach ($categories as $category)
+                                <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
                                 </option>
                                 @endforeach
                             </select>
@@ -65,11 +65,11 @@
                         <div>
                             <label class="block text-xs text-gray-400 mb-2">Faixa de preço</label>
                             <div class="flex items-center gap-2">
-                                <input type="number" name="preco_min" value="{{ request('preco_min') }}"
+                                <input type="number" name="price_min" value="{{ request('price_min') }}"
                                     placeholder="Min"
                                     class="bg-gray-700 text-white text-sm rounded-md border-gray-600 w-full focus:border-primary-500 focus:ring-primary-500">
                                 <span class="text-gray-500">—</span>
-                                <input type="number" name="preco_max" value="{{ request('preco_max') }}"
+                                <input type="number" name="price_max" value="{{ request('price_max') }}"
                                     placeholder="Max"
                                     class="bg-gray-700 text-white text-sm rounded-md border-gray-600 w-full focus:border-primary-500 focus:ring-primary-500">
                             </div>
@@ -77,18 +77,18 @@
 
                         <div>
                             <label class="block text-xs text-gray-400 mb-2">Ordenar por</label>
-                            <select name="ordenar"
+                            <select name="sort"
                                 class="bg-gray-700 text-white text-sm rounded-md border-gray-600 w-full focus:border-primary-500 focus:ring-primary-500">
-                                <option value="recentes" {{ request('ordenar') == 'recentes' ? 'selected' : '' }}>Mais recentes</option>
-                                <option value="menor_preco" {{ request('ordenar') == 'menor_preco' ? 'selected' : '' }}>Menor preço</option>
-                                <option value="maior_preco" {{ request('ordenar') == 'maior_preco' ? 'selected' : '' }}>Maior preço</option>
+                                <option value="recent" {{ request('sort') == 'recent' ? 'selected' : '' }}>Mais recentes</option>
+                                <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Menor preço</option>
+                                <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Maior preço</option>
                             </select>
                         </div>
 
                         <div class="flex items-center gap-2">
-                            <input type="checkbox" name="em_estoque" id="em_estoque" value="1" {{ request('em_estoque') ? 'checked' : '' }}
+                            <input type="checkbox" name="in_stock" id="in_stock" value="1" {{ request('in_stock') ? 'checked' : '' }}
                                 class="rounded border-gray-600 text-primary-500 focus:ring-primary-500">
-                            <label for="em_estoque" class="text-sm text-gray-300">Apenas em estoque</label>
+                            <label for="in_stock" class="text-sm text-gray-300">Apenas em estoque</label>
                         </div>
 
                         <div class="flex items-center gap-2 pt-2">
@@ -96,8 +96,8 @@
                                 class="flex-1 bg-primary-500 hover:opacity-90 text-white text-sm py-2 rounded-full transition">
                                 Aplicar
                             </button>
-                            @if(request('categoria') || request('preco_min') || request('preco_max') || request('em_estoque') || request('ordenar'))
-                            <a href="{{ route('home', array_filter(['busca' => request('busca')])) }}"
+                            @if(request('category') || request('price_min') || request('price_max') || request('in_stock') || request('sort'))
+                            <a href="{{ route('home', array_filter(['search' => request('search')])) }}"
                                 class="text-xs text-gray-400 hover:text-white transition px-2">
                                 Limpar
                             </a>
@@ -107,12 +107,12 @@
                 </div>
             </div>
 
-            @if (request('busca'))
-            <p class="text-2xl font-bold text-white mb-4">Você buscou por: "{{ request('busca') }}"</p>
+            @if (request('search'))
+            <p class="text-2xl font-bold text-white mb-4">Você buscou por: "{{ request('search') }}"</p>
             @endif
 
             {{-- Produtos + Busca --}}
-            <div id="produtos">
+            <div id="products">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-lg text-gray-400">Produtos</h2>
 
@@ -120,22 +120,22 @@
 
                 {{-- Grid de produtos --}}
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    @forelse ($produtos as $produto)
-                    <a href="{{ route('product.page', $produto) }}">
+                    @forelse ($products as $product)
+                    <a href="{{ route('product.page', $product) }}">
                         <div class="group bg-gray-800 rounded-xl p-4 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary-500/20 hover:bg-gray-700">
                             <div class="block mb-3 overflow-hidden rounded-lg">
                                 <img
-                                    src="{{ urlFotoProduto($produto->foto) }}"
-                                    alt="{{ $produto->nome }}"
+                                    src="{{ productPhotoUrl($product->photo) }}"
+                                    alt="{{ $product->name }}"
                                     class="w-full h-32 object-contain transition-transform duration-300 group-hover:scale-110">
                             </div>
 
                             <h3 class="text-sm text-gray-300 line-clamp-2">
-                                {{ $produto->nome }}
+                                {{ $product->name }}
                             </h3>
 
                             <p class="text-lg font-bold text-white mt-2">
-                                {{ formatarPreco($produto->preco )}}
+                                {{ formatPrice($product->price)}}
                             </p>
 
                             <span class="block w-full bg-primary-500 group-hover:bg-primary-400 text-white text-sm py-2 rounded-full transition-colors duration-300 mt-3 text-center">
@@ -152,12 +152,12 @@
 
                 {{-- Paginação --}}
                 <div class="mt-8">
-                    {{ $produtos->appends(request()->query())->links() }}
+                    {{ $products->appends(request()->query())->links() }}
                 </div>
             </div>
 
 
-            <!--   @if(!request('busca'))
+            <!--   @if(!request('search'))
             {{-- Banner 2 / Promoções (carrossel) --}}
             <div class="mt-16" x-data="{ slide: 0, slides: 3 }" x-init="setInterval(() => slide = (slide + 1) % slides, 4000)">
                 <h2 class="text-lg text-gray-400 mb-4">Banner 2</h2>
@@ -170,7 +170,7 @@
                             <div class="text-center flex-1">
                                 <h3 class="text-3xl font-bold">Promoções</h3>
                                 <p class="text-gray-400 mt-2">Confira as melhores promoções do site</p>
-                                <a href="#produtos" class="inline-block mt-4 px-6 py-2 bg-primary-500 hover:opacity-90 rounded-full text-sm transition">
+                                <a href="#products" class="inline-block mt-4 px-6 py-2 bg-primary-500 hover:opacity-90 rounded-full text-sm transition">
                                     Ir agora
                                 </a>
                             </div>

@@ -76,13 +76,13 @@
                             @forelse ($products as $product)
                             <tr class="border-b border-gray-800/40 last:border-0 hover:bg-white/[0.02]">
                                 <td class="px-5 py-4">
-                                    <img src="{{ urlFotoProduto($product->foto) }}"
-                                        alt="{{ $product->nome }}"
+                                    <img src="{{ productPhotoUrl($product->photo) }}"
+                                        alt="{{ $product->name }}"
                                         class="w-10 h-10 rounded object-cover bg-gray-700">
                                 </td>
-                                <td class="px-5 py-4">{{ $product->nome }}</td>
-                                <td class="px-5 py-4 text-gray-400 max-w-[160px] truncate">{{ $product->descricao }}</td>
-                                <td class="px-5 py-4">{{ formatarPreco($product->preco) }}</td>
+                                <td class="px-5 py-4">{{ $product->name }}</td>
+                                <td class="px-5 py-4 text-gray-400 max-w-[160px] truncate">{{ $product->description }}</td>
+                                <td class="px-5 py-4">{{ formatPrice($product->price) }}</td>
                                 <td class="px-5 py-4 text-gray-400">{{ $product->user->name ?? 'nome' }}</td>
                                 <td class="px-5 py-4 text-gray-400">{{ $product->created_at->format('d-M-Y') }}</td>
                                 <td class="px-5 py-4">
@@ -139,13 +139,13 @@
                                 <span>Clique para adicionar uma foto</span>
                             </template>
                             <img :src="preview" x-show="preview" class="absolute inset-0 w-full h-full object-cover">
-                            <input type="file" name="foto" accept="image/*" class="hidden"
+                            <input type="file" name="photo" accept="image/*" class="hidden"
                                 @change="preview = URL.createObjectURL($event.target.files[0])">
                         </label>
 
                         <div>
                             <label class="block text-gray-400 text-xs mb-1">Nome</label>
-                            <input type="text" name="nome" required
+                            <input type="text" name="name" required
                                 class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400">
                         </div>
 
@@ -155,7 +155,7 @@
                                 class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400">
                                 <option value="">Selecione uma categoria</option>
                                 @foreach($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->nome }}</option>
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -165,21 +165,21 @@
                                 <label class="block text-gray-400 text-xs mb-1">Preço</label>
                                 <div class="flex items-center bg-[#15171e] border border-gray-700 rounded-lg px-3">
                                     <span class="text-gray-400 text-sm mr-1">R$</span>
-                                    <input type="number" step="0.01" min="0" name="preco" required
+                                    <input type="number" step="0.01" min="0" name="price" required
                                         class="w-full bg-transparent py-2 text-white text-sm focus:outline-none">
                                 </div>
                             </div>
 
                             <div class="flex-1">
                                 <label class="block text-gray-400 text-xs mb-1">Quantidade</label>
-                                <input type="number" min="0" step="1" name="quantidade" required
+                                <input type="number" min="0" step="1" name="quantity" required
                                     class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400">
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-gray-400 text-xs mb-1">Descrição</label>
-                            <textarea name="descricao" rows="3" required
+                            <textarea name="description" rows="3" required
                                 class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400"></textarea>
                         </div>
 
@@ -207,30 +207,30 @@
 
                     <template x-if="selected">
                         <div class="space-y-4">
-                            <img :src="'{{urlFotoProduto($product->foto)}}'"
+                            <img :src="'{{productPhotoUrl($product->photo)}}'"
                                 class="w-full h-40 object-cover rounded-lg border border-gray-700">
 
                             <div>
                                 <p class="text-gray-400 text-xs mb-1">Nome</p>
-                                <p class="text-white text-sm" x-text="selected.nome"></p>
+                                <p class="text-white text-sm" x-text="selected.name"></p>
                             </div>
                             <div>
                                 <p class="text-gray-400 text-xs mb-1">Categoria</p>
-                                <p class="text-white text-sm" x-text="selected.category?.nome ?? selected.category_id"></p>
+                                <p class="text-white text-sm" x-text="selected.category?.name ?? selected.category_id"></p>
                             </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <p class="text-gray-400 text-xs mb-1">Preço</p>
-                                    <p class="text-white text-sm" x-text="'R$' + Number(selected.preco).toFixed(2).replace('.', ',')"></p>
+                                    <p class="text-white text-sm" x-text="'R$' + Number(selected.price).toFixed(2).replace('.', ',')"></p>
                                 </div>
                                 <div>
                                     <p class="text-gray-400 text-xs mb-1">Quantidade</p>
-                                    <p class="text-white text-sm" x-text="selected.quantidade"></p>
+                                    <p class="text-white text-sm" x-text="selected.quantity"></p>
                                 </div>
                             </div>
                             <div>
                                 <p class="text-gray-400 text-xs mb-1">Descrição</p>
-                                <p class="text-white text-sm" x-text="selected.descricao"></p>
+                                <p class="text-white text-sm" x-text="selected.description"></p>
                             </div>
                             <button type="button" @click="showView = false"
                                 class="w-full border border-gray-600 text-gray-300 hover:bg-gray-800 text-sm font-medium py-2.5 rounded-lg transition mt-2">
@@ -255,14 +255,14 @@
                             @method('PUT')
 
                             <label class="block border-2 border-dashed border-gray-700 rounded-lg h-40 flex items-center justify-center text-gray-500 text-sm cursor-pointer hover:border-cyan-400 relative overflow-hidden">
-                                <img :src="selected.foto_url ?? '{{ urlFotoProduto($product->foto ) }}'"
+                                <img :src="selected.photo_url ?? '{{ productPhotoUrl($product->photo) }}'"
                                     class="absolute inset-0 w-full h-full object-cover">
-                                <input type="file" name="foto" accept="image/*" class="hidden">
+                                <input type="file" name="photo" accept="image/*" class="hidden">
                             </label>
 
                             <div>
                                 <label class="block text-gray-400 text-xs mb-1">Nome</label>
-                                <input type="text" name="nome" required :value="selected.nome"
+                                <input type="text" name="name" required :value="selected.name"
                                     class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400">
                             </div>
 
@@ -273,7 +273,7 @@
                                     x-init="$el.value = selected.category_id">
                                     <option value="">Selecione uma categoria</option>
                                     @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->nome }}</option>
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -283,21 +283,21 @@
                                     <label class="block text-gray-400 text-xs mb-1">Preço</label>
                                     <div class="flex items-center bg-[#15171e] border border-gray-700 rounded-lg px-3">
                                         <span class="text-gray-400 text-sm mr-1">R$</span>
-                                        <input type="number" step="0.01" min="0" name="preco" required :value="selected.preco"
+                                        <input type="number" step="0.01" min="0" name="price" required :value="selected.price"
                                             class="w-full bg-transparent py-2 text-white text-sm focus:outline-none">
                                     </div>
                                 </div>
 
                                 <div class="flex-1">
                                     <label class="block text-gray-400 text-xs mb-1">Quantidade</label>
-                                    <input type="number" min="0" step="1" name="quantidade" required :value="selected.quantidade"
+                                    <input type="number" min="0" step="1" name="quantity" required :value="selected.quantity"
                                         class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400">
                                 </div>
                             </div>
 
                             <div>
                                 <label class="block text-gray-400 text-xs mb-1">Descrição</label>
-                                <textarea name="descricao" rows="3" required x-text="selected.descricao"
+                                <textarea name="description" rows="3" required x-text="selected.description"
                                     class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400"></textarea>
                             </div>
 
@@ -329,7 +329,7 @@
                             </svg>
                             <p class="text-white text-sm">
                                 Tem certeza que deseja excluir
-                                <span class="font-semibold" x-text="selected.nome"></span>?
+                                <span class="font-semibold" x-text="selected.name"></span>?
                                 Essa ação não pode ser desfeita.
                             </p>
 

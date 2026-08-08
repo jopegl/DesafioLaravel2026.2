@@ -6,7 +6,7 @@
     </div>
 
     <div class="flex flex-col items-center py-6 border-b border-gray-800/60">
-        <img src="{{ auth()->user()->foto_url ?? asset('images/default-avatar.png') }}"
+        <img src="{{ auth()->user()->photo_url ?? asset('images/default-avatar.png') }}"
             alt="{{ auth()->user()->name }}"
             class="w-20 h-20 rounded-full object-cover mb-3 ring-2 ring-gray-700">
         <span class="font-semibold text-sm">{{ auth()->user()->name }}</span>
@@ -44,13 +44,22 @@
             Perfil
         </a>
 
-        <a href="#"
+        <a href="{{route('products.index')}}"
             class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition
-                  {{ request()->routeIs('produtos.*') ? 'bg-cyan-500 text-white' : 'text-gray-300 hover:bg-gray-800/70' }}">
+                  {{ request()->routeIs('products.index') ? 'bg-cyan-500 text-white' : 'text-gray-300 hover:bg-gray-800/70' }}">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
             </svg>
             Produtos
+        </a>
+
+        <a href="{{route('sales.index')}}"
+            class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition
+                  {{ request()->routeIs('sales.index') ? 'bg-cyan-500 text-white' : 'text-gray-300 hover:bg-gray-800/70' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            </svg>
+            Vendas
         </a>
 
     </nav>

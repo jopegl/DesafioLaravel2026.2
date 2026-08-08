@@ -3,26 +3,26 @@
 use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
 
-if (! function_exists('formatarPreco')) {
+if (! function_exists('formatPrice')) {
 
-    function formatarPreco(float $valor): string
+    function formatPrice(float $value): string
     {
-        return 'R$' . number_format($valor, 2, ',', '.');
+        return 'R$' . number_format($value, 2, ',', '.');
     }
 }
 
-if (! function_exists('produtoEmEstoque')) {
-    function produtoEmEstoque(Product $produto): bool
+if (! function_exists('productInStock')) {
+    function productInStock(Product $product): bool
     {
-        return $produto->quantidade > 0;
+        return $product->quantity > 0;
     }
 }
 
-if (! function_exists('urlFotoProduto')) {
-    function urlFotoProduto(?string $foto): string
+if (! function_exists('productPhotoUrl')) {
+    function productPhotoUrl(?string $photo): string
     {
-        return $foto && Storage::disk('public')->exists($foto)
-            ? asset('storage/' . $foto)
+        return $photo && Storage::disk('public')->exists($photo)
+            ? asset('storage/' . $photo)
             : asset('images/placeholder-produto.png');
     }
 }

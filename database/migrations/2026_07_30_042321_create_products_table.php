@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('category_id')->constrained('categories')->restrictOnDelete();
-            $table->string('nome');
-            $table->string('foto');
-            $table->text('descricao')->nullable();
-            $table->decimal('preco', 10, 2);
-            $table->integer('quantidade');
+            $table->string('name');
+            $table->string('photo');
+            $table->text('description')->nullable();
+            $table->decimal('price', 10, 2);
+            $table->integer('quantity');
             $table->timestamps();
         });
     }

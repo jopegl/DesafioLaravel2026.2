@@ -9,26 +9,27 @@ use Illuminate\Support\Facades\Http;
 
 class CepController extends Controller
 {
-    public function buscar(string $cep): JsonResponse
+    public function search(string $zipCode): JsonResponse
     {
-        $cepLimpo = preg_replace('/[^0-9]/', '', $cep);
+        $cleanZipCode = preg_replace('/[^0-9]/', '', $zipCode);
 
-        if (strlen($cepLimpo) !== 8) {
-            return response()->json(['erro' => 'CEP inválido'], 422);
+        if (strlen($cleanZipCode) !== 8) {
+            return response()->json(['error' => 'CEP inválido'], 422);
         }
 
-        $response = Http::get("https://viacep.com.br/ws/{$cepLimpo}/json/");
+        $response = Http::get("https://viacep.com.br/ws/{$cleanZipCode}/json/");
 
         if ($response->failed()) {
-            return response()->json(['erro' => 'Não foi possível consultar o CEP'], 503);
+            return response()->json(['error' => 'Não foi possível consultar o CEP'], 503);
         }
 
-        $dados = $response->json();
+        $data = $response->json();
 
-        if (isset($dados['erro'])) {
-            return response()->json(['erro' => 'CEP não encontrado'], 404);
+        // 'erro' here is ViaCEP's own response field, not ours — keep as-is.
+        if (isset($data['erro'])) {
+            return response()->json(['error' => 'CEP não encontrado'], 404);
         }
 
-        return response()->json($dados);
+        return response()->json($data);
     }
 }

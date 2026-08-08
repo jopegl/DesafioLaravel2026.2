@@ -17,7 +17,7 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            "nome" => $this->faker->unique()->randomElement([
+            "name" => $this->faker->unique()->randomElement([
                 'Smartphones',
                 'Notebooks e Computadores',
                 'Áudio e Fones de Ouvido',

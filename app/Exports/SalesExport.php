@@ -17,16 +17,16 @@ class SalesExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
      */
 
     public function __construct(
-        protected ?string $inicio = null,
-        protected ?string $fim = null
+        protected ?string $start = null,
+        protected ?string $end = null
     ) {}
 
     public function collection()
     {
         return Sale::asSeller(Auth::user())
             ->withDetails()
-            ->periodo($this->inicio, $this->fim)
-            ->orderByDesc('data_compra')
+            ->period($this->start, $this->end)
+            ->orderByDesc('purchase_date')
             ->get();
     }
 
@@ -35,14 +35,14 @@ class SalesExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
         return ['Data', 'Valor', 'Categoria', 'Comprador', 'Vendedor'];
     }
 
-    public function map($venda): array
+    public function map($sale): array
     {
         return [
-            $venda->data_compra->format('d/m/Y'),
-            $venda->valor_total,
-            $venda->category->nome,
-            $venda->buyer->name,
-            $venda->seller->name,
+            $sale->purchase_date->format('d/m/Y'),
+            $sale->total_price,
+            $sale->category->name,
+            $sale->buyer->name,
+            $sale->seller->name,
         ];
     }
 
