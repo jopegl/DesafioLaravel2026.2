@@ -15,11 +15,11 @@ class ProductPolicy
 
     public function update(User $user, Product $product): bool
     {
-        return $user->id === $product->user_id || $user->is_admin;
+        return $user->id == $product->user_id || $user->is_admin;
     }
 
     public function delete(User $user, Product $product): bool
     {
-        return $user->id === $product->user_id || $user->is_admin;
+        return $user->id == $product->user_id || $user->is_admin;
     }
 }

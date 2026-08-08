@@ -20,7 +20,7 @@ class SaleController extends Controller
             ->orderByDesc('data_compra')
             ->paginate(10);
 
-        //return view()
+        return view('sales', compact('sales'));
     }
 
     public function show(string $id)
@@ -37,7 +37,7 @@ class SaleController extends Controller
         //return view
     }
 
-    public function gerarRelatiorioPDF(Request $request)
+    public function generatePDF(Request $request)
     {
         $user = Auth::user();
 
@@ -56,7 +56,7 @@ class SaleController extends Controller
         return $pdf->stream('relatorio-vendas.pdf');
     }
 
-    public function  gerarRelatorioXlsx(Request $request)
+    public function  generateXlsx(Request $request)
     {
         $this->authorize('exportXlsx', Sale::class);
         return Excel::download(

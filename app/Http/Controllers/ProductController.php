@@ -27,7 +27,7 @@ class ProductController extends Controller
     {
         $this->authorize('create', Product::class);
 
-        $dadosValidados = $request->validate([
+        $validatedData = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'nome'        => 'required|string|max:255',
             'foto'        => 'nullable|image|max:2048',
@@ -37,38 +37,31 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('foto')) {
-            $dadosValidados['foto'] = $request->file('foto')->store('produtos', 'public');
+            $validatedData['foto'] = $request->file('foto')->store('produtos', 'public');
         }
 
-        $dadosValidados['user_id'] = Auth::id();
+        $validatedData['user_id'] = Auth::id();
 
 
-        Product::create($dadosValidados);
+        Product::create($validatedData);
         return redirect()->route('products.index')->with('success', 'Produto cadastrado com sucesso!');
     }
 
 
-    public function show(Product $produto) //pagina de produto 
+    public function show(Product $product) //pagina de produto 
     {
-        if ($produto != null)
-            return view('product-page', compact('produto'));
+        if ($product != null)
+            return view('product-page', compact('product'));
         return null;
     }
 
-    public function edit(Product $produto)
-    {
-        if (!$produto) {
-            abort(404);
-        }
-        //return view('products.edit', compact('produto'));
-    }
 
-    public function update(Request $request, Product $produto)
+    public function update(Request $request, Product $product)
     {
 
-        $this->authorize('update', $produto);
+        $this->authorize('update', $product);
 
-        $dadosValidados = $request->validate([
+        $validatedData = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'nome'        => 'required|string|max:255',
             'foto'        => 'nullable|image|max:2048',
@@ -77,25 +70,27 @@ class ProductController extends Controller
             'quantidade'  => 'required|integer|min:0',
         ]);
 
-        if ($produto->foto) {
-            Storage::disk('public')->delete($produto->foto);
-        }
-
         if ($request->hasFile('foto')) {
-            $dadosValidados['foto'] = $request->file('foto')->store('produtos', 'public');
+            $validatedData['foto'] = $request->file('foto')->store('produtos', 'public');
+            if ($product->foto) {
+                Storage::disk('public')->delete($product->foto);
+            }
+        } else {
+            $validatedData['foto'] = $product->foto;
         }
 
-        $produto->update($dadosValidados);
+        $product->update($validatedData);
+        return redirect()->route('products.index')->with('success', 'Produto editado com sucesso!');
     }
 
-    public function destroy(Product $produto)
+    public function destroy(Product $product)
     {
 
-        $this->authorize('delete', $produto);
+        $this->authorize('delete', $product);
 
-        if ($produto->foto) {
-            Storage::disk('public')->delete($produto->foto);
+        if ($product->foto) {
+            Storage::disk('public')->delete($product->foto);
         }
-        $produto->delete();
+        $product->delete();
     }
 }

@@ -5,32 +5,32 @@
 
             <div class="flex items-center justify-center">
                 <img
-                    src="{{ urlFotoProduto($produto->foto) }}"
-                    alt="{{ $produto->nome }}"
+                    src="{{ urlFotoProduto($product->foto) }}"
+                    alt="{{ $product->nome }}"
                     class="max-h-[480px] w-auto object-contain rounded-xl">
             </div>
 
             <div class="flex flex-col justify-center">
-                <h1 class="text-3xl font-bold mb-4">{{ $produto->nome }}</h1>
+                <h1 class="text-3xl font-bold mb-4">{{ $product->nome }}</h1>
 
                 <div class="flex items-center gap-3 mb-2">
                     <span class="text-2xl font-bold text-cyan-400">
-                        {{ formatarPreco($produto->preco) }}
+                        {{ formatarPreco($product->preco) }}
                     </span>
                 </div>
 
-                <p class="text-sm mb-6 {{ $produto->quantidade > 0 ? 'text-gray-400' : 'text-red-400' }}">
-                    @if($produto->quantidade > 0)
-                    {{ $produto->quantidade }} em estoque
+                <p class="text-sm mb-6 {{ $product->quantidade > 0 ? 'text-gray-400' : 'text-red-400' }}">
+                    @if($product->quantidade > 0)
+                    {{ $product->quantidade }} em estoque
                     @else
                     Fora de estoque
                     @endif
                 </p>
 
-                @if($produto->descricao)
+                @if($product->descricao)
                 <p class="text-sm text-gray-400 leading-relaxed mb-6">
-                    {{ \Illuminate\Support\Str::limit($produto->descricao, 180) }}
-                    @if(strlen($produto->descricao) > 180)
+                    {{ \Illuminate\Support\Str::limit($product->descricao, 180) }}
+                    @if(strlen($product->descricao) > 180)
                     <a href="#details" class="text-cyan-400 underline">mais</a>
                     @endif
                 </p>
@@ -45,15 +45,15 @@
                             <button type="button" @click="qty = qty > 1 ? qty - 1 : 1"
                                 class="px-4 py-2 text-lg hover:bg-gray-800">-</button>
                             <input type="number" name="quantidade" x-model="qty" min="1"
-                                max="{{ $produto->quantidade }}"
+                                max="{{ $product->quantidade }}"
                                 class="w-12 text-center bg-black border-x border-gray-700 py-2 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
-                            <button type="button" @click="qty = qty < {{ $produto->quantidade }} ? qty + 1 : qty"
+                            <button type="button" @click="qty = qty < {{ $product->quantidade }} ? qty + 1 : qty"
                                 class="px-4 py-2 text-lg hover:bg-gray-800">+</button>
                         </div>
                     </div>
 
                     <button type="submit"
-                        @disabled($produto->quantidade <= 0)
+                        @disabled($product->quantidade <= 0)
                             class="w-full md:w-auto px-10 py-3 bg-cyan-400 text-black font-semibold rounded-lg hover:bg-cyan-300 transition disabled:opacity-40 disabled:cursor-not-allowed">
                             Adicionar ao carrinho
                     </button>
@@ -75,11 +75,11 @@
                 {{-- Anunciante --}}
                 <div class="flex items-center gap-4 pb-6 border-b border-gray-800">
                     <div class="w-12 h-12 rounded-full bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400 font-semibold text-lg">
-                        {{ strtoupper(substr($produto->user->name ?? 'U', 0, 1)) }}
+                        {{ strtoupper(substr($product->user->name ?? 'U', 0, 1)) }}
                     </div>
                     <div>
                         <p class="text-sm font-medium text-white">
-                            {{ $produto->user->name ?? 'Usuário' }}
+                            {{ $product->user->name ?? 'Usuário' }}
                         </p>
                         <p class="text-xs text-gray-500">Anunciante</p>
                     </div>
@@ -87,32 +87,32 @@
 
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                    @if($produto->user->telefone ?? false)
+                    @if($product->user->telefone ?? false)
                     <div class="flex items-center gap-2 text-gray-400">
                         <svg class="w-4 h-4 text-cyan-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                         </svg>
-                        {{ $produto->user->telefone }}
+                        {{ $product->user->telefone }}
                     </div>
                     @endif
 
-                    @if($produto->category->nome ?? false)
+                    @if($product->category->nome ?? false)
                     <div class="flex items-center gap-2 text-gray-400">
                         <svg class="w-4 h-4 text-cyan-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                         </svg>
-                        {{ $produto->category->nome }}
+                        {{ $product->category->nome }}
                     </div>
                     @endif
                 </div>
 
-                @if($produto->descricao)
+                @if($product->descricao)
                 <div class="pt-2 border-t border-gray-800">
                     <h3 class="text-sm font-semibold text-white mb-3">Descrição</h3>
                     <p class="text-sm text-gray-400 leading-relaxed whitespace-pre-line">
-                        {{ $produto->descricao }}
+                        {{ $product->descricao }}
                     </p>
                 </div>
                 @endif

@@ -123,7 +123,6 @@
                 </div>
             </main>
 
-            {{-- ================= MODAL: CRIAR PRODUTO ================= --}}
             <div x-show="showCreate" x-cloak
                 class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
                 x-transition.opacity>
@@ -198,7 +197,6 @@
                 </div>
             </div>
 
-            {{-- ================= MODAL: VISUALIZAR PRODUTO ================= --}}
             <div x-show="showView" x-cloak
                 class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
                 x-transition.opacity>
@@ -209,7 +207,7 @@
 
                     <template x-if="selected">
                         <div class="space-y-4">
-                            <img :src="{{urlFotoProduto($product->foto)}}"
+                            <img :src="'{{urlFotoProduto($product->foto)}}'"
                                 class="w-full h-40 object-cover rounded-lg border border-gray-700">
 
                             <div>
@@ -243,7 +241,6 @@
                 </div>
             </div>
 
-            {{-- ================= MODAL: EDITAR PRODUTO ================= --}}
             <div x-show="showEdit" x-cloak
                 class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
                 x-transition.opacity>
@@ -253,12 +250,12 @@
                     <h3 class="text-white text-lg font-semibold text-center mb-5">Editar produto</h3>
 
                     <template x-if="selected">
-                        <form method="POST" :action="'/produtos/' + selected.id" enctype="multipart/form-data" class="space-y-4">
+                        <form method="POST" :action="`{{ url('/dashboard/products') }}/${selected.id}`" enctype="multipart/form-data" class="space-y-4">
                             @csrf
                             @method('PUT')
 
                             <label class="block border-2 border-dashed border-gray-700 rounded-lg h-40 flex items-center justify-center text-gray-500 text-sm cursor-pointer hover:border-cyan-400 relative overflow-hidden">
-                                <img :src="selected.foto_url ?? '{{ asset('images/product-placeholder.png') }}'"
+                                <img :src="selected.foto_url ?? '{{ urlFotoProduto($product->foto ) }}'"
                                     class="absolute inset-0 w-full h-full object-cover">
                                 <input type="file" name="foto" accept="image/*" class="hidden">
                             </label>
@@ -319,7 +316,6 @@
                 </div>
             </div>
 
-            {{-- ================= MODAL: EXCLUIR PRODUTO ================= --}}
             <div x-show="showDelete" x-cloak
                 class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
                 x-transition.opacity>
@@ -337,7 +333,7 @@
                                 Essa ação não pode ser desfeita.
                             </p>
 
-                            <form method="POST" :action="'/produtos/' + selected.id" class="flex gap-3">
+                            <form method="POST" :action="`{{ url('/dashboard/products') }}/${selected.id}`" class="flex gap-3">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
