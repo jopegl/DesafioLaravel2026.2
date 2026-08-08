@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ContactController;
+use App\Http\Controllers\EmailController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -13,8 +13,6 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
-Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
 Route::get('/product/{product}', [ProductController::class, 'show'])->name('product.page');
 
@@ -31,6 +29,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/send-email', [EmailController::class, 'index'])->name('admin.email.index');
+    Route::post('/send-email', [EmailController::class, 'send'])->name('admin.email.send');
+    Route::get('/send-email/search-user', [EmailController::class, 'searchUser'])->name('admin.email.search');
 });
 
 require __DIR__ . '/auth.php';

@@ -53,7 +53,6 @@
                     <h2 class="text-xl font-semibold text-white">Vendas realizadas</h2>
 
                     <div class="flex items-center gap-3">
-                        {{-- Botão Exportar PDF (Vermelho) --}}
                         <a href="{{ route('sales.pdf', request()->query()) }}" target="_blank"
                             class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 active:bg-red-800 rounded-lg shadow border border-red-500/50 transition-all duration-200">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -61,8 +60,6 @@
                             </svg>
                             Exportar PDF
                         </a>
-
-                        {{-- Botão Exportar Excel (Verde) --}}
                         @can('exportXlsx', App\Models\Sale::class)
                         <a href="{{ route('sales.xlsx', request()->query()) }}"
                             class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 rounded-lg shadow border border-emerald-500/50 transition-all duration-200">
