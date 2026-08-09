@@ -22,4 +22,9 @@ class ProductPolicy
     {
         return $user->id == $product->user_id || $user->is_admin;
     }
+
+    public function forceDelete(User $user): bool
+    {
+        return $user->is_admin;
+    }
 }

@@ -68,7 +68,7 @@ class Sale extends Model
 
     public function scopeWithDetails(Builder $query): Builder
     {
-        return $query->with(['product', 'buyer', 'seller', 'category']);
+        return $query->with(['product' => fn($q) => $q->withTrashed(), 'buyer', 'seller', 'category']);
     }
 
 

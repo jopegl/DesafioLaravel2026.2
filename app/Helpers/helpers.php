@@ -26,3 +26,13 @@ if (! function_exists('productPhotoUrl')) {
             : asset('images/placeholder-produto.png');
     }
 }
+
+if (! function_exists('userPhotoUrl')) {
+
+    function userPhotoUrl(?string $photo): string
+    {
+        return $photo && Storage::disk('public')->exists($photo)
+            ? asset('storage/' . $photo)
+            : asset('images/placeholder-user.png');
+    }
+}

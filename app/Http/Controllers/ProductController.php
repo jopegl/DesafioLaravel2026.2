@@ -10,13 +10,17 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
 
         $products = Product::visibleTo($user)
-            ->withDetails()
-            ->paginate(10);
+            ->search($request->search)
+            ->inCategory($request->category)
+            ->priceBetween($request->price_min, $request->price_max)
+            ->inStock($request->in_stock)
+            ->sortBy($request->sort)
+            ->paginate(8);
 
         $categories = Category::all();
 
@@ -83,14 +87,23 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Produto editado com sucesso!');
     }
 
-    public function destroy(Product $product)
+    public function delete(Product $product)
     {
 
+        $this->authorize('delete', $product);
+
+        $product->delete();
+        return redirect()->route('products.index')->with('success', 'Produto deletado com sucesso!');
+    }
+
+    public function forceDestroy(Product $product)
+    {
         $this->authorize('delete', $product);
 
         if ($product->photo) {
             Storage::disk('public')->delete($product->photo);
         }
         $product->delete();
+        return redirect()->route('products.index')->with('success', 'Produto destruído com sucesso!');
     }
 }

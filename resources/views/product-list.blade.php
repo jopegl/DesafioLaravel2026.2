@@ -28,32 +28,7 @@
             },
         }">
 
-            <header class="flex items-center justify-end gap-4 px-8 py-5 border-b border-gray-800/60">
-                <form method="GET" action="{{ route('products.index') }}" class="relative">
-                    <input type="text" name="search" value="{{ request('search') }}"
-                        placeholder="Search..."
-                        class="w-64 bg-[#1c1f2a] border border-gray-700 text-sm text-white rounded-lg pl-4 pr-9 py-2
-                              focus:outline-none focus:ring-1 focus:ring-cyan-400 placeholder-gray-500">
 
-                    <button type="submit"
-                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
-
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                            class="w-4 h-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            stroke-width="2">
-
-                            <path stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
-
-                        </svg>
-
-                    </button>
-                </form>
-            </header>
 
 
             <main class="flex-1 px-8 py-8">
@@ -81,6 +56,121 @@
                     <h2 class="text-xl font-semibold text-white">
                         Produtos cadastrados
                     </h2>
+
+                    {{-- Filtros --}}
+                    <div class="mb-8 relative" x-data="{ open: false }">
+                        <div class="flex items-center gap-3">
+                            <button @click="open = !open" type="button"
+                                class="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-gray-300 text-sm px-4 py-2 rounded-full transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                                </svg>
+                                Filtrar
+                                @if(request('category') || request('price_min') || request('price_max') || request('in_stock') || (request('sort') && request('sort') != 'recent'))
+                                <span class="w-2 h-2 rounded-full bg-primary-500"></span>
+                                @endif
+                            </button>
+                            <!-- Busca -->
+                            <div class="flex-1 flex justify-center sm:justify-start max-w-xs">
+                                <form method="GET" action="{{ route('products.index') }}" class="w-full">
+                                    <input
+                                        type="text"
+                                        name="search"
+                                        value="{{ request('search') }}"
+                                        placeholder="Buscar produtos..."
+                                        class="w-full bg-gray-800 border border-gray-700 rounded-full px-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary-500">
+
+                                    <button type="submit"
+                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            class="w-4 h-4"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            stroke-width="2">
+
+                                            <path stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
+
+                                        </svg>
+
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        {{-- Dropdown --}}
+                        <div x-show="open" @click.outside="open = false" x-transition
+                            class="absolute z-20 mt-2 w-80 bg-gray-800 border border-gray-700 rounded-xl shadow-lg p-5"
+                            style="display: none;">
+
+                            <form method="GET" action="{{ route('products.index') }}" class="space-y-4">
+
+                                {{-- Preserva busca ativa --}}
+                                @if(request('search'))
+                                <input type="hidden" name="search" value="{{ request('search') }}">
+                                @endif
+
+                                <div>
+                                    <label class="block text-xs text-gray-400 mb-2">Categoria</label>
+                                    <select name="category"
+                                        class="bg-gray-700 text-white text-sm rounded-md border-gray-600 w-full focus:border-primary-500 focus:ring-primary-500">
+                                        <option value="">Todas</option>
+                                        @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs text-gray-400 mb-2">Faixa de preço</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="number" name="price_min" value="{{ request('price_min') }}"
+                                            placeholder="Min"
+                                            class="bg-gray-700 text-white text-sm rounded-md border-gray-600 w-full focus:border-primary-500 focus:ring-primary-500">
+                                        <span class="text-gray-500">—</span>
+                                        <input type="number" name="price_max" value="{{ request('price_max') }}"
+                                            placeholder="Max"
+                                            class="bg-gray-700 text-white text-sm rounded-md border-gray-600 w-full focus:border-primary-500 focus:ring-primary-500">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs text-gray-400 mb-2">Ordenar por</label>
+                                    <select name="sort"
+                                        class="bg-gray-700 text-white text-sm rounded-md border-gray-600 w-full focus:border-primary-500 focus:ring-primary-500">
+                                        <option value="recent" {{ request('sort') == 'recent' ? 'selected' : '' }}>Mais recentes</option>
+                                        <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Menor preço</option>
+                                        <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Maior preço</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" name="in_stock" id="in_stock" value="1" {{ request('in_stock') ? 'checked' : '' }}
+                                        class="rounded border-gray-600 text-primary-500 focus:ring-primary-500">
+                                    <label for="in_stock" class="text-sm text-gray-300">Apenas em estoque</label>
+                                </div>
+
+                                <div class="flex items-center gap-2 pt-2">
+                                    <button type="submit"
+                                        class="flex-1 bg-primary-500 hover:opacity-90 text-white text-sm py-2 rounded-full transition">
+                                        Aplicar
+                                    </button>
+                                    @if(request('category') || request('price_min') || request('price_max') || request('in_stock') || request('sort'))
+                                    <a href="{{ route('home', array_filter(['search' => request('search')])) }}"
+                                        class="text-xs text-gray-400 hover:text-white transition px-2">
+                                        Limpar
+                                    </a>
+                                    @endif
+                                </div>
+                            </form>
+                        </div>
+                    </div>
 
                     @if(!auth()->user()->is_admin)
                     <button @click="showCreate = true"
@@ -155,7 +245,6 @@
 
                                     <div class="flex items-center justify-end gap-3 text-cyan-400">
 
-                                        {{-- VISUALIZAR --}}
                                         <button
                                             @click='openView(@json(array_merge($product->toArray(), ["photo_url" => productPhotoUrl($product->photo)])))'
                                             title="Visualizar"
@@ -181,7 +270,6 @@
                                         </button>
 
 
-                                        {{-- EDITAR --}}
                                         <button
                                             @click='openEdit(@json(array_merge($product->toArray(), ["photo_url" => productPhotoUrl($product->photo)])))'
                                             title="Editar"
@@ -203,7 +291,6 @@
                                         </button>
 
 
-                                        {{-- EXCLUIR --}}
                                         <button
                                             @click='openDelete(@json($product))'
                                             title="Excluir"
@@ -258,8 +345,6 @@
 
             </main>
 
-
-            {{-- ==================== CRIAR ==================== --}}
 
             <div x-show="showCreate"
                 x-cloak
@@ -424,8 +509,6 @@
             </div>
 
 
-            {{-- ==================== VISUALIZAR ==================== --}}
-
             <div x-show="showView"
                 x-cloak
                 class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
@@ -444,7 +527,6 @@
 
                         <div class="space-y-4">
 
-                            {{-- FOTO DO PRODUTO --}}
                             <img :src="selected.photo_url"
                                 x-show="selected.photo_url"
                                 :alt="selected.name"
@@ -537,8 +619,6 @@
             </div>
 
 
-            {{-- ==================== EDITAR ==================== --}}
-
             <div x-show="showEdit"
                 x-cloak
                 class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
@@ -564,7 +644,6 @@
                             @method('PUT')
 
 
-                            {{-- FOTO ATUAL --}}
                             <label
                                 class="block border-2 border-dashed border-gray-700 rounded-lg h-40 flex items-center justify-center text-gray-500 text-sm cursor-pointer hover:border-cyan-400 relative overflow-hidden">
 
@@ -708,8 +787,6 @@
 
             </div>
 
-
-            {{-- ==================== EXCLUIR ==================== --}}
 
             <div x-show="showDelete"
                 x-cloak

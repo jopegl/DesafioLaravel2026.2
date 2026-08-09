@@ -18,7 +18,7 @@ class SaleController extends Controller
             ->withDetails()
             ->period($request->input('start'), $request->input('end'))
             ->orderByDesc('purchase_date')
-            ->paginate(10);
+            ->paginate(8);
 
         return view('sales', compact('sales'));
     }

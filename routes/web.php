@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/products', [ProductController::class, 'index'])->name('products.index');
     Route::post('/dashboard/products', [ProductController::class, 'store'])->name('products.store');
     Route::put('/dashboard/products/{product}', [ProductController::class, 'update'])->name('products.update');
-    Route::delete('/dashboard/products/{product}', [ProductController::class, 'destroy'])->name('products.delete');
+    Route::delete('/dashboard/products/{product}', [ProductController::class, 'delete'])->name('products.delete');
 
     Route::get('/dashboard/sales', [SaleController::class, 'index'])->name('sales.index');
     Route::get('/dashboard/sales/pdf', [SaleController::class, 'generatePdf'])->name('sales.pdf');

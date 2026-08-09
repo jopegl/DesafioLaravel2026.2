@@ -6,10 +6,11 @@ use GuzzleHttp\Psr7\Query;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -25,6 +26,7 @@ class Product extends Model
     {
         return [
             'price' => 'decimal:2',
+            'deleted_at' => 'datetime',
         ];
     }
 
