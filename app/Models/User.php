@@ -22,13 +22,6 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
-        'zip_code',
-        'number',
-        'street',
-        'neighborhood',
-        'city',
-        'state',
-        'complement',
         'phone',
         'birth_date',
         'cpf',
@@ -64,8 +57,34 @@ class User extends Authenticatable
         ];
     }
 
+
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function createdUsers()
+    {
+        return $this->hasMany(User::class, 'created_by');
+    }
+
+    public function salesAsSeller()
+    {
+        return $this->hasMany(Sale::class, 'seller_id');
+    }
+
+    public function salesAsBuyer()
+    {
+        return $this->hasMany(Sale::class, 'buyer_id');
+    }
+
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
+
+    public function defaultAddress()
+    {
+        return $this->hasOne(Address::class)->where('is_default', true);
     }
 }
