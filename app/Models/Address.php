@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Address extends Model
 {
@@ -36,5 +37,16 @@ class Address extends Model
     public function fullAddress(): string
     {
         return "{$this->street}, {$this->number} - {$this->neighborhood}, {$this->city}/{$this->state}";
+    }
+
+    public function markAsDefault(): void
+    {
+        DB::transaction(function () {
+            $this->user->addresses()
+                ->where('id', '!=', $this->id)
+                ->update(['is_default' => false]);
+
+            $this->update(['is_default' => true]);
+        });
     }
 }

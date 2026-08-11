@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable
 {
@@ -86,5 +87,20 @@ class User extends Authenticatable
     public function defaultAddress()
     {
         return $this->hasOne(Address::class)->where('is_default', true);
+    }
+
+    public function scopeWithDetails(Builder $query)
+    {
+        return $query->with('defaultAddress');
+    }
+
+    public function scopeAdmins(Builder $query)
+    {
+        return $query->where('is_admin', true);
+    }
+
+    public function scopeNotAdmins(Builder $query)
+    {
+        return $query->where('is_admin', false);
     }
 }

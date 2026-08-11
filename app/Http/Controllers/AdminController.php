@@ -2,25 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAdminRequest;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateAdminRequest;
 use App\Http\Requests\UpdateUserRequest;
-use App\Models\Address;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class AdminController extends Controller
 {
     public function index()
     {
-        $this->authorize('accessUsersList', User::class);
-        $users = User::withDetails()->notAdmins()->paginate(10);
-        return view('users-list', compact('users'));
+        $this->authorize('accessAdminsList', User::class);
+        $admins = User::withDetails()->admins()->paginate(10);
+        return view('users-list', compact('admins'));
     }
 
-    public function store(StoreUserRequest $request)
+    public function store(StoreAdminRequest $request)
     {
+
         $data = $request->validated();
         $data['created_by'] = auth()->id();
+        $data['is_admin'] = true;
 
         if ($request->hasFile('photo')) {
             $data['photo'] = $request->file('photo')->store('users', 'public');
@@ -28,10 +31,10 @@ class UserController extends Controller
 
         User::create($data);
 
-        return redirect()->route('users.index')->with('success', 'Usuário criado.');
+        return redirect()->route('admins.index')->with('success', 'Usuário criado.');
     }
 
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateAdminRequest $request, User $user)
     {
 
         $data = $request->validated();
@@ -42,13 +45,13 @@ class UserController extends Controller
 
         $user->update($data);
 
-        return redirect()->route('users.index')->with('success', 'Usuário criado.');
+        return redirect()->route('admins.index')->with('success', 'Usuário criado.');
     }
 
     public function destroy(User $user)
     {
-        $this->authorize('delete', $user);
+        $this->authorize('manageAdmins', $user);
         $user->delete();
-        return redirect()->route('users.index')->with('success', 'Usuário criado.');
+        return redirect()->route('admins.index')->with('success', 'Usuário criado.');
     }
 }
