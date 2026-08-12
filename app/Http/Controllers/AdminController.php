@@ -3,40 +3,43 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAdminRequest;
-use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateAdminRequest;
-use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('accessAdminsList', User::class);
-        $admins = User::withDetails()->admins()->paginate(10);
-        return view('users-list', compact('admins'));
+        $admins = User::withDetails()->admins(auth()->id())->search($request->search)->paginate(10);
+        return view('admins-list', compact('admins'));
     }
 
     public function store(StoreAdminRequest $request)
     {
-
         $data = $request->validated();
         $data['created_by'] = auth()->id();
         $data['is_admin'] = true;
+
+        $addressData = $data['address'] ?? null;
 
         if ($request->hasFile('photo')) {
             $data['photo'] = $request->file('photo')->store('users', 'public');
         }
 
-        User::create($data);
+        $admin = User::create($data);
 
-        return redirect()->route('admins.index')->with('success', 'Usuário criado.');
+        if (! empty($addressData['zip_code'])) {
+            $addressData['is_default'] = true;
+            $admin->addresses()->create($addressData);
+        }
+
+        return redirect()->route('admins.index')->with('success', 'Administrador criado.');
     }
 
     public function update(UpdateAdminRequest $request, User $user)
     {
-
         $data = $request->validated();
 
         if ($request->hasFile('photo')) {
@@ -45,13 +48,13 @@ class AdminController extends Controller
 
         $user->update($data);
 
-        return redirect()->route('admins.index')->with('success', 'Usuário criado.');
+        return redirect()->route('admins.index')->with('success', 'Administrador atualizado.');
     }
 
     public function destroy(User $user)
     {
         $this->authorize('manageAdmins', $user);
         $user->delete();
-        return redirect()->route('admins.index')->with('success', 'Usuário criado.');
+        return redirect()->route('admins.index')->with('success', 'Administrador removido.');
     }
 }

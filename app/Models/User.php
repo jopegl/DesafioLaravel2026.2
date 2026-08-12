@@ -94,13 +94,22 @@ class User extends Authenticatable
         return $query->with('defaultAddress');
     }
 
-    public function scopeAdmins(Builder $query)
+    public function scopeAdmins(Builder $query, string $id)
     {
-        return $query->where('is_admin', true);
+        return $query->where('is_admin', true)->where('created_by', $id);
     }
 
     public function scopeNotAdmins(Builder $query)
     {
         return $query->where('is_admin', false);
+    }
+
+    public function scopeSearch(Builder $query, ?string $term): Builder
+    {
+        if (!$term) {
+            return $query;
+        }
+
+        return $query->where('name', 'like', "%{$term}%")->orWhere('email', 'like', "{$term}");;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAddressRequest;
 use App\Http\Requests\UpdateAddressRequest;
 use App\Models\Address;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -15,7 +16,12 @@ class AddressController extends Controller
         $data = $request->validated();
         $wantsDefault = $request->boolean('is_default');
 
-        $address = auth()->user()->addresses()->create($data);
+        $userId = $data['user_id'] ?? null;
+        unset($data['user_id']);
+
+        $targetUser = $userId ? User::findOrFail($userId) : auth()->user();
+
+        $address = $targetUser->addresses()->create($data);
 
         if ($wantsDefault) {
             $address->markAsDefault();

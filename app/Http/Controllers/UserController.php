@@ -10,10 +10,10 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('accessUsersList', User::class);
-        $users = User::withDetails()->notAdmins()->paginate(10);
+        $users = User::withDetails()->notAdmins()->search($request->search)->latest()->paginate(10);
         return view('users-list', compact('users'));
     }
 
@@ -22,14 +22,23 @@ class UserController extends Controller
         $data = $request->validated();
         $data['created_by'] = auth()->id();
 
+        $addressData = $data['address'] ?? null;
+
         if ($request->hasFile('photo')) {
             $data['photo'] = $request->file('photo')->store('users', 'public');
         }
 
-        User::create($data);
+        $user = User::create($data);
+
+
+        if (! empty($addressData['zip_code'])) {
+            $addressData['is_default'] = true;
+            $user->addresses()->create($addressData);
+        }
 
         return redirect()->route('users.index')->with('success', 'Usuário criado.');
     }
+
 
     public function update(UpdateUserRequest $request, User $user)
     {
