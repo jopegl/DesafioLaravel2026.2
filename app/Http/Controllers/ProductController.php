@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use LaravelDaily\LaravelCharts\Classes\LaravelChart;
 
 class ProductController extends Controller
 {
@@ -23,8 +24,9 @@ class ProductController extends Controller
             ->paginate(8);
 
         $categories = Category::all();
+        $graphic = $this->generateGraphic();
 
-        return view('product-list', compact('products', 'categories'));
+        return view('product-list', compact('products', 'categories', 'graphic'));
     }
 
     public function store(Request $request)
@@ -105,5 +107,24 @@ class ProductController extends Controller
         }
         $product->delete();
         return redirect()->route('products.index')->with('success', 'Produto destruído com sucesso!');
+    }
+
+    private function generateGraphic()
+    {
+        $user = Auth::user();
+        $this->authorize('generateGraphic', Product::class);
+
+        $chart_options = [
+            'chart_title'       => 'Produtos Cadastros por Mes',
+            'model'              => Product::class,
+            'chart_type'         => 'bar',
+            'report_type'        => 'group_by_date',
+            'group_by_field'     => 'created_at',
+            'group_by_period'    => 'month',
+            'chart_clor'         => '0,122,255',
+        ];
+
+        $chart = new LaravelChart($chart_options);
+        return $chart;
     }
 }

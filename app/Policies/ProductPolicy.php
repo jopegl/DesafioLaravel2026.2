@@ -27,4 +27,9 @@ class ProductPolicy
     {
         return $user->is_admin;
     }
+
+    public function generateGraphic(User $user): bool
+    {
+        return $user->is_admin;
+    }
 }

@@ -89,6 +89,24 @@ class User extends Authenticatable
         return $this->hasOne(Address::class)->where('is_default', true);
     }
 
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
+    public function cartTotal(): float
+    {
+        return $this->cartItems()
+            ->with('product')
+            ->get()
+            ->sum(fn($item) => $item->quantity * $item->product->price);
+    }
+
+    public function cartItemsCount(): int
+    {
+        return $this->cartItems()->count();
+    }
+
     public function scopeWithDetails(Builder $query)
     {
         return $query->with('defaultAddress');
