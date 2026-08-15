@@ -14,7 +14,7 @@ class UserController extends Controller
     {
         $this->authorize('accessUsersList', User::class);
         $users = User::withDetails()->notAdmins()->search($request->search)->latest()->paginate(10);
-        return view('users-list', compact('users'));
+        return view('admin.users.index', compact('users'));
     }
 
     public function store(StoreUserRequest $request)

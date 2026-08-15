@@ -24,6 +24,6 @@ class IndexController extends Controller
 
         $categories = Category::all();
 
-        return view('home', compact('products', 'categories'));
+        return view('catalog.home', compact('products', 'categories'));
     }
 }

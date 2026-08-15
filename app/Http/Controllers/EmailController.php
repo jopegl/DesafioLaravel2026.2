@@ -11,7 +11,7 @@ class EmailController extends Controller
 {
     public function index()
     {
-        return view('send-email');
+        return view('admin.email.index');
     }
 
     public function searchUser(Request $request)

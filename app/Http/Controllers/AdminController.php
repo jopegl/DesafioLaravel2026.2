@@ -13,7 +13,7 @@ class AdminController extends Controller
     {
         $this->authorize('accessAdminsList', User::class);
         $admins = User::withDetails()->admins(auth()->id())->search($request->search)->paginate(10);
-        return view('admins-list', compact('admins'));
+        return view('admin.admins.index', compact('admins'));
     }
 
     public function store(StoreAdminRequest $request)

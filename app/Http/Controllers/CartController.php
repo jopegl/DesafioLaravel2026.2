@@ -19,7 +19,7 @@ class CartController extends Controller
         $nProducts = $user->cartItemsCount();
         $total = $user->cartTotal();
 
-        return view('cart', compact('cartItems', 'nProducts', 'total'));
+        return view('cart.index', compact('cartItems', 'nProducts', 'total'));
     }
 
     public function store(StoreCartItemRequest $request)

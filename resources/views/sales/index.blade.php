@@ -4,17 +4,7 @@
 
         @include('layouts.sidebar')
 
-        <div class="flex-1 flex flex-col"
-            x-data="{
-                showCreate: false,
-                showView: false,
-                showEdit: false,
-                showDelete: false,
-                selected: null,
-                openView(p)   { this.selected = p; this.showView = true; },
-                openEdit(p)   { this.selected = p; this.showEdit = true; },
-                openDelete(p) { this.selected = p; this.showDelete = true; },
-             }">
+        <div class="flex-1 flex flex-col">
 
 
             <header class="flex flex-col gap-4 px-8 py-5 border-b border-gray-800/60">
@@ -54,21 +44,7 @@
 
             <main class="flex-1 px-8 py-8">
 
-                @if (session('success'))
-                <div class="mb-4 rounded-lg bg-emerald-500/10 border border-emerald-500/40 text-emerald-300 text-sm px-4 py-3">
-                    {{ session('success') }}
-                </div>
-                @endif
-
-                @if ($errors->any())
-                <div class="mb-4 rounded-lg bg-red-500/10 border border-red-500/40 text-red-300 text-sm px-4 py-3">
-                    <ul class="list-disc list-inside">
-                        @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-                @endif
+                <x-alerts />
 
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-xl font-semibold text-white">Vendas realizadas</h2>

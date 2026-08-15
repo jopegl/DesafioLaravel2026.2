@@ -21,7 +21,7 @@ class SaleController extends Controller
             ->orderByDesc('purchase_date')
             ->paginate(8);
 
-        return view('sales', compact('sales'));
+        return view('sales.index', compact('sales'));
     }
 
     public function indexPurchaseHistory(Request $request)

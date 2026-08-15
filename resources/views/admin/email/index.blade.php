@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="min-h-screen bg-zinc-950">
-        <div class="max-w-3xl mx-auto pt-10 px-4" x-data="emailForm()">
+        <div class="max-w-3xl mx-auto pt-10 px-4" x-data="emailSearch('{{ route('admin.email.search') }}')">
 
             <div class="bg-zinc-900 rounded-xl p-8 text-white">
 
@@ -98,36 +98,4 @@
 
         </div>
     </div>
-
-    <script>
-        function emailForm() {
-            return {
-                query: '',
-                results: [],
-                showResults: false,
-                selectedUser: {
-                    id: null,
-                    name: '',
-                    email: ''
-                },
-
-                async search() {
-                    if (this.query.length < 2) {
-                        this.results = [];
-                        return;
-                    }
-
-                    const response = await fetch(`{{ route('admin.email.search') }}?q=${encodeURIComponent(this.query)}`);
-                    this.results = await response.json();
-                    this.showResults = true;
-                },
-
-                selectUser(user) {
-                    this.selectedUser = user;
-                    this.query = user.email;
-                    this.showResults = false;
-                }
-            }
-        }
-    </script>
 </x-app-layout>

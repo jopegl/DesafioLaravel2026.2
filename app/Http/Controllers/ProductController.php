@@ -26,7 +26,7 @@ class ProductController extends Controller
         $categories = Category::all();
         $graphic = $this->generateGraphic();
 
-        return view('product-list', compact('products', 'categories', 'graphic'));
+        return view('products.index', compact('products', 'categories', 'graphic'));
     }
 
     public function store(Request $request)
@@ -57,7 +57,7 @@ class ProductController extends Controller
     public function show(Product $product) //pagina de produto 
     {
         if ($product != null)
-            return view('product-page', compact('product'));
+            return view('catalog.product', compact('product'));
         return null;
     }
 
