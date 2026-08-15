@@ -252,9 +252,6 @@
                             </div>
                         </div>
 
-                        {{-- Endereço: seção opcional. Se o CEP for preenchido, os campos
-                             viajam junto no mesmo POST sob address[...] e o controller
-                             cria o endereço logo depois do usuário. --}}
                         <div class="border-t border-gray-800 pt-4"
                             x-data="{
                                 showAddress: false,
@@ -265,7 +262,7 @@
                                     if (this.addr.zip_code.length !== 8) return;
                                     this.cepLoading = true;
                                     this.cepError = '';
-                                    fetch(`/cep/${this.addr.zip_code}`)
+                                    fetch(`{{ route('cep.search', ['zipCode' => '__CEP__']) }}`.replace('__CEP__', this.addr.zip_code))
                                         .then(r => r.json())
                                         .then(d => {
                                             if (d.error) { this.cepError = d.error; return; }
@@ -291,10 +288,12 @@
                                     <div>
                                         <label class="block text-gray-400 text-xs mb-1">CEP</label>
                                         <div class="flex items-center gap-2">
-                                            <input type="text" name="address[zip_code]" maxlength="8"
+                                            <input type="text" name="zip_code" maxlength="8" required
                                                 x-model="addr.zip_code"
-                                                @input="addr.zip_code = addr.zip_code.replace(/\D/g, '')"
-                                                @blur="buscarCep()"
+                                                @input="
+                                                    addr.zip_code = addr.zip_code.replace(/\D/g, '');
+                                                    if (addr.zip_code.length === 8) buscarCep();
+                                                "
                                                 placeholder="Somente números"
                                                 class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400">
                                             <span x-show="cepLoading" class="text-xs text-gray-400 whitespace-nowrap">buscando...</span>
@@ -536,7 +535,7 @@
                                         if (this.addr.zip_code.length !== 8) return;
                                         this.cepLoading = true;
                                         this.cepError = '';
-                                        fetch(`/cep/${this.addr.zip_code}`)
+                                        fetch(`{{ route('cep.search', ['zipCode' => '__CEP__']) }}`.replace('__CEP__', this.addr.zip_code))
                                             .then(r => r.json())
                                             .then(d => {
                                                 if (d.error) { this.cepError = d.error; return; }
@@ -566,11 +565,13 @@
                                     <div>
                                         <label class="block text-gray-400 text-xs mb-1">CEP</label>
                                         <div class="flex items-center gap-2">
-                                            <input type="text" name="zip_code" maxlength="8"
+                                            <input type="text" name="zip_code" maxlength="8" required
                                                 x-model="addr.zip_code"
-                                                @input="addr.zip_code = addr.zip_code.replace(/\D/g, '')"
-                                                @blur="buscarCep()"
-                                                required
+                                                @input="
+                                                    addr.zip_code = addr.zip_code.replace(/\D/g, '');
+                                                    if (addr.zip_code.length === 8) buscarCep();
+                                                "
+                                                placeholder="Somente números"
                                                 class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400">
                                             <span x-show="cepLoading" class="text-xs text-gray-400 whitespace-nowrap">buscando...</span>
                                         </div>

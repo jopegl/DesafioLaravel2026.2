@@ -1,6 +1,38 @@
 <x-app-layout>
     <div class="min-h-screen bg-black text-white">
 
+        @if (session('success'))
+        <div
+            x-data="{ show: true }"
+            x-init="setTimeout(() => show = false, 3000)"
+            x-show="show"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-2"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="fixed top-6 right-6 z-50 bg-green-600/90 text-white px-5 py-3 rounded-xl shadow-lg text-sm font-medium">
+            {{ session('success') }}
+        </div>
+        @endif
+
+        @if (session('error'))
+        <div
+            x-data="{ show: true }"
+            x-init="setTimeout(() => show = false, 3000)"
+            x-show="show"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-2"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="fixed top-6 right-6 z-50 bg-red-600/90 text-white px-5 py-3 rounded-xl shadow-lg text-sm font-medium">
+            {{ session('error') }}
+        </div>
+        @endif
+
         <div class="max-w-6xl mx-auto px-6 pt-12 grid grid-cols-1 md:grid-cols-2 gap-12">
 
             <div class="flex items-center justify-center">
@@ -37,9 +69,10 @@
                 @endif
 
                 @auth
-                {{-- Rota do carrinho ainda não existe: action="#" como placeholder --}}
-                <form action="#" method="POST" class="mb-6">
+                <form action="{{ route('cart-items.store') }}" method="POST" class="mb-6">
                     @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+
                     <div x-data="{ qty: 1 }" class="flex items-center gap-4 mb-6">
                         <div class="flex items-center border border-gray-700 rounded-lg overflow-hidden">
                             <button type="button" @click="qty = qty > 1 ? qty - 1 : 1"

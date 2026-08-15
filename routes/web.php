@@ -4,6 +4,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\CepController;
 use App\Http\Controllers\Api\MercadoPagoController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ProductController;
@@ -20,8 +21,8 @@ Route::get('/dashboard', function () {
 
 
 Route::get('/product/{product}', [ProductController::class, 'show'])->name('product.page');
-Route::get('/cep/{zipCode}', [CepController::class, 'search'])->name('cep.search');
-Route::post('/webhook', [MercadoPagoController::class, 'webhook'])->name('webhook');
+Route::get('/api/cep/{zipCode}', [CepController::class, 'search'])->name('cep.search');
+
 
 
 Route::middleware('auth')->group(function () {
@@ -42,13 +43,21 @@ Route::middleware('auth')->group(function () {
     Route::put('/addresses/{address}', [AddressController::class, 'update'])->name('addresses.update');
     Route::delete('/addresses/{address}', [AddressController::class, 'destroy'])->name('addresses.destroy');
 
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart-items', [CartController::class, 'store'])->name('cart-items.store');
+    Route::put('/cart-items/{cartItem}', [CartController::class, 'update'])->name('cart-items.update');
+    Route::delete('/cart-items/{cartItem}', [CartController::class, 'destroy'])->name('cart-items.destroy');
+
     Route::prefix('mercadopago')->name('mercadopago.')->group(function () {
         Route::post('/checkout', [MercadoPagoController::class, 'process'])->name('process');
-        Route::get('/sucesso', [MercadoPagoController::class, 'success'])->name('success');
-        Route::get('/pendente', [MercadoPagoController::class, 'pending'])->name('pending');
-        Route::get('/falha', [MercadoPagoController::class, 'failure'])->name('failure');
+        Route::get('/success', [MercadoPagoController::class, 'success'])->name('success');
+        Route::get('/pendent', [MercadoPagoController::class, 'pending'])->name('pending');
+        Route::get('/failure', [MercadoPagoController::class, 'failure'])->name('failure');
     });
 });
+
+
+Route::post('/mercadopago/webhook', [MercadoPagoController::class, 'webhook'])->name('mercadopago.webhook');
 
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/send-email', [EmailController::class, 'index'])->name('admin.email.index');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCartItemRequest;
 use App\Http\Requests\UpdateCartItemRequest;
 use App\Models\CartItem;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,9 +25,17 @@ class CartController extends Controller
     public function store(StoreCartItemRequest $request)
     {
         $data = $request->validated();
+
         $cartItem = auth()->user()->cartItems()
             ->where('product_id', $data['product_id'])
             ->first();
+
+        $product = Product::findOrFail($data['product_id']);
+        $currentQty = $cartItem?->quantity ?? 0;
+
+        if ($currentQty + $data['quantity'] > $product->quantity) {
+            return back()->with('error', 'Quantidade solicitada indisponível em estoque.');
+        }
 
         if ($cartItem) {
             $cartItem->increment('quantity', $data['quantity']);
@@ -39,9 +48,16 @@ class CartController extends Controller
 
     public function update(UpdateCartItemRequest $request, CartItem $cartItem)
     {
-        $cartItem->update($request->validated());
 
-        return back()->with('success', 'Quantidade atualizada!');
+        $data = $request->validated();
+
+        if ($data['quantity'] > $cartItem->product->quantity) {
+            return back()->with('error', 'Quantidade solicitada indisponível em estoque.');
+        }
+
+        $cartItem->update($data);
+
+        return back();
     }
 
 
@@ -49,6 +65,6 @@ class CartController extends Controller
     {
         $this->authorize('delete', $cartItem);
         $cartItem->delete();
-        return redirect()->route('users.index')->with('success', 'Usuário criado.');
+        return redirect()->route('cart.index')->with('success', 'Item removido do carrinho.');
     }
 }

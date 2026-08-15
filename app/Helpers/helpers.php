@@ -36,3 +36,21 @@ if (! function_exists('userPhotoUrl')) {
             : asset('images/placeholder-user.png');
     }
 }
+
+if (! function_exists('formatPhone')) {
+    function formatPhone(?string $phone): string
+    {
+        if (empty($phone)) {
+            return '';
+        }
+
+        $digits = preg_replace('/\D/', '', $phone);
+
+        return match (strlen($digits)) {
+            11 => preg_replace('/(\d{2})(\d{5})(\d{4})/', '($1) $2-$3', $digits),
+            10 => preg_replace('/(\d{2})(\d{4})(\d{4})/', '($1) $2-$3', $digits),
+            13 => preg_replace('/(\d{2})(\d{2})(\d{5})(\d{4})/', '+$1 ($2) $3-$4', $digits),
+            default => $phone
+        };
+    }
+}

@@ -11,7 +11,7 @@ class UpdateCartItemRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $cartItem = $this->route('cart_item');
+        $cartItem = $this->route('cartItem');
 
         return $cartItem && $cartItem->user_id === $this->user()->id;
     }

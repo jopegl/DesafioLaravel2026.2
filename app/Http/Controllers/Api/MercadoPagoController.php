@@ -7,12 +7,20 @@ use App\Models\Sale;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
-
-use function PHPUnit\Framework\isEmpty;
+use Illuminate\Support\Facades\Log;
+use MercadoPago\Client\Common\RequestOptions;
+use MercadoPago\Client\Payment\PaymentClient;
+use MercadoPago\Client\Preference\PreferenceClient;
+use MercadoPago\Exceptions\MPApiException;
+use MercadoPago\MercadoPagoConfig;
 
 class MercadoPagoController extends Controller
 {
+    public function __construct()
+    {
+        MercadoPagoConfig::setAccessToken(config('services.mercadopago.access_token'));
+    }
+
     public function process()
     {
         $user = Auth::user();
@@ -32,26 +40,30 @@ class MercadoPagoController extends Controller
             ];
         })->toArray();
 
-        $response = Http::withToken(config('services.mercadopago.access_token'))
-            ->post('https://api.mercadopago.com/checkout/preferences', [
+        $client = new PreferenceClient();
+
+        try {
+            $preference = $client->create([
                 'items' => $items,
                 'back_urls' => [
                     'success' => route('mercadopago.success'),
                     'pending' => route('mercadopago.pending'),
                     'failure' => route('mercadopago.failure'),
                 ],
-                'auto_return' => 'approved',
-                'notification_url' => route('mercadopago.webhook'),
+                //'auto_return' => 'approved',
+                //'notification_url' => route('mercadopago.webhook'),
                 'external_reference' => (string) $user->id,
             ]);
+        } catch (MPApiException $e) {
+            Log::stack(['single', 'stderr'])->error('Erro ao criar preferência MercadoPago', [
+                'status' => $e->getApiResponse()->getStatusCode(),
+                'body' => $e->getApiResponse()->getContent(),
+            ]);
 
-        if ($response->failed()) {
             return back()->with('error', 'Não foi possível iniciar o pagamento.');
         }
 
-        $preference = $response->json();
-
-        return redirect($preference['sandbox_init_point']);
+        return redirect($preference->sandbox_init_point);
     }
 
     public function success()
@@ -85,20 +97,25 @@ class MercadoPagoController extends Controller
             return response()->json(['status' => 'already processed'], 200);
         }
 
-        $response = Http::withToken(config('services.mercadopago.access_token'))
-            ->get("https://api.mercadopago.com/v1/payments/{$paymentId}");
+        $client = new PaymentClient();
 
-        if ($response->failed()) {
+        try {
+            $payment = $client->get($paymentId);
+        } catch (MPApiException $e) {
+            Log::stack(['single', 'stderr'])->error('Erro ao buscar pagamento MercadoPago', [
+                'payment_id' => $paymentId,
+                'status' => $e->getApiResponse()->getStatusCode(),
+                'body' => $e->getApiResponse()->getContent(),
+            ]);
+
             return response()->json(['error' => 'failed to fetch payment'], 500);
         }
 
-        $payment = $response->json();
-
-        if ($payment['status'] !== 'approved') {
+        if ($payment->status !== 'approved') {
             return response()->json(['status' => 'not approved yet'], 200);
         }
 
-        $buyerId = $payment['external_reference'];
+        $buyerId = $payment->external_reference;
         $buyer = User::find($buyerId);
 
         if (!$buyer) {
