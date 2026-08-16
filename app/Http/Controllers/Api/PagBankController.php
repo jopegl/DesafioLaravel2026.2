@@ -46,7 +46,6 @@ class PagBankController extends Controller
                 'reference_id' => (string) $item->product_id,
                 'name' => $item->product->name,
                 'quantity' => $item->quantity,
-                // PagBank trabalha em centavos, diferente do Mercado Pago
                 'unit_amount' => (int) round($item->product->price * 100),
             ];
         })->toArray();
@@ -57,10 +56,10 @@ class PagBankController extends Controller
             'reference_id' => $referenceId,
             'items' => $items,
             'customer_modifiable' => true,
-            'redirect_url' => route('pagbank.callback', ['reference_id' => $referenceId]),
-            'notification_urls' => [
+            //'redirect_url' => route('pagbank.callback', ['reference_id' => $referenceId]),
+            /*  'notification_urls' => [
                 route('pagbank.webhook'),
-            ],
+            ], */
         ]);
 
         if ($response->failed()) {

@@ -4,6 +4,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\CepController;
 use App\Http\Controllers\Api\MercadoPagoController;
+use App\Http\Controllers\Api\PagBankController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\IndexController;
@@ -54,10 +55,18 @@ Route::middleware('auth')->group(function () {
         Route::get('/pendent', [MercadoPagoController::class, 'pending'])->name('pending');
         Route::get('/failure', [MercadoPagoController::class, 'failure'])->name('failure');
     });
+
+    Route::prefix('pagbank')->name('pagbank.')->group(function () {
+        Route::post('/checkout', [PagBankController::class, 'process'])
+            ->name('process');
+        Route::get('/callback', [PagBankController::class, 'callback'])
+            ->name('callback');
+    });
 });
 
 
 Route::post('/mercadopago/webhook', [MercadoPagoController::class, 'webhook'])->name('mercadopago.webhook');
+Route::post('/pagbank/webhook', [PagBankController::class, 'webhook'])->name('pagbank.webhook');
 
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/send-email', [EmailController::class, 'index'])->name('admin.email.index');

@@ -85,14 +85,29 @@
                     <span>R$ {{ number_format($total, 2, ',', '.') }}</span>
                 </div>
 
-                <form action="{{ route('mercadopago.process') }}" method="POST" class="mt-6">
-                    @csrf
-                    <button type="submit"
-                        @if($cartItems->isEmpty()) disabled @endif
-                        class="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-neutral-700 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition">
-                        Finalizar Compra
-                    </button>
-                </form>
+                <div class="space-y-3 mt-6">
+
+                    <form action="{{ route('mercadopago.process') }}" method="POST">
+                        @csrf
+
+                        <button type="submit"
+                            @if($cartItems->isEmpty()) disabled @endif
+                            class="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-neutral-700 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition">
+                            Pagar com Mercado Pago
+                        </button>
+                    </form>
+
+                    <form action="{{ route('pagbank.process') }}" method="POST">
+                        @csrf
+
+                        <button type="submit"
+                            @if($cartItems->isEmpty()) disabled @endif
+                            class="w-full bg-green-500 hover:bg-green-600 disabled:bg-neutral-700 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition">
+                            Pagar com PagBank
+                        </button>
+                    </form>
+
+                </div>
             </div>
         </div>
     </div>

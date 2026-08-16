@@ -23,7 +23,7 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <p class="text-gray-400 text-xs mb-1">Telefone</p>
-                    <p class="text-white text-sm" x-text="selected.phone || '—'"></p>
+                    <p class="text-white text-sm" x-text="selected.formatted_phone || '—'"></p>
                 </div>
                 <div>
                     <p class="text-gray-400 text-xs mb-1">Nascimento</p>

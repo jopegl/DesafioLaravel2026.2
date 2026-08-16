@@ -39,4 +39,9 @@ return [
         'access_token' => env('MERCADOPAGO_ACCESS_TOKEN'),
     ],
 
+    'pagbank' => [
+        'token' => env('PAGBANK_TOKEN'),
+        'sandbox' => env('PAGBANK_SANDBOX', true),
+    ],
+
 ];

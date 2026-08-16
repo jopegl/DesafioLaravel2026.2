@@ -67,7 +67,7 @@
 
                                 <td class="px-5 py-4 text-gray-400">{{ $user->email }}</td>
 
-                                <td class="px-5 py-4 text-gray-400">{{ $user->phone ?? '—' }}</td>
+                                <td class="px-5 py-4 text-gray-400">{{ formatPhone($user->phone) }}</td>
 
                                 <td class="px-5 py-4 text-gray-400">
                                     @if($user->defaultAddress)
@@ -83,8 +83,10 @@
                                     <div class="flex items-center justify-end gap-3 text-cyan-400">
 
                                         <button
-                                            @click='openView(@json(array_merge($user->toArray(), ["photo_url" => userPhotoUrl($user->photo)])))'
-                                            title="Visualizar" class="hover:text-cyan-300">
+                                            @click='openView(@json(array_merge($user->toArray(), [
+                                                    "photo_url" => userPhotoUrl($user->photo),
+                                                    "formatted_phone" => formatPhone($user->phone)
+                                                ])))'>
                                             <x-icons.eye />
                                         </button>
 

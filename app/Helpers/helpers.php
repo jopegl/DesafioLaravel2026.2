@@ -41,7 +41,7 @@ if (! function_exists('formatPhone')) {
     function formatPhone(?string $phone): string
     {
         if (empty($phone)) {
-            return '';
+            return '-';
         }
 
         $digits = preg_replace('/\D/', '', $phone);
