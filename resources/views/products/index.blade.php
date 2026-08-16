@@ -1,27 +1,27 @@
 <x-app-layout>
 
-    <div class="flex min-h-screen bg-[#15171e]">
+    <div class="flex flex-col lg:flex-row min-h-screen bg-[#15171e]">
 
         @include('layouts.sidebar')
 
         <div class="flex-1 flex flex-col" x-data="crudModals">
 
-            <main class="flex-1 px-8 py-8">
+            <main class="flex-1 px-4 sm:px-8 py-8">
 
                 <x-alerts />
 
-                <div class="flex items-center justify-between mb-6">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
 
                     <h2 class="text-xl font-semibold text-white">
                         Produtos cadastrados
                     </h2>
 
                     {{-- Filtros --}}
-                    <div class="mb-8 relative">
-                        <div class="flex items-center gap-3">
+                    <div class="relative">
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-3">
                             <x-product-filter :action="route('products.index')" :categories="$categories" />
 
-                            <div class="flex-1 flex justify-center sm:justify-start max-w-xs">
+                            <div class="relative flex-1 sm:max-w-xs">
                                 <form method="GET" action="{{ route('products.index') }}" class="w-full">
                                     <input
                                         type="text"
@@ -43,16 +43,16 @@
 
                     @if(!auth()->user()->is_admin)
                     <button @click="showCreate = true"
-                        class="bg-cyan-500 hover:bg-cyan-400 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition">
+                        class="w-full sm:w-auto bg-cyan-500 hover:bg-cyan-400 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition">
                         Cadastrar produto
                     </button>
                     @endif
 
                 </div>
 
-                <div class="bg-[#1c1f2a] rounded-xl overflow-hidden border border-gray-800/60">
+                <div class="bg-[#1c1f2a] rounded-xl border border-gray-800/60 overflow-x-auto">
 
-                    <table class="w-full text-sm text-left">
+                    <table class="w-full min-w-[760px] text-sm text-left">
 
                         <thead>
                             <tr class="text-gray-400 border-b border-gray-800/60">
@@ -71,9 +71,9 @@
                             @forelse ($products as $product)
                             <tr class="border-b border-gray-800/40 last:border-0 hover:bg-white/[0.02]">
 
-                                <td class="px-5 py-4">
+                                <td class="px-5 py-4 w-20">
                                     <img src="{{ productPhotoUrl($product->photo) }}" alt="{{ $product->name }}"
-                                        class="w-10 h-10 rounded object-cover bg-gray-700">
+                                        class="w-10 h-10 shrink-0 min-w-[2.5rem] min-h-[2.5rem] rounded object-cover bg-gray-700 block">
                                 </td>
 
                                 <td class="px-5 py-4">{{ $product->name }}</td>

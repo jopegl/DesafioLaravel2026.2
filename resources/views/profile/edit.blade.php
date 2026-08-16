@@ -1,12 +1,12 @@
 <x-app-layout>
 
-    <div class="flex min-h-screen bg-[#15171e]">
+    <div class="flex flex-col lg:flex-row min-h-screen bg-[#15171e]">
 
         @include('layouts.sidebar')
 
         <div class="flex-1 flex flex-col" x-data="addressModals">
 
-            <main class="flex-1 px-8 py-8 max-w-3xl">
+            <main class="flex-1 px-4 sm:px-8 py-8 w-full max-w-3xl">
 
                 <h2 class="text-xl font-semibold text-white mb-6">
                     Meu perfil
@@ -75,7 +75,7 @@
                                 class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400">
                         </div>
 
-                        <div class="flex gap-4">
+                        <div class="flex flex-col sm:flex-row gap-4">
                             <div class="flex-1">
                                 <label class="block text-gray-400 text-xs mb-1">Telefone</label>
                                 <input type="text" name="phone" value="{{ old('phone', $user->phone) }}"
@@ -126,7 +126,7 @@
                             @enderror
                         </div>
 
-                        <div class="flex gap-4">
+                        <div class="flex flex-col sm:flex-row gap-4">
                             <div class="flex-1">
                                 <label class="block text-gray-400 text-xs mb-1">Nova senha</label>
                                 <input type="password" name="password"
@@ -167,7 +167,7 @@
 
                         @forelse ($addresses as $address)
 
-                        <div class="flex items-start justify-between bg-[#15171e] border border-gray-800 rounded-lg px-4 py-3">
+                        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 bg-[#15171e] border border-gray-800 rounded-lg px-4 py-3">
 
                             <div>
                                 <div class="flex items-center gap-2 mb-1">
@@ -188,7 +188,7 @@
                                 @endif
                             </div>
 
-                            <div class="flex items-center gap-3 text-cyan-400 shrink-0 ml-4">
+                            <div class="flex items-center gap-3 text-cyan-400 shrink-0">
 
                                 <button @click='openEditAddress(@json($address))' title="Editar" class="hover:text-cyan-300">
                                     <x-icons.pencil class="w-4 h-4" />
