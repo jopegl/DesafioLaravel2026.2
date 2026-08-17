@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -105,6 +107,16 @@ class User extends Authenticatable
     public function cartItemsCount(): int
     {
         return $this->cartItems()->count();
+    }
+
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class);
+    }
+
+    public function repliedContacts()
+    {
+        return $this->hasMany(Contact::class, 'replied_by');
     }
 
     public function scopeWithDetails(Builder $query)

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\Contact;
+use App\Mail\AdminMessage;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -41,7 +41,7 @@ class EmailController extends Controller
         $user = User::findOrFail($validated['user_id']);
 
         Mail::to($user->email, $user->name)->send(
-            new Contact([
+            new AdminMessage([
                 'fromName' => $user->name,
                 'fromSubject' => $validated['subject'],
                 'fromEmail' => $user->email,
