@@ -19,7 +19,7 @@ class StoreUserRequest extends FormRequest
             'name'       => ['required', 'string', 'max:255'],
             'email'      => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'cpf'        => ['required', 'string', 'size:11', 'unique:users,cpf'],
-            'phone'      => ['nullable', 'string', 'max:20'],
+            'phone'      => ['nullable', 'string', 'max:12'],
             'birth_date' => ['nullable', 'date', 'before:today'],
             'photo'      => ['nullable', 'image', 'max:2048'], // 2MB
             'password'   => ['required', 'confirmed', Password::defaults()],

@@ -21,7 +21,7 @@ class UpdateUserRequest extends FormRequest
             'name'       => ['required', 'string', 'max:255'],
             'email'      => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($userId)],
             'cpf'        => ['required', 'string', 'size:11', Rule::unique('users', 'cpf')->ignore($userId)],
-            'phone'      => ['nullable', 'string', 'max:20'],
+            'phone'      => ['nullable', 'string', 'max:12'],
             'birth_date' => ['nullable', 'date', 'before:today'],
             'photo'      => ['nullable', 'image', 'max:2048'],
             'password'   => ['nullable', 'confirmed', Password::defaults()],
