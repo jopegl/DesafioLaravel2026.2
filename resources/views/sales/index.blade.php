@@ -109,6 +109,26 @@
                 <div class="mt-6">
                     {{ $sales->appends(request()->query())->links() }}
                 </div>
+
+                <div class="mt-8 bg-[#1c1f2a] rounded-xl border border-gray-800/60 p-6">
+
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-white">
+                            Vendas realizadas
+                        </h3>
+
+                        <p class="text-sm text-gray-500 mt-1">
+                            Quantidade de vendas realizadas por mês
+                        </p>
+                    </div>
+
+                    <div class="w-full overflow-x-auto">
+                        {!! $graphic->renderHtml() !!}
+                        {!! $graphic->renderChartJsLibrary() !!}
+                        {!! $graphic->renderJs() !!}
+                    </div>
+
+                </div>
             </main>
 
         </div>

@@ -21,7 +21,9 @@ class SaleController extends Controller
             ->orderByDesc('purchase_date')
             ->paginate(8);
 
-        return view('sales.index', compact('sales'));
+        $graphic = $this->generateGraphic();
+
+        return view('sales.index', compact('sales', 'graphic'));
     }
 
     public function indexPurchaseHistory(Request $request)
@@ -64,32 +66,34 @@ class SaleController extends Controller
             'relatorio-vendas.xlsx'
         );
     }
-
     private function generateGraphic()
     {
         $user = Auth::user();
-        $this->authorize('generateGraphic', Sale::class);
 
-        $chart_options = [
-            'chart_title'       => 'Vendas Realizadas por Mês',
-            'model'              => Sale::class,
-            'chart_type'         => 'line',
-            'report_type'        => 'group_by_date',
-            'group_by_field'     => 'purchase_date',
-            'group_by_period'    => 'month',
-            'filter_field'       => 'purchase_date',
-            'filter_days'        => 365,
-            'continuous_time' => true,
-            'conditions' => [
-                [
-                    'name' => 'Vendas',
-                    'condition' => "seller_id = " . $user->id,
-                    'color' => 'blue',
-                ],
+        $conditions = [
+            [
+                'name' => 'Vendas',
+                'condition' => $user->is_admin
+                    ? '1 = 1'
+                    : 'seller_id = ' . $user->id,
+                'color' => 'blue',
+                'fill' => false,
             ],
         ];
 
-        $chart = new LaravelChart($chart_options);
-        return $chart;
+        $chart_options = [
+            'chart_title' => 'Vendas Realizadas por Mês',
+            'model' => Sale::class,
+            'chart_type' => 'line',
+            'report_type' => 'group_by_date',
+            'group_by_field' => 'purchase_date',
+            'group_by_period' => 'month',
+            'filter_field' => 'purchase_date',
+            'filter_days' => 365,
+            'continuous_time' => true,
+            'conditions' => $conditions,
+        ];
+
+        return new LaravelChart($chart_options);
     }
 }

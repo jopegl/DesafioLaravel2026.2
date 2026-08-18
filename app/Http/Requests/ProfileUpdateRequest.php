@@ -26,7 +26,7 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
-            'cpf'        => ['required', 'string', 'size:11', Rule::unique(User::class)->ignore($this->user()->id)],
+            'cpf'        => ['nullable', 'string', 'size:11', Rule::unique(User::class)->ignore($this->user()->id)],
             'phone'      => ['nullable', 'string', 'max:20'],
             'birth_date' => ['nullable', 'date', 'before:today'],
             'photo'      => ['nullable', 'image', 'max:2048'], // 2mb

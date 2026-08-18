@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -29,28 +31,22 @@ class ProductController extends Controller
         return view('products.index', compact('products', 'categories', 'graphic'));
     }
 
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        $this->authorize('create', Product::class);
-
-        $validatedData = $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'name'        => 'required|string|max:255',
-            'photo'       => 'nullable|image|max:2048',
-            'description' => 'nullable|string',
-            'price'       => 'required|numeric|min:0',
-            'quantity'    => 'required|integer|min:0',
-        ]);
+        $validatedData = $request->validated();
 
         if ($request->hasFile('photo')) {
-            $validatedData['photo'] = $request->file('photo')->store('products', 'public');
+            $validatedData['photo'] = $request->file('photo')
+                ->store('products', 'public');
         }
 
         $validatedData['user_id'] = Auth::id();
 
-
         Product::create($validatedData);
-        return redirect()->route('products.index')->with('success', 'Produto cadastrado com sucesso!');
+
+        return redirect()
+            ->route('products.index')
+            ->with('success', 'Produto cadastrado com sucesso!');
     }
 
 
@@ -62,22 +58,14 @@ class ProductController extends Controller
     }
 
 
-    public function update(Request $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
-
-        $this->authorize('update', $product);
-
-        $validatedData = $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'name'        => 'required|string|max:255',
-            'photo'       => 'nullable|image|max:2048',
-            'description' => 'nullable|string',
-            'price'       => 'required|numeric|min:0',
-            'quantity'    => 'required|integer|min:0',
-        ]);
+        $validatedData = $request->validated();
 
         if ($request->hasFile('photo')) {
-            $validatedData['photo'] = $request->file('photo')->store('products', 'public');
+            $validatedData['photo'] = $request->file('photo')
+                ->store('products', 'public');
+
             if ($product->photo) {
                 Storage::disk('public')->delete($product->photo);
             }
@@ -86,7 +74,10 @@ class ProductController extends Controller
         }
 
         $product->update($validatedData);
-        return redirect()->route('products.index')->with('success', 'Produto editado com sucesso!');
+
+        return redirect()
+            ->route('products.index')
+            ->with('success', 'Produto editado com sucesso!');
     }
 
     public function delete(Product $product)
@@ -115,7 +106,7 @@ class ProductController extends Controller
         $this->authorize('generateGraphic', Product::class);
 
         $chart_options = [
-            'chart_title'       => 'Produtos Cadastros por Mes',
+            'chart_title'       => 'Produtos Cadastrados por Mes',
             'model'              => Product::class,
             'chart_type'         => 'bar',
             'report_type'        => 'group_by_date',

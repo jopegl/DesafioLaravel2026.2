@@ -129,6 +129,31 @@
                     {{ $products->links() }}
                 </div>
 
+                @if(auth()->user()->is_admin)
+                <div class="bg-[#1c1f2a] rounded-xl border border-gray-800/60 p-6 mb-6">
+
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-lg font-semibold text-white">
+                                Produtos cadastrados
+                            </h3>
+
+                            <p class="text-sm text-gray-500 mt-1">
+                                Quantidade de produtos cadastrados por mês
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="w-full">
+                        {!! $graphic->renderHtml() !!}
+                        {!! $graphic->renderChartJsLibrary() !!}
+                        {!! $graphic->renderJs() !!}
+                    </div>
+
+                </div>
+                @endif
+
+
             </main>
 
             @include('products.modals.create')
