@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\CepController;
 use App\Http\Controllers\Api\MercadoPagoController;
 use App\Http\Controllers\Api\PagBankController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ProductController;
@@ -49,6 +50,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/cart-items/{cartItem}', [CartController::class, 'update'])->name('cart-items.update');
     Route::delete('/cart-items/{cartItem}', [CartController::class, 'destroy'])->name('cart-items.destroy');
 
+    Route::get('/contact-us', [ContactController::class, 'create'])->name('contact.create');
+    Route::post('/contact-us', [ContactController::class, 'store'])->name('contact.store');
+
     Route::prefix('mercadopago')->name('mercadopago.')->group(function () {
         Route::post('/checkout', [MercadoPagoController::class, 'process'])->name('process');
         Route::get('/success', [MercadoPagoController::class, 'success'])->name('success');
@@ -75,6 +79,9 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 
     Route::resource('admins', AdminController::class)->except(['show', 'create', 'edit']);
     Route::resource('users', UserController::class)->except(['show', 'create', 'edit']);
+
+    Route::get('/contacts', [ContactController::class, 'indexAllMessages'])->name('contacts.index');
+    Route::post('/contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
 });
 
 
