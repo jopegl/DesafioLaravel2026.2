@@ -9,11 +9,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection;
 
 class PagBankController extends Controller
 {
-    protected string $baseUrl;
-    protected string $token;
+    private string $baseUrl;
+    private string $token;
 
     public function __construct()
     {
@@ -24,7 +25,7 @@ class PagBankController extends Controller
             : 'https://api.pagseguro.com';
     }
 
-    protected function headers(): array
+    private function headers(): array
     {
         return [
             'Authorization' => "Bearer {$this->token}",
@@ -56,10 +57,6 @@ class PagBankController extends Controller
             'reference_id' => $referenceId,
             'items' => $items,
             'customer_modifiable' => true,
-            //'redirect_url' => route('pagbank.callback', ['reference_id' => $referenceId]),
-            /*  'notification_urls' => [
-                route('pagbank.webhook'),
-            ], */
         ]);
 
         if ($response->failed()) {
@@ -73,8 +70,6 @@ class PagBankController extends Controller
 
         $checkout = $response->json();
 
-        cache()->put("pagbank_checkout:{$referenceId}", $user->id, now()->addHours(3));
-
         $payLink = collect($checkout['links'] ?? [])->firstWhere('rel', 'PAY');
 
         if (!$payLink) {
@@ -83,7 +78,37 @@ class PagBankController extends Controller
             return back()->with('error', 'Não foi possível iniciar o pagamento.');
         }
 
+        // registra a venda no momento do clique, usando o id do checkout
+        // (ainda não é confirmação de pagamento).
+        $this->registerSale($user, $cartItems, (string) $checkout['id']);
+
+        cache()->put("pagbank_checkout:{$referenceId}", $user->id, now()->addHours(3));
+
         return redirect($payLink['href']);
+    }
+
+    private function registerSale(User $buyer, Collection $cartItems, string $checkoutId): void
+    {
+        foreach ($cartItems as $item) {
+            $product = $item->product;
+
+            Sale::create([
+                'product_id' => $product->id,
+                'buyer_id' => $buyer->id,
+                'seller_id' => $product->user_id,
+                'category_id' => $product->category_id,
+                'quantity' => $item->quantity,
+                'unit_price' => $product->price,
+                'total_price' => $product->price * $item->quantity,
+                'purchase_date' => now(),
+                'pagbank_checkout_id' => $checkoutId,
+            ]);
+
+            $product->user->increment('balance', $product->price * $item->quantity);
+            $product->decrement('quantity', $item->quantity);
+        }
+
+        $buyer->cartItems()->delete();
     }
 
     public function callback(Request $request)
@@ -116,7 +141,7 @@ class PagBankController extends Controller
         };
     }
 
-    protected function resolvePaymentStatus(array $checkout): string
+    private function resolvePaymentStatus(array $checkout): string
     {
         $charges = collect($checkout['charges'] ?? []);
 
@@ -132,66 +157,19 @@ class PagBankController extends Controller
         }
 
         $payload = $request->all();
-        $status = $payload['status'] ?? null;
 
-        if (!in_array($status, ['PAID', 'DECLINED', 'CANCELED'], true)) {
-            return response()->json(['status' => 'ignored'], 200);
-        }
-
-        $checkoutId = $payload['id'] ?? null;
-        $referenceId = $payload['reference_id'] ?? null;
-
-        if (!$checkoutId || !$referenceId) {
-            return response()->json(['error' => 'missing identifiers'], 400);
-        }
-
-        if (Sale::where('pagbank_checkout_id', $checkoutId)->exists()) {
-            return response()->json(['status' => 'already processed'], 200);
-        }
-
-        if ($status !== 'PAID') {
-            return response()->json(['status' => 'not paid'], 200);
-        }
-
-        $buyerId = cache()->get("pagbank_checkout:{$referenceId}");
-        $buyer = $buyerId ? User::find($buyerId) : null;
-
-        if (!$buyer) {
-            Log::stack(['single', 'stderr'])->error('Comprador não encontrado para checkout PagBank', [
-                'reference_id' => $referenceId,
-            ]);
-
-            return response()->json(['error' => 'buyer not found'], 404);
-        }
-
-        $cartItems = $buyer->cartItems()->with('product')->get();
-
-        foreach ($cartItems as $item) {
-            $product = $item->product;
-
-            Sale::create([
-                'product_id' => $product->id,
-                'buyer_id' => $buyer->id,
-                'seller_id' => $product->user_id,
-                'category_id' => $product->category_id,
-                'quantity' => $item->quantity,
-                'unit_price' => $product->price,
-                'total_price' => $product->price * $item->quantity,
-                'purchase_date' => now(),
-                'pagbank_checkout_id' => $checkoutId,
-            ]);
-
-            $product->user->increment('balance', $product->price * $item->quantity);
-            $product->decrement('quantity', $item->quantity);
-        }
-
-        $buyer->cartItems()->delete();
-        cache()->forget("pagbank_checkout:{$referenceId}");
+        // a venda já foi registrada no clique do botão (process()).
+        // aqui só logamos o status recebido, sem criar/alterar registros.
+        Log::info('Notificação de pagamento PagBank recebida', [
+            'id' => $payload['id'] ?? null,
+            'reference_id' => $payload['reference_id'] ?? null,
+            'status' => $payload['status'] ?? null,
+        ]);
 
         return response()->json(['status' => 'ok'], 200);
     }
 
-    protected function isAuthentic(Request $request): bool
+    private function isAuthentic(Request $request): bool
     {
         $header = $request->header('x-authenticity-token');
 

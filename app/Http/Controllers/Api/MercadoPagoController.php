@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection;
 use MercadoPago\Client\Common\RequestOptions;
 use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\Client\Preference\PreferenceClient;
@@ -50,8 +51,6 @@ class MercadoPagoController extends Controller
                     'pending' => route('mercadopago.pending'),
                     'failure' => route('mercadopago.failure'),
                 ],
-                //'auto_return' => 'approved',
-                //'notification_url' => route('mercadopago.webhook'),
                 'external_reference' => (string) $user->id,
             ]);
         } catch (MPApiException $e) {
@@ -63,7 +62,35 @@ class MercadoPagoController extends Controller
             return back()->with('error', 'Não foi possível iniciar o pagamento.');
         }
 
+        // registra a venda no momento do clique, usando o id da preferência
+        // (ainda não é o id do pagamento, pois o pagamento não ocorreu).
+        $this->registerSale($user, $cartItems, (string) $preference->id);
+
         return redirect($preference->sandbox_init_point);
+    }
+
+    private function registerSale(User $buyer, Collection $cartItems, string $mpReferenceId): void
+    {
+        foreach ($cartItems as $item) {
+            $product = $item->product;
+
+            Sale::create([
+                'product_id' => $product->id,
+                'buyer_id' => $buyer->id,
+                'seller_id' => $product->user_id,
+                'category_id' => $product->category_id,
+                'quantity' => $item->quantity,
+                'unit_price' => $product->price,
+                'total_price' => $product->price * $item->quantity,
+                'purchase_date' => now(),
+                'mp_payment_id' => $mpReferenceId,
+            ]);
+
+            $product->user->increment('balance', $product->price * $item->quantity);
+            $product->decrement('quantity', $item->quantity);
+        }
+
+        $buyer->cartItems()->delete();
     }
 
     public function success()
@@ -93,10 +120,6 @@ class MercadoPagoController extends Controller
             return response()->json(['error' => 'payment id missing'], 400);
         }
 
-        if (Sale::where('mp_payment_id', $paymentId)->exists()) {
-            return response()->json(['status' => 'already processed'], 200);
-        }
-
         $client = new PaymentClient();
 
         try {
@@ -111,39 +134,13 @@ class MercadoPagoController extends Controller
             return response()->json(['error' => 'failed to fetch payment'], 500);
         }
 
-        if ($payment->status !== 'approved') {
-            return response()->json(['status' => 'not approved yet'], 200);
-        }
-
-        $buyerId = $payment->external_reference;
-        $buyer = User::find($buyerId);
-
-        if (!$buyer) {
-            return response()->json(['error' => 'buyer not found'], 404);
-        }
-
-        $cartItems = $buyer->cartItems()->with('product')->get();
-
-        foreach ($cartItems as $item) {
-            $product = $item->product;
-
-            Sale::create([
-                'product_id' => $product->id,
-                'buyer_id' => $buyer->id,
-                'seller_id' => $product->user_id,
-                'category_id' => $product->category_id,
-                'quantity' => $item->quantity,
-                'unit_price' => $product->price,
-                'total_price' => $product->price * $item->quantity,
-                'purchase_date' => now(),
-                'mp_payment_id' => $paymentId,
-            ]);
-
-            $product->user->increment('balance', $product->price * $item->quantity);
-            $product->decrement('quantity', $item->quantity);
-        }
-
-        $buyer->cartItems()->delete();
+        // a venda já foi registrada no clique do botão (process()).
+        // aqui só logamos o status recebido, sem criar/alterar registros.
+        Log::info('Notificação de pagamento MercadoPago recebida', [
+            'payment_id' => $paymentId,
+            'status' => $payment->status,
+            'external_reference' => $payment->external_reference,
+        ]);
 
         return response()->json(['status' => 'ok'], 200);
     }
