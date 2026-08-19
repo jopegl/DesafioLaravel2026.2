@@ -103,7 +103,6 @@ class ProductController extends Controller
     private function generateGraphic()
     {
         $user = Auth::user();
-        $this->authorize('generateGraphic', Product::class);
 
         $chart_options = [
             'chart_title'       => 'Produtos Cadastrados por Mes',
@@ -112,7 +111,7 @@ class ProductController extends Controller
             'report_type'        => 'group_by_date',
             'group_by_field'     => 'created_at',
             'group_by_period'    => 'month',
-            'chart_clor'         => '0,122,255',
+            'chart_color'         => '0,122,255',
         ];
 
         $chart = new LaravelChart($chart_options);

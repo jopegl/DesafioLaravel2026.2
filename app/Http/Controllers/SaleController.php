@@ -73,10 +73,8 @@ class SaleController extends Controller
         $conditions = [
             [
                 'name' => 'Vendas',
-                'condition' => $user->is_admin
-                    ? '1 = 1'
-                    : 'seller_id = ' . $user->id,
-                'color' => 'blue',
+                'condition' => 'seller_id = ' . $user->id,
+                'color' => 'green',
                 'fill' => false,
             ],
         ];
@@ -92,6 +90,8 @@ class SaleController extends Controller
             'filter_days' => 365,
             'continuous_time' => true,
             'conditions' => $conditions,
+            'date_format' => 'Y-m',
+
         ];
 
         return new LaravelChart($chart_options);

@@ -110,6 +110,8 @@
                     {{ $sales->appends(request()->query())->links() }}
                 </div>
 
+                @if(!auth()->user()->is_admin)
+
                 <div class="mt-8 bg-[#1c1f2a] rounded-xl border border-gray-800/60 p-6">
 
                     <div class="mb-6">
@@ -122,13 +124,21 @@
                         </p>
                     </div>
 
+
+
                     <div class="w-full overflow-x-auto">
                         {!! $graphic->renderHtml() !!}
                         {!! $graphic->renderChartJsLibrary() !!}
                         {!! $graphic->renderJs() !!}
+
+                        <script>
+                            Chart.defaults.global.elements.line.tension = 0;
+                        </script>
                     </div>
 
+
                 </div>
+                @endif
             </main>
 
         </div>
