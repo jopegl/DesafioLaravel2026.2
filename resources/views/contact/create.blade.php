@@ -24,7 +24,7 @@
                             type="text"
                             name="name"
                             id="name"
-                            value="{{ old('name') }}"
+                            value="{{ old('name', auth()->user()->name ?? '') }}"
                             class="w-full rounded-md bg-gray-900 border-gray-700 text-gray-200">
                         @error('name')
                         <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
@@ -37,7 +37,7 @@
                             type="email"
                             name="email"
                             id="email"
-                            value="{{ old('email') }}"
+                            value="{{ old('email', auth()->user()->email ?? '') }}"
                             class="w-full rounded-md bg-gray-900 border-gray-700 text-gray-200">
                         @error('email')
                         <p class="text-red-400 text-sm mt-1">{{ $message }}</p>

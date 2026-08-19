@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\Cpf;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -20,7 +21,7 @@ class UpdateAdminRequest extends FormRequest
         return [
             'name'       => ['required', 'string', 'max:255'],
             'email'      => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($userId)],
-            'cpf'        => ['required', 'string', 'size:11', Rule::unique('users', 'cpf')->ignore($userId)],
+            'cpf' => ['required', 'string', 'size:11', Rule::unique('users', 'cpf')->ignore($userId), new Cpf],
             'phone'      => ['nullable', 'string', 'max:20'],
             'birth_date' => ['nullable', 'date', 'before:today'],
             'photo'      => ['nullable', 'image', 'max:2048'],

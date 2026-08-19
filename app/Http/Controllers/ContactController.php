@@ -66,7 +66,7 @@ class ContactController extends Controller
         );
 
         return redirect()
-            ->route('admin.contacts.index')
+            ->route('contacts.index')
             ->with('success', 'Resposta enviada com sucesso!');
     }
 }

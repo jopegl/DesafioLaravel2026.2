@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\User;
+use App\Rules\Cpf;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
@@ -18,7 +19,7 @@ class StoreUserRequest extends FormRequest
         return [
             'name'       => ['required', 'string', 'max:255'],
             'email'      => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'cpf'        => ['required', 'string', 'size:11', 'unique:users,cpf'],
+            'cpf' => ['required', 'string', 'size:11', 'unique:users,cpf', new Cpf],
             'phone'      => ['nullable', 'string', 'max:12'],
             'birth_date' => ['nullable', 'date', 'before:today'],
             'photo'      => ['nullable', 'image', 'max:2048'], // 2MB

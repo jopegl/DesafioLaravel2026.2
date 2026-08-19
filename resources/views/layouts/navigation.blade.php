@@ -32,6 +32,17 @@
                     </x-nav-link>
                     @endif
 
+                    @if(Auth::check())
+
+                    <x-nav-link
+                        :href="route('contact.create')"
+                        :active="request()->routeIs('dashboard')">
+                        {{ __('Contate-nos') }}
+                    </x-nav-link>
+                    @endif
+
+
+
                 </div>
 
             </div>

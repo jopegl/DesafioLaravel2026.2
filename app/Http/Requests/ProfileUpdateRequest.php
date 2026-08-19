@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\User;
+use App\Rules\Cpf;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -26,7 +27,7 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
-            'cpf'        => ['nullable', 'string', 'size:11', Rule::unique(User::class)->ignore($this->user()->id)],
+            'cpf'        => ['nullable', 'string', 'size:11', Rule::unique(User::class)->ignore($this->user()->id),  new Cpf],
             'phone'      => ['nullable', 'string', 'max:20'],
             'birth_date' => ['nullable', 'date', 'before:today'],
             'photo'      => ['nullable', 'image', 'max:2048'], // 2mb
