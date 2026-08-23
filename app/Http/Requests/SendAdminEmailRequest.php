@@ -16,7 +16,7 @@ class SendAdminEmailRequest extends FormRequest
         return [
             'user_id' => 'required|exists:users,id',
             'subject' => 'required|string|max:255',
-            'message' => 'required|string',
+            'message' => 'required|string|max:500',
         ];
     }
 
