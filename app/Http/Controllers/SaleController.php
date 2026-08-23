@@ -90,6 +90,7 @@ class SaleController extends Controller
             'filter_days' => 365,
             'continuous_time' => true,
             'conditions' => $conditions,
+            'show_blank_data' => true,
             'date_format' => 'Y-m',
 
         ];

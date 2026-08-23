@@ -27,7 +27,6 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
-            'cpf'        => ['nullable', 'string', 'size:11', Rule::unique(User::class)->ignore($this->user()->id),  new Cpf],
             'phone'      => ['nullable', 'string', 'max:20'],
             'birth_date' => ['nullable', 'date', 'before:today'],
             'photo'      => ['nullable', 'image', 'max:2048'], // 2mb
@@ -37,7 +36,6 @@ class ProfileUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'cpf.size'          => 'O CPF deve conter 11 dígitos (sem pontuação).',
             'birth_date.before' => 'A data de nascimento deve ser anterior a hoje.',
             'photo.image'       => 'O arquivo deve ser uma imagem.',
             'photo.max'         => 'A imagem deve ter no máximo 2MB.',

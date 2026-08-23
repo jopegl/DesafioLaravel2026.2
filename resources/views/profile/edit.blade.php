@@ -32,6 +32,11 @@
                         Dados pessoais
                     </h3>
 
+                    <div class="mb-5">
+                        <span class="block text-gray-400 text-xs mb-1">CPF</span>
+                        <span class="text-gray-300 text-sm">{{ $user->cpf }}</span>
+                    </div>
+
                     <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="space-y-4">
 
                         @csrf
@@ -69,11 +74,7 @@
                             @endif
                         </div>
 
-                        <div>
-                            <label class="block text-gray-400 text-xs mb-1">CPF (somente números)</label>
-                            <input type="text" name="cpf" maxlength="11" value="{{ old('cpf', $user->cpf) }}"
-                                class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400">
-                        </div>
+
 
                         <div class="flex flex-col sm:flex-row gap-4">
                             <div class="flex-1">
