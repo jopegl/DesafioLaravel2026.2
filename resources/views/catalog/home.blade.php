@@ -2,10 +2,56 @@
     <div class="bg-primary-900 min-h-screen text-white">
 
         @if(!request('search'))
-        {{-- Banner Hero (topo) --}}
-        <div class="relative bg-gradient-to-r from-gray-900 to-gray-800 overflow-hidden">
-            <img src="{{ asset('images/hero-iphone.png') }}" alt="Produto em destaque" class="w-full h-64 md:h-96 object-cover">
-        </div>
+        <section class="hero-carousel relative w-full h-72 md:h-[28rem] overflow-hidden bg-gray-900">
+            <div class="hero-track h-full">
+
+
+                @foreach ($heroSlides as $index => $slide)
+                <div class="hero-slide absolute inset-0 {{ $index === 0 ? 'is-active' : '' }}" data-index="{{ $index }}">
+                    <div class="hero-bg absolute inset-0">
+                        <img src="{{ $slide['image'] }}" alt="{{ $slide['title'] }}" class="w-full h-full object-cover">
+                    </div>
+
+                    <div class="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/40 to-transparent"></div>
+
+                    <div class="relative z-10 h-full flex flex-col justify-center px-8 md:px-16 max-w-xl">
+                        <span class="hero-eyebrow inline-block text-primary-400 text-xs md:text-sm font-semibold tracking-widest uppercase mb-3">
+                            {{ $slide['eyebrow'] }}
+                        </span>
+                        <h1 class="hero-title text-3xl md:text-5xl font-extrabold text-white leading-tight mb-3">
+                            {{ $slide['title'] }}
+                        </h1>
+                        <p class="hero-subtitle text-gray-300 text-sm md:text-lg mb-6">
+                            {{ $slide['subtitle'] }}
+                        </p>
+                        <a href="#products" class="hero-cta inline-flex items-center gap-2 w-fit bg-primary-500 hover:bg-primary-400 text-white font-semibold text-sm md:text-base px-6 py-3 rounded-full transition-all duration-300 hover:gap-3 hover:shadow-lg hover:shadow-primary-500/40">
+                            Ver produtos
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+
+            <button type="button" class="hero-prev absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <button type="button" class="hero-next absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+
+            <div class="hero-dots absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+                @foreach ($heroSlides as $index => $slide)
+                <button type="button" class="hero-dot h-1.5 rounded-full bg-white/30 transition-all duration-300 {{ $index === 0 ? 'is-active' : '' }}" data-goto="{{ $index }}"></button>
+                @endforeach
+            </div>
+        </section>
         @endif
 
         <div class="max-w-7xl mx-auto px-6 py-10">

@@ -31,6 +31,10 @@ class MercadoPagoController extends Controller
             return back()->with('error', 'Seu carrinho está vazio.');
         }
 
+        if ($cartItems->contains(fn($item) => $item->product->user_id === $user->id)) {
+            return back()->with('error', 'Você não pode comprar seu próprio produto.');
+        }
+
         $items = $cartItems->map(function ($item) {
             return [
                 'id' => (string) $item->product_id,

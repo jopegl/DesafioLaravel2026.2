@@ -35,5 +35,11 @@ class UpdateUserRequest extends FormRequest
             $this->request->remove('password');
             $this->request->remove('password_confirmation');
         }
+
+        if ($this->filled('cpf')) {
+            $this->merge([
+                'cpf' => preg_replace('/[^0-9]/', '', $this->cpf),
+            ]);
+        }
     }
 }

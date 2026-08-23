@@ -1,0 +1,42 @@
+@import url("root.css");
+
+.hero-slide {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 1s ease;
+}
+.hero-slide.is-active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.hero-bg img {
+    transform: scale(1.15);
+    transition: transform 6s ease-out;
+}
+.hero-slide.is-active .hero-bg img {
+    transform: scale(1);
+}
+
+.hero-eyebrow,
+.hero-title,
+.hero-subtitle,
+.hero-cta {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .7s ease, transform .7s ease;
+}
+.hero-slide.is-active .hero-eyebrow  { transition-delay: .15s; opacity: 1; transform: translateY(0); }
+.hero-slide.is-active .hero-title    { transition-delay: .3s;  opacity: 1; transform: translateY(0); }
+.hero-slide.is-active .hero-subtitle { transition-delay: .45s; opacity: 1; transform: translateY(0); }
+.hero-slide.is-active .hero-cta      { transition-delay: .6s;  opacity: 1; transform: translateY(0); }
+
+.hero-dot {
+    width: 8px;
+}
+.hero-dot.is-active {
+    width: 28px;
+    background-color: var(--hero-accent, #6366f1);
+}

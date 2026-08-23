@@ -58,6 +58,6 @@ class UserController extends Controller
     {
         $this->authorize('delete', $user);
         $user->delete();
-        return redirect()->route('users.index')->with('success', 'Usuário criado.');
+        return redirect()->route('users.index')->with('success', 'Usuário removido.');
     }
 }

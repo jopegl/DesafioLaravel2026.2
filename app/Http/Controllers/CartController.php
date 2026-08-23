@@ -37,6 +37,10 @@ class CartController extends Controller
             return back()->with('error', 'Quantidade solicitada indisponível em estoque.');
         }
 
+        if ($product->user_id === auth()->id()) {
+            return back()->with('error', 'Não é possível adicionar seu próprio produto ao carrinho');
+        }
+
         if ($cartItem) {
             $cartItem->increment('quantity', $data['quantity']);
         } else {

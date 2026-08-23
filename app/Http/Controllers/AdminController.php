@@ -38,7 +38,7 @@ class AdminController extends Controller
         return redirect()->route('admins.index')->with('success', 'Administrador criado.');
     }
 
-    public function update(UpdateAdminRequest $request, User $user)
+    public function update(UpdateAdminRequest $request, User $admin)
     {
         $data = $request->validated();
 
@@ -46,15 +46,18 @@ class AdminController extends Controller
             $data['photo'] = $request->file('photo')->store('users', 'public');
         }
 
-        $user->update($data);
+        $admin->update($data);
 
         return redirect()->route('admins.index')->with('success', 'Administrador atualizado.');
     }
 
-    public function destroy(User $user)
+    public function destroy(User $admin)
     {
-        $this->authorize('manageAdmins', $user);
-        $user->delete();
+        if (auth()->id() === $admin->id) {
+            return back()->with('error', 'Para deletar seu próprio usuário você deve ir na página de edição de perfil.');
+        }
+
+        $admin->delete();
         return redirect()->route('admins.index')->with('success', 'Administrador removido.');
     }
 }
