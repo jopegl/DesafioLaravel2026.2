@@ -41,6 +41,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/sales/pdf', [SaleController::class, 'generatePdf'])->name('sales.pdf');
     Route::get('/dashboard/sales/xlsx', [SaleController::class, 'generateXlsx'])->name('sales.xlsx');
 
+    Route::get('/dashboard/purchases', [SaleController::class, 'indexPurchaseHistory'])->name('purchases.index');
+    Route::get('/dashboard/purchases/pdf', [SaleController::class, 'generatePdfPurchases'])->name('purchases.pdf');
+
     Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
     Route::put('/addresses/{address}', [AddressController::class, 'update'])->name('addresses.update');
     Route::delete('/addresses/{address}', [AddressController::class, 'destroy'])->name('addresses.destroy');
@@ -52,6 +55,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/contact-us', [ContactController::class, 'create'])->name('contact.create');
     Route::post('/contact-us', [ContactController::class, 'store'])->name('contact.store');
+
 
     Route::prefix('mercadopago')->name('mercadopago.')->group(function () {
         Route::post('/checkout', [MercadoPagoController::class, 'process'])->name('process');

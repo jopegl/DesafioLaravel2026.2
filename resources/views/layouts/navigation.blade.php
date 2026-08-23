@@ -62,6 +62,20 @@
             <!-- User -->
             @if(Auth::check())
 
+            <!-- Saldo -->
+            <div class="hidden sm:flex sm:items-center sm:mr-3">
+                <a href="{{ route('purchases.index') }}"
+                    class="group flex items-center gap-2 bg-gradient-to-r from-cyan-500/10 to-cyan-400/5 hover:from-cyan-500/20 hover:to-cyan-400/10 border border-cyan-500/30 hover:border-cyan-400/50 rounded-full px-4 py-1.5 transition-all duration-300">
+                    <svg class="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V6m0 10v-2m9-4a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span class="text-cyan-300 text-sm font-semibold">
+                        {{ formatPrice(Auth::user()->balance) }}
+                    </span>
+                </a>
+            </div>
+
             <!-- Carrinho -->
             <div class="hidden sm:flex sm:items-center sm:mr-4">
                 <a href="{{ route('cart.index') }}" class="relative inline-flex items-center p-2 text-gray-300 hover:text-white transition">

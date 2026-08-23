@@ -13,7 +13,7 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/css/hero-carousel.css', 'resources/js/app.js', 'resources/js/hero-carousel.js'])
+    @vite(['resources/css/app.css', 'resources/css/hero-carousel.css', 'resources/js/app.js', 'resources/js/hero-carousel.js', 'resources/js/balance-counter.js'])
 </head>
 
 <body class="font-sans antialiased">
