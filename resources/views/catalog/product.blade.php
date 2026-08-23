@@ -69,33 +69,58 @@
                 @endif
 
                 @auth
+
+                @if(!Auth::user()->is_admin)
+
                 <form action="{{ route('cart-items.store') }}" method="POST" class="mb-6">
                     @csrf
+
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
 
                     <div x-data="{ qty: 1 }" class="flex items-center gap-4 mb-6">
                         <div class="flex items-center border border-gray-700 rounded-lg overflow-hidden">
-                            <button type="button" @click="qty = qty > 1 ? qty - 1 : 1"
-                                class="px-4 py-2 text-lg hover:bg-gray-800">-</button>
-                            <input type="number" name="quantity" x-model="qty" min="1"
+                            <button
+                                type="button"
+                                @click="qty = qty > 1 ? qty - 1 : 1"
+                                class="px-4 py-2 text-lg hover:bg-gray-800">
+                                -
+                            </button>
+
+                            <input
+                                type="number"
+                                name="quantity"
+                                x-model="qty"
+                                min="1"
                                 max="{{ $product->quantity }}"
                                 class="w-12 text-center bg-black border-x border-gray-700 py-2 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
-                            <button type="button" @click="qty = qty < {{ $product->quantity }} ? qty + 1 : qty"
-                                class="px-4 py-2 text-lg hover:bg-gray-800">+</button>
+
+                            <button
+                                type="button"
+                                @click="qty = qty < {{ $product->quantity }} ? qty + 1 : qty"
+                                class="px-4 py-2 text-lg hover:bg-gray-800">
+                                +
+                            </button>
                         </div>
                     </div>
 
-                    <button type="submit"
+                    <button
+                        type="submit"
                         @disabled($product->quantity <= 0)
                             class="w-full md:w-auto px-10 py-3 bg-cyan-400 text-black font-semibold rounded-lg hover:bg-cyan-300 transition disabled:opacity-40 disabled:cursor-not-allowed">
                             Adicionar ao carrinho
                     </button>
                 </form>
+
+                @endif
+
                 @else
-                <a href="{{ route('login') }}"
+
+                <a
+                    href="{{ route('login') }}"
                     class="inline-block w-full md:w-auto text-center px-10 py-3 bg-cyan-400 text-black font-semibold rounded-lg hover:bg-cyan-300 transition">
                     Entrar para comprar
                 </a>
+
                 @endauth
             </div>
         </div>
@@ -131,7 +156,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                         </svg>
-                        {{ $product->user->phone }}
+                        {{ formatPhone($product->user->phone)}}
                     </div>
                     @endif
 

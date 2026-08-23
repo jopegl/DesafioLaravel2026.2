@@ -106,9 +106,11 @@
                 Vendas
             </a>
 
+            @if(!auth()->user()->is_admin)
+
             <a href="{{ route('purchases.index') }}"
                 class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition
-       {{ request()->routeIs('purchases.index') ? 'bg-cyan-500 text-white' : 'text-gray-300 hover:bg-gray-800/70' }}">
+        {{ request()->routeIs('purchases.index') ? 'bg-cyan-500 text-white' : 'text-gray-300 hover:bg-gray-800/70' }}">
 
                 <svg xmlns="http://www.w3.org/2000/svg"
                     class="w-5 h-5 shrink-0"
@@ -122,6 +124,8 @@
 
                 Minhas Compras
             </a>
+
+            @endif
 
             @if(auth()->user()->is_admin)
 

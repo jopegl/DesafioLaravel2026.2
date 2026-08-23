@@ -61,9 +61,7 @@ class Sale extends Model
 
     public function scopeAsBuyer(Builder $query, User $user): Builder
     {
-        return $user->is_admin
-            ? $query
-            : $query->where('buyer_id', $user->id);
+        return $query->where('buyer_id', $user->id);
     }
 
     public function scopeWithDetails(Builder $query): Builder

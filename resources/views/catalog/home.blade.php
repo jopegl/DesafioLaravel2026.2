@@ -131,20 +131,32 @@
                             </p>
 
                             {{-- Botão --}}
-                            @if($inStock)
-                            <span class="block w-full bg-primary-500 group-hover:bg-primary-400 text-white text-sm py-2 rounded-full transition-colors duration-300 mt-3 text-center">
-                                Comprar
-                            </span>
-                            @else
+                            @if(!$inStock)
+
                             <span class="flex items-center justify-center gap-2 w-full bg-gray-700 text-gray-400 text-sm py-2 rounded-full mt-3 cursor-not-allowed border border-gray-600/50">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636" />
                                 </svg>
                                 Indisponível
                             </span>
-                            @endif
 
+                            @elseif(Auth::check() && Auth::user()->is_admin)
+
+                            <span class="block w-full bg-gray-700 group-hover:bg-gray-600 text-gray-200 text-sm py-2 rounded-full transition-colors duration-300 mt-3 text-center">
+                                Visualizar
+                            </span>
+
+                            @else
+
+                            <span class="block w-full bg-primary-500 group-hover:bg-primary-400 text-white text-sm py-2 rounded-full transition-colors duration-300 mt-3 text-center">
+                                Comprar
+                            </span>
+
+                            @endif
                         </div>
                     </a>
                     @empty

@@ -42,17 +42,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/sales/pdf', [SaleController::class, 'generatePdf'])->name('sales.pdf');
     Route::get('/dashboard/sales/xlsx', [SaleController::class, 'generateXlsx'])->name('sales.xlsx');
 
-    Route::get('/dashboard/purchases', [PurchaseController::class, 'indexPurchaseHistory'])->name('purchases.index');
-    Route::get('/dashboard/purchases/pdf', [PurchaseController::class, 'generatePdfPurchases'])->name('purchases.pdf');
-
     Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
     Route::put('/addresses/{address}', [AddressController::class, 'update'])->name('addresses.update');
     Route::delete('/addresses/{address}', [AddressController::class, 'destroy'])->name('addresses.destroy');
-
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/cart-items', [CartController::class, 'store'])->name('cart-items.store');
-    Route::put('/cart-items/{cartItem}', [CartController::class, 'update'])->name('cart-items.update');
-    Route::delete('/cart-items/{cartItem}', [CartController::class, 'destroy'])->name('cart-items.destroy');
 
     Route::get('/contact-us', [ContactController::class, 'create'])->name('contact.create');
     Route::post('/contact-us', [ContactController::class, 'store'])->name('contact.store');
@@ -71,6 +63,20 @@ Route::middleware('auth')->group(function () {
         Route::get('/callback', [PagBankController::class, 'callback'])
             ->name('callback');
     });
+});
+
+Route::middleware(['auth', 'user.only'])->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])
+        ->name('cart.index');
+    Route::post('/cart-items', [CartController::class, 'store'])
+        ->name('cart-items.store');
+    Route::put('/cart-items/{cartItem}', [CartController::class, 'update'])
+        ->name('cart-items.update');
+    Route::delete('/cart-items/{cartItem}', [CartController::class, 'destroy'])
+        ->name('cart-items.destroy');
+
+    Route::get('/dashboard/purchases', [PurchaseController::class, 'indexPurchaseHistory'])->name('purchases.index');
+    Route::get('/dashboard/purchases/pdf', [PurchaseController::class, 'generatePdfPurchases'])->name('purchases.pdf');
 });
 
 
