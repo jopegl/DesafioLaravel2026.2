@@ -28,15 +28,15 @@
 
                         <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
 
-                            <div class="flex items-center gap-3">
-                                <img src="{{ userPhotoUrl($msg->user?->photo) }}" alt="{{ $msg->name }}" class="w-10 h-10 rounded-full object-cover border border-gray-700">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <img src="{{ userPhotoUrl($msg->user?->photo) }}" alt="{{ $msg->name }}" class="w-10 h-10 rounded-full object-cover border border-gray-700 shrink-0">
 
-                                <div>
-                                    <p class="text-gray-200 font-medium">
+                                <div class="min-w-0">
+                                    <p class="text-gray-200 font-medium truncate">
                                         {{ $msg->name }}
                                     </p>
 
-                                    <p class="text-gray-400 text-xs sm:text-sm">
+                                    <p class="text-gray-400 text-xs sm:text-sm truncate">
                                         {{ $msg->email }}
                                     </p>
                                 </div>
@@ -44,13 +44,13 @@
 
                             @if ($msg->replied_at)
 
-                            <span class="self-start text-xs bg-green-900/50 text-green-300 px-2 py-1 rounded-full">
+                            <span class="self-start text-xs bg-green-900/50 text-green-300 px-2 py-1 rounded-full shrink-0">
                                 Respondida em {{ $msg->replied_at->format('d/m/Y H:i') }}
                             </span>
 
                             @else
 
-                            <span class="self-start text-xs bg-yellow-900/50 text-yellow-300 px-2 py-1 rounded-full">
+                            <span class="self-start text-xs bg-yellow-900/50 text-yellow-300 px-2 py-1 rounded-full shrink-0">
                                 Pendente
                             </span>
 
@@ -58,19 +58,21 @@
 
                         </div>
 
-                        <p class="text-gray-300 text-sm whitespace-pre-line">
+                        <!-- Mensagem recebida ajustada -->
+                        <p class="text-gray-300 text-sm line-clamp-3 break-all overflow-hidden">
                             {{ $msg->message }}
                         </p>
 
                         @if ($msg->reply)
 
-                        <div class="mt-2 pl-4 border-l-2 border-gray-600">
+                        <div class="mt-2 pl-4 border-l-2 border-gray-600 min-w-0">
 
-                            <p class="text-xs text-gray-500 mb-1">
+                            <p class="text-xs text-gray-500 mb-1 truncate">
                                 Resposta de {{ $msg->repliedBy?->name ?? 'Admin' }}:
                             </p>
 
-                            <p class="text-gray-300 text-sm whitespace-pre-line">
+                            <!-- Resposta enviada ajustada -->
+                            <p class="text-gray-300 text-sm line-clamp-3 break-all overflow-hidden">
                                 {{ $msg->reply }}
                             </p>
 

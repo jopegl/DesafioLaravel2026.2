@@ -87,7 +87,7 @@
 
             @if(!Auth::user()->is_admin)
 
-            <!-- Saldo -->
+
 
             <div class="hidden sm:flex sm:items-center sm:mr-3">
 
@@ -119,7 +119,6 @@
 
             </div>
 
-            <!-- Carrinho -->
 
             <div class="hidden sm:flex sm:items-center sm:mr-4">
 
@@ -309,6 +308,14 @@
 
             </x-responsive-nav-link>
 
+            <x-responsive-nav-link
+                :href="route('contact.create')"
+                :active="request()->routeIs('contact.create')">
+
+                {{ __('Contate-nos') }}
+
+            </x-responsive-nav-link>
+
             @endif
 
         </div>
@@ -316,33 +323,69 @@
 
         <!-- Responsive Settings Options -->
 
-        <div class="pt-4 pb-1 border-t border-gray-700">
+        <div class="pt-4 pb-3 border-t border-gray-700">
 
             <!-- User Information -->
 
-            <div class="px-4">
+            <div class="px-4 flex items-center justify-between">
 
-                @if(Auth::check())
+                <div>
 
-                <div class="font-medium text-base text-white">
+                    @if(Auth::check())
 
-                    {{ Auth::user()->name }}
+                    <div class="font-medium text-base text-white">
+
+                        {{ Auth::user()->name }}
+
+                    </div>
+
+                    <div class="font-medium text-sm text-gray-400">
+
+                        {{ Auth::user()->email }}
+
+                    </div>
+
+                    @else
+
+                    <div class="font-medium text-base text-white">
+
+                        Olá visitante!
+
+                    </div>
+
+                    @endif
 
                 </div>
 
-                <div class="font-medium text-sm text-gray-400">
+                @if(Auth::check() && !Auth::user()->is_admin)
 
-                    {{ Auth::user()->email }}
+                <!-- Saldo Mobile -->
 
-                </div>
+                <a
+                    href="{{ route('sales.index') }}"
+                    class="inline-flex items-center gap-1.5 bg-gradient-to-r from-cyan-500/10 to-cyan-400/5 border border-cyan-500/30 rounded-full px-3 py-1">
 
-                @else
+                    <svg
+                        class="w-3.5 h-3.5 text-cyan-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24">
 
-                <div class="font-medium text-base text-white">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V6m0 10v-2m9-4a9 9 0 11-18 0 9 9 0 0118 0z" />
 
-                    Olá visitante!
+                    </svg>
 
-                </div>
+                    <span class="text-cyan-300 text-xs font-semibold">
+
+                        {{ formatPrice(Auth::user()->balance) }}
+
+                    </span>
+
+                </a>
 
                 @endif
 
