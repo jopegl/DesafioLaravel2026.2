@@ -1,4 +1,4 @@
-<x-modal-panel show="showDeleteAccount" max-width="max-w-sm">
+<x-modal-panel show="showDeleteAccount" max-width="max-w-sm" x-cloak>
 
     <div class="text-center space-y-5">
 

@@ -220,7 +220,6 @@
 
                 </div>
 
-                {{-- ===================== EXCLUIR CONTA ===================== --}}
 
                 <div class="bg-[#1c1f2a] rounded-xl border border-red-900/40 p-6">
 

@@ -28,14 +28,18 @@
 
                         <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
 
-                            <div>
-                                <p class="text-gray-200 font-medium">
-                                    {{ $msg->name }}
-                                </p>
+                            <div class="flex items-center gap-3">
+                                <img src="{{ userPhotoUrl($msg->user?->photo) }}" alt="{{ $msg->name }}" class="w-10 h-10 rounded-full object-cover border border-gray-700">
 
-                                <p class="text-gray-400 text-sm">
-                                    {{ $msg->email }}
-                                </p>
+                                <div>
+                                    <p class="text-gray-200 font-medium">
+                                        {{ $msg->name }}
+                                    </p>
+
+                                    <p class="text-gray-400 text-xs sm:text-sm">
+                                        {{ $msg->email }}
+                                    </p>
+                                </div>
                             </div>
 
                             @if ($msg->replied_at)
