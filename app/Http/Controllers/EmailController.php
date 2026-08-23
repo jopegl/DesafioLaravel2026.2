@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SendAdminEmailRequest;
 use App\Mail\AdminMessage;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -30,13 +31,9 @@ class EmailController extends Controller
         return response()->json($users);
     }
 
-    public function send(Request $request)
+    public function send(SendAdminEmailRequest $request)
     {
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'subject' => 'required|string|max:255',
-            'message' => 'required|string',
-        ]);
+        $validated = $request->validated();
 
         $user = User::findOrFail($validated['user_id']);
 

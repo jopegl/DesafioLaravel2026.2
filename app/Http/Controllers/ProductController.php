@@ -96,7 +96,7 @@ class ProductController extends Controller
         if ($product->photo) {
             Storage::disk('public')->delete($product->photo);
         }
-        $product->delete();
+        $product->forceDelete();
         return redirect()->route('products.index')->with('success', 'Produto destruído com sucesso!');
     }
 
