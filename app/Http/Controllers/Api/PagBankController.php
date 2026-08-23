@@ -106,6 +106,7 @@ class PagBankController extends Controller
                 'total_price' => $product->price * $item->quantity,
                 'purchase_date' => now(),
                 'pagbank_checkout_id' => $checkoutId,
+                "is_paid" => true
             ]);
 
             $product->user->increment('balance', $product->price * $item->quantity);
