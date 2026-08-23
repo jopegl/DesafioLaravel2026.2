@@ -53,9 +53,7 @@ class AdminController extends Controller
 
     public function destroy(User $admin)
     {
-        if (auth()->id() === $admin->id) {
-            return back()->with('error', 'Para deletar seu próprio usuário você deve ir na página de edição de perfil.');
-        }
+        $this->authorize('manageAdmins', User::class);
 
         $admin->delete();
         return redirect()->route('admins.index')->with('success', 'Administrador removido.');

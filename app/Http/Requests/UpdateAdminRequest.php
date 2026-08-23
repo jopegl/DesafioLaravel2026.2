@@ -11,7 +11,7 @@ class UpdateAdminRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('manageAdmin', $this->route('admin'));
+        return $this->user()->can('manageAdmins', $this->route('admin'));
     }
 
     public function rules(): array
