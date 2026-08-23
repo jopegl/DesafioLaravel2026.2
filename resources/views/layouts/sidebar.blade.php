@@ -1,4 +1,3 @@
-}
 <div x-data="{ sidebarOpen: false }" @keydown.escape.window="sidebarOpen = false">
 
     <div class="lg:hidden flex items-center justify-between px-4 py-4 bg-[#0d0f14] text-white border-b border-gray-800/60">
@@ -17,7 +16,7 @@
 
     </div>
 
-    <aside class="hidden lg:flex w-64 min-h-screen bg-[#0d0f14] text-white flex-col border-r border-gray-800/60 shrink-0">
+    <aside class="hidden lg:flex w-64 h-screen sticky top-0 bg-[#0d0f14] text-white flex-col border-r border-gray-800/60 shrink-0">
 
         <div class="px-6 py-6 flex items-center gap-2">
             <span class="text-cyan-400 text-2xl font-light leading-none">|</span>
