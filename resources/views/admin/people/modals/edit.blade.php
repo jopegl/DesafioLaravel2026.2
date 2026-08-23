@@ -27,8 +27,31 @@
                     @method('PUT')
 
                     <label class="block border-2 border-dashed border-gray-700 rounded-lg h-28 flex items-center justify-center text-gray-500 text-sm cursor-pointer hover:border-cyan-400 relative overflow-hidden">
-                        <img :src="selected.photo_url" x-show="selected.photo_url" :alt="selected.name" class="absolute inset-0 w-full h-full object-cover">
-                        <input type="file" name="photo" accept="image/*" class="hidden">
+
+                        <img
+                            :src="selected.photo_url"
+                            x-show="selected.photo_url"
+                            :alt="selected.name"
+                            class="absolute inset-0 w-full h-full object-cover">
+
+                        <div
+                            x-show="!selected.photo_url"
+                            class="text-gray-500 text-sm">
+                            Clique para selecionar uma imagem
+                        </div>
+
+                        <input
+                            type="file"
+                            name="photo"
+                            accept="image/*"
+                            class="hidden"
+                            @change="
+            const file = $event.target.files[0];
+
+            if (file) {
+                selected.photo_url = URL.createObjectURL(file);
+            }
+        ">
                     </label>
 
                     <div>

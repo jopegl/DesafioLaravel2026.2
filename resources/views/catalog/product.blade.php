@@ -70,7 +70,15 @@
 
                 @auth
 
-                @if(!Auth::user()->is_admin)
+                @if(Auth::user()->id === $product->user_id)
+
+                <a
+                    href="{{ route('products.index') }}"
+                    class="inline-block w-full md:w-auto text-center px-10 py-3 bg-cyan-400 text-black font-semibold rounded-lg hover:bg-cyan-300 transition">
+                    Gerenciar meus produtos
+                </a>
+
+                @elseif(!Auth::user()->is_admin)
 
                 <form action="{{ route('cart-items.store') }}" method="POST" class="mb-6">
                     @csrf
@@ -79,6 +87,7 @@
 
                     <div x-data="{ qty: 1 }" class="flex items-center gap-4 mb-6">
                         <div class="flex items-center border border-gray-700 rounded-lg overflow-hidden">
+
                             <button
                                 type="button"
                                 @click="qty = qty > 1 ? qty - 1 : 1"
@@ -100,6 +109,7 @@
                                 class="px-4 py-2 text-lg hover:bg-gray-800">
                                 +
                             </button>
+
                         </div>
                     </div>
 
@@ -109,6 +119,7 @@
                             class="w-full md:w-auto px-10 py-3 bg-cyan-400 text-black font-semibold rounded-lg hover:bg-cyan-300 transition disabled:opacity-40 disabled:cursor-not-allowed">
                             Adicionar ao carrinho
                     </button>
+
                 </form>
 
                 @endif

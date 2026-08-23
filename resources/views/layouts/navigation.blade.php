@@ -54,10 +54,8 @@
 
                     <x-nav-link
                         :href="route('contact.create')"
-                        :active="request()->routeIs('dashboard')">
-
+                        :active="request()->routeIs('contact.create')">
                         {{ __('Contate-nos') }}
-
                     </x-nav-link>
 
                     @endif
