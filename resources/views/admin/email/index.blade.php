@@ -1,6 +1,9 @@
 <x-app-layout>
     <div class="min-h-screen bg-zinc-950">
+
+
         <div class="max-w-3xl mx-auto pt-10 px-4" x-data="emailSearch('{{ route('admin.email.search') }}')">
+
 
             <div class="bg-zinc-900 rounded-xl p-8 text-white">
 

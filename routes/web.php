@@ -11,6 +11,7 @@ use App\Http\Controllers\EmailController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -41,8 +42,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/sales/pdf', [SaleController::class, 'generatePdf'])->name('sales.pdf');
     Route::get('/dashboard/sales/xlsx', [SaleController::class, 'generateXlsx'])->name('sales.xlsx');
 
-    Route::get('/dashboard/purchases', [SaleController::class, 'indexPurchaseHistory'])->name('purchases.index');
-    Route::get('/dashboard/purchases/pdf', [SaleController::class, 'generatePdfPurchases'])->name('purchases.pdf');
+    Route::get('/dashboard/purchases', [PurchaseController::class, 'indexPurchaseHistory'])->name('purchases.index');
+    Route::get('/dashboard/purchases/pdf', [PurchaseController::class, 'generatePdfPurchases'])->name('purchases.pdf');
 
     Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
     Route::put('/addresses/{address}', [AddressController::class, 'update'])->name('addresses.update');
