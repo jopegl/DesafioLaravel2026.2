@@ -60,6 +60,7 @@
                                 <th class="px-5 py-4 font-medium">Nome</th>
                                 <th class="px-5 py-4 font-medium">Descrição</th>
                                 <th class="px-5 py-4 font-medium">Preço</th>
+                                <th class="px-5 py-4 font-medium">Quantidade</th>
                                 <th class="px-5 py-4 font-medium">Usuário</th>
                                 <th class="px-5 py-4 font-medium">Data de criação</th>
                                 <th class="px-5 py-4 font-medium text-right">Ações</th>
@@ -83,6 +84,14 @@
                                 </td>
 
                                 <td class="px-5 py-4">{{ formatPrice($product->price) }}</td>
+
+                                <td class="px-5 py-4">
+                                    @if($product->quantity > 0)
+                                    <span class="text-gray-200">{{ $product->quantity }}</span>
+                                    @else
+                                    <span class="text-red-400 font-medium">Esgotado</span>
+                                    @endif
+                                </td>
 
                                 <td class="px-5 py-4 text-gray-400">{{ $product->user->name ?? 'nome' }}</td>
 
