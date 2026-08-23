@@ -56,6 +56,15 @@
                 Usuários
             </a>
 
+            <a href="{{ route('admin.email.index') }}"
+                class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition
+          {{ request()->routeIs('admin.email.*') ? 'bg-cyan-500 text-white' : 'text-gray-300 hover:bg-gray-800/70' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                </svg>
+                Enviar E-mail
+            </a>
+
             @endif
 
             <a href="{{route('profile.edit')}}"
@@ -195,6 +204,15 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-5.13a4 4 0 11-8 0 4 4 0 018 0zm8 3a4 4 0 10-4-4" />
                 </svg>
                 Usuários
+            </a>
+
+            <a href="{{ route('admin.email.index') }}"
+                class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition
+          {{ request()->routeIs('admin.email.*') ? 'bg-cyan-500 text-white' : 'text-gray-300 hover:bg-gray-800/70' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                </svg>
+                Enviar E-mail
             </a>
 
             @endif
