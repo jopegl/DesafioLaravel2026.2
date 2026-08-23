@@ -27,7 +27,9 @@
             <img src="{{ userPhotoUrl(auth()->user()->photo) }}"
                 alt="{{ auth()->user()->name }}"
                 class="w-20 h-20 rounded-full object-cover mb-3 ring-2 ring-gray-700">
-            <span class="font-semibold text-sm">{{ auth()->user()->name }}</span>
+            <span class="font-semibold text-sm truncate max-w-[180px] block text-center" title="{{ auth()->user()->name }}">
+                {{ auth()->user()->name }}
+            </span>
             <span class="text-xs text-cyan-400 uppercase tracking-wide mt-1">
                 {{ auth()->user()->is_admin ?? false ? 'Admin' : 'Usuário' }}
             </span>

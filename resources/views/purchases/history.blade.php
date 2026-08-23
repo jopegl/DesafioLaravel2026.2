@@ -79,8 +79,12 @@
                                         alt="{{ $purchase->product->name }}"
                                         class="w-10 h-10 rounded object-cover bg-gray-700">
                                 </td>
-                                <td class="px-5 py-4">{{ $purchase->product->name }}</td>
-                                <td class="px-5 py-4 text-gray-400">{{ $purchase->seller->name ?? '—' }}</td>
+                                <td class="px-5 py-4 max-w-[160px] truncate" title="{{ $purchase->product->name }}">
+                                    {{ $purchase->product->name }}
+                                </td>
+                                <td class="px-5 py-4 text-gray-400 max-w-[140px] truncate" title="{{ $purchase->seller->name ?? '—' }}">
+                                    {{ $purchase->seller->name ?? '—' }}
+                                </td>
                                 <td class="px-5 py-4 text-gray-400">{{ $purchase->quantity }}</td>
                                 <td class="px-5 py-4">{{ formatPrice($purchase->total_price) }}</td>
                                 <td class="px-5 py-4 text-gray-400">{{ $purchase->purchase_date?->format('d-M-Y') ?? '—' }}</td>

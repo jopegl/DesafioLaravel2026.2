@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 if (! function_exists('formatPrice')) {
@@ -52,5 +53,17 @@ if (! function_exists('formatPhone')) {
             13 => preg_replace('/(\d{2})(\d{2})(\d{5})(\d{4})/', '+$1 ($2) $3-$4', $digits),
             default => $phone
         };
+    }
+}
+
+if (! function_exists('formatDate')) {
+
+    function formatDate(string|Carbon|\DateTimeInterface|null $date): string
+    {
+        if (empty($date)) {
+            return '-';
+        }
+
+        return Carbon::parse($date)->format('d/m/Y');
     }
 }

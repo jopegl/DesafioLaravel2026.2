@@ -77,7 +77,9 @@
                                         class="w-10 h-10 shrink-0 min-w-[2.5rem] min-h-[2.5rem] rounded object-cover bg-gray-700 block">
                                 </td>
 
-                                <td class="px-5 py-4">{{ $product->name }}</td>
+                                <td class="px-5 py-4 max-w-[160px] truncate" title="{{ $product->name }}">
+                                    {{ $product->name }}
+                                </td>
 
                                 <td class="px-5 py-4 text-gray-400 max-w-[160px] truncate">
                                     {{ $product->description }}
@@ -95,7 +97,7 @@
 
                                 <td class="px-5 py-4 text-gray-400">{{ $product->user->name ?? 'nome' }}</td>
 
-                                <td class="px-5 py-4 text-gray-400">{{ $product->created_at->format('d-M-Y') }}</td>
+                                <td class="px-5 py-4 text-gray-400">{{ formatDate($product->created_at) }}</td>
 
                                 <td class="px-5 py-4">
                                     <div class="flex items-center justify-end gap-3 text-cyan-400">

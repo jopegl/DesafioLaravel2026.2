@@ -15,12 +15,12 @@
 
             <div>
                 <p class="text-gray-400 text-xs mb-1">Nome</p>
-                <p class="text-white text-sm" x-text="selected.name"></p>
+                <p class="text-white text-sm break-words" x-text="selected.name"></p>
             </div>
 
             <div>
                 <p class="text-gray-400 text-xs mb-1">E-mail</p>
-                <p class="text-white text-sm" x-text="selected.email"></p>
+                <p class="text-white text-sm break-all" x-text="selected.email"></p>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
@@ -37,7 +37,7 @@
             <div>
                 <p class="text-gray-400 text-xs mb-1">Endereço padrão</p>
                 <template x-if="selected.default_address">
-                    <p class="text-white text-sm"
+                    <p class="text-white text-sm break-words"
                         x-text="`${selected.default_address.street}, ${selected.default_address.number} - ${selected.default_address.neighborhood}, ${selected.default_address.city}/${selected.default_address.state}`">
                     </p>
                 </template>

@@ -63,21 +63,27 @@
                                         class="w-10 h-10 shrink-0 min-w-[2.5rem] min-h-[2.5rem] rounded-full object-cover bg-gray-700 block">
                                 </td>
 
-                                <td class="px-5 py-4">{{ $user->name }}</td>
+                                <td class="px-5 py-4 max-w-[160px] truncate" title="{{ $user->name }}">
+                                    {{ $user->name }}
+                                </td>
 
-                                <td class="px-5 py-4 text-gray-400">{{ $user->email }}</td>
+                                <td class="px-5 py-4 text-gray-400 max-w-[180px] truncate" title="{{ $user->email }}">
+                                    {{ $user->email }}
+                                </td>
 
                                 <td class="px-5 py-4 text-gray-400">{{ formatPhone($user->phone) }}</td>
 
-                                <td class="px-5 py-4 text-gray-400">
+                                <td class="px-5 py-4 text-gray-400 max-w-[160px] truncate">
                                     @if($user->defaultAddress)
-                                    {{ $user->defaultAddress->city }}/{{ $user->defaultAddress->state }}
+                                    <span title="{{ $user->defaultAddress->city }}/{{ $user->defaultAddress->state }}">
+                                        {{ $user->defaultAddress->city }}/{{ $user->defaultAddress->state }}
+                                    </span>
                                     @else
                                     <span class="text-gray-600">Não cadastrado</span>
                                     @endif
                                 </td>
 
-                                <td class="px-5 py-4 text-gray-400">{{ $user->created_at->format('d-M-Y') }}</td>
+                                <td class="px-5 py-4 text-gray-400">{{ formatDate($user->created_at) }}</td>
 
                                 <td class="px-5 py-4">
                                     <div class="flex items-center justify-end gap-3 text-cyan-400">

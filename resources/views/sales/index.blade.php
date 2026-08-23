@@ -93,7 +93,7 @@
                                 <td class="px-5 py-4 text-gray-400">{{ $sale->seller->name ?? '—' }}</td>
                                 <td class="px-5 py-4 text-gray-400">{{ $sale->buyer->name ?? '—' }}</td>
                                 <td class="px-5 py-4">{{ formatPrice($sale->total_price) }}</td>
-                                <td class="px-5 py-4 text-gray-400">{{ $sale->purchase_date?->format('d-M-Y') ?? '—' }}</td>
+                                <td class="px-5 py-4 text-gray-400">{{ formatDate($sale->purchase_date) }}</td>
                             </tr>
                             @empty
                             <tr>
@@ -138,7 +138,7 @@
 
 
                 </div>
-                @endif
+
 
                 <div class="mt-8 bg-[#1c1f2a] rounded-xl border border-gray-800/60 p-8 flex flex-col items-center justify-center text-center">
                     <span class="text-gray-400 text-sm mb-2">Saldo disponível</span>
@@ -149,6 +149,7 @@
                         R$ 0,00
                     </span>
                 </div>
+                @endif
             </main>
 
         </div>

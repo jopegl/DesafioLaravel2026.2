@@ -12,12 +12,12 @@
 
             <div>
                 <p class="text-gray-400 text-xs mb-1">Nome</p>
-                <p class="text-white text-sm" x-text="selected.name"></p>
+                <p class="text-white text-sm break-words" x-text="selected.name"></p>
             </div>
 
             <div>
                 <p class="text-gray-400 text-xs mb-1">Categoria</p>
-                <p class="text-white text-sm" x-text="selected.category?.name ?? selected.category_id"></p>
+                <p class="text-white text-sm break-words" x-text="selected.category?.name ?? selected.category_id"></p>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
@@ -34,7 +34,7 @@
 
             <div>
                 <p class="text-gray-400 text-xs mb-1">Descrição</p>
-                <p class="text-white text-sm" x-text="selected.description"></p>
+                <p class="text-white text-sm break-words whitespace-pre-line" x-text="selected.description"></p>
             </div>
 
             <button type="button" @click="showView = false"
