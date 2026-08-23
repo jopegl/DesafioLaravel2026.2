@@ -33,7 +33,7 @@ class UserFactory extends Factory
             'is_admin' => false,
             'phone' => fake()->numerify('###########'),
             'birth_date' => fake()->dateTimeBetween('-70 years', '-18 years')->format('Y-m-d'),
-            'cpf' => fake()->numerify('###########'),
+            'cpf' => fake('pt_BR')->cpf(false),
             'balance' => fake()->randomFloat(2, 0, 5000),
             'photo' => null,
             'created_by' => null,

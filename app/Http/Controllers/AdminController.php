@@ -53,7 +53,7 @@ class AdminController extends Controller
 
     public function destroy(User $admin)
     {
-        $this->authorize('manageAdmins', User::class);
+        $this->authorize('manageAdmins', $admin);
 
         $admin->delete();
         return redirect()->route('admins.index')->with('success', 'Administrador removido.');
