@@ -91,7 +91,10 @@
                                         </button>
 
                                         <button
-                                            @click='openEdit(@json(array_merge($user->toArray(), ["photo_url" => userPhotoUrl($user->photo)])))'
+                                            @click='openEdit(@json(array_merge($user->toArray(), [
+                                                "photo_url" => userPhotoUrl($user->photo),
+                                                "cpf" => $user->cpf
+                                            ])))'
                                             title="Editar" class="hover:text-cyan-300">
                                             <x-icons.pencil />
                                         </button>

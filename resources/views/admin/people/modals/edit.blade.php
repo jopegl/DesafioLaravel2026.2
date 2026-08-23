@@ -26,7 +26,7 @@
                     @csrf
                     @method('PUT')
 
-                    <label class="block border-2 border-dashed border-gray-700 rounded-lg h-28 flex items-center justify-center text-gray-500 text-sm cursor-pointer hover:border-cyan-400 relative overflow-hidden">
+                    <label class="block border-2 border-dashed border-gray-700 rounded-lg h-64 flex items-center justify-center text-gray-500 text-sm cursor-pointer hover:border-cyan-400 relative overflow-hidden">
 
                         <img
                             :src="selected.photo_url"

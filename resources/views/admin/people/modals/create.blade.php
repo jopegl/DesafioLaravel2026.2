@@ -8,7 +8,7 @@
 
         @csrf
 
-        <label class="block border-2 border-dashed border-gray-700 rounded-lg h-32 flex items-center justify-center text-gray-500 text-sm cursor-pointer hover:border-cyan-400 relative overflow-hidden"
+        <label class="block border-2 border-dashed border-gray-700 rounded-lg h-64 flex items-center justify-center text-gray-500 text-sm cursor-pointer hover:border-cyan-400 relative overflow-hidden"
             x-data="{ preview: null }">
             <template x-if="!preview">
                 <span>Clique para adicionar uma foto</span>

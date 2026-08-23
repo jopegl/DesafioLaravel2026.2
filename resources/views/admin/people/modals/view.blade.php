@@ -7,8 +7,11 @@
     <template x-if="selected">
         <div class="space-y-4">
 
-            <img :src="selected.photo_url" x-show="selected.photo_url" :alt="selected.name"
-                class="w-20 h-20 mx-auto object-cover rounded-full border border-gray-700">
+            <img
+                :src="selected.photo_url"
+                x-show="selected.photo_url"
+                :alt="selected.name"
+                class="w-32 h-32 mx-auto object-cover rounded-full border-2 border-gray-700">
 
             <div>
                 <p class="text-gray-400 text-xs mb-1">Nome</p>
