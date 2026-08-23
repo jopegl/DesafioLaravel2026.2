@@ -20,11 +20,18 @@ class SalesSeeder extends Seeder
         }
 
         $products->each(function (Product $product) use ($buyers) {
+
+            $validBuyers = $buyers->where('id', '!=', $product->user_id);
+
+            if ($validBuyers->isEmpty()) {
+                return;
+            }
+
             Sale::factory()
                 ->count(rand(1, 4))
                 ->forProduct($product)
                 ->create([
-                    'buyer_id' => fn() => $buyers->random()->id,
+                    'buyer_id' => fn() => $validBuyers->random()->id,
                 ]);
         });
     }

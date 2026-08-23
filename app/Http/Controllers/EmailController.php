@@ -23,7 +23,8 @@ class EmailController extends Controller
             return response()->json([]);
         }
 
-        $users = User::where('email', 'like', "%{$term}%")
+        $users = User::where('is_admin', false)
+            ->where('email', 'like', "%{$term}%")
             ->select('id', 'name', 'email')
             ->limit(8)
             ->get();
@@ -35,7 +36,9 @@ class EmailController extends Controller
     {
         $validated = $request->validated();
 
-        $user = User::findOrFail($validated['user_id']);
+        $user = User::where('id', $validated['user_id'])
+            ->where('is_admin', false)
+            ->firstOrFail();
 
         Mail::to($user->email, $user->name)->send(
             new AdminMessage([
