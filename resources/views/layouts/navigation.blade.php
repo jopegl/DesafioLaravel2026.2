@@ -160,57 +160,48 @@
 
             @endif
 
-            {{-- Settings Dropdown --}}
-
+            <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center">
-
-                <x-dropdown align="right" width="48">
-
+                <x-dropdown align="right" width="56" contentClasses="py-1 bg-gray-800 border border-gray-700 rounded-md shadow-lg">
                     <x-slot name="trigger">
-
-                        <button
-                            class="inline-flex items-center p-1 border border-transparent rounded-full text-sm font-medium text-gray-300 bg-gray-800 hover:ring-2 hover:ring-cyan-400/50 focus:outline-none transition ease-in-out duration-150">
-
-                            <img
-                                src="{{ userPhotoUrl(Auth::user()->photo ?? null) }}"
-                                alt="{{ Auth::user()->name }}"
-                                class="w-9 h-9 rounded-full object-cover">
-
+                        <button class="inline-flex items-center p-1 border border-transparent rounded-full text-sm font-medium text-gray-300 bg-gray-800 hover:ring-2 hover:ring-cyan-400/50 focus:outline-none transition ease-in-out duration-150">
+                            <img src="{{ userPhotoUrl(Auth::user()->photo ?? null) }}" alt="{{ Auth::user()->name }}" class="w-9 h-9 rounded-full object-cover">
                         </button>
-
                     </x-slot>
 
                     <x-slot name="content">
+                        <!-- Cabeçalho com Foto e Nome -->
+                        <div class="px-4 py-3 border-b border-gray-700 flex items-center gap-3">
+                            <img src="{{ userPhotoUrl(Auth::user()->photo ?? null) }}" alt="{{ Auth::user()->name }}" class="w-9 h-9 rounded-full object-cover">
+                            <div class="truncate">
+                                <p class="text-sm font-semibold text-white truncate">{{ Auth::user()->name }}</p>
+                                <p class="text-xs text-gray-400 truncate">{{ Auth::user()->email }}</p>
+                            </div>
+                        </div>
 
-                        {{-- Profile --}}
-
-                        <x-dropdown-link :href="route('profile.edit')">
-
-                            {{ __('Perfil') }}
-
-                        </x-dropdown-link>
-
-                        {{-- Authentication --}}
-
-                        <form method="POST" action="{{ route('logout') }}">
-
-                            @csrf
-
-                            <x-dropdown-link
-                                :href="route('logout')"
-                                onclick="event.preventDefault();
-                                    this.closest('form').submit();">
-
-                                {{ __('Log Out') }}
-
+                        <!-- Links do Menu -->
+                        <div class="py-1">
+                            <!-- Perfil -->
+                            <x-dropdown-link :href="route('profile.edit')" class="flex items-center gap-2 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-150">
+                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                {{ __('Perfil') }}
                             </x-dropdown-link>
 
-                        </form>
-
+                            <!-- Logout -->
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();" class="flex items-center gap-2 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-150">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                    </svg>
+                                    {{ __('Log Out') }}
+                                </x-dropdown-link>
+                            </form>
+                        </div>
                     </x-slot>
-
                 </x-dropdown>
-
             </div>
 
             @else

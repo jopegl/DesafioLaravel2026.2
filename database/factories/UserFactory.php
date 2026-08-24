@@ -5,25 +5,37 @@ namespace Database\Factories;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
- */
 class UserFactory extends Factory
 {
-    /**
-     * The current password being used by the factory.
-     */
     protected static ?string $password;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
+        $avatars = [];
+
+        //peguei de 10 a 30 pra variar as imagens
+        for ($i = 10; $i <= 30; $i++) {
+            $filename = "users/avatar-{$i}.jpg";
+
+            if (!Storage::disk('public')->exists($filename)) {
+                try {
+                    $response = Http::timeout(3)->get("https://i.pravatar.cc/300?img={$i}");
+
+                    if ($response->successful()) {
+                        Storage::disk('public')->put($filename, $response->body());
+                        $avatars[] = $filename;
+                    }
+                } catch (\Exception $e) {
+                }
+            } else {
+                $avatars[] = $filename;
+            }
+        }
+
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
@@ -35,14 +47,11 @@ class UserFactory extends Factory
             'birth_date' => fake()->dateTimeBetween('-70 years', '-18 years')->format('Y-m-d'),
             'cpf' => fake('pt_BR')->cpf(false),
             'balance' => fake()->randomFloat(2, 0, 5000),
-            'photo' => null,
+            'photo' => !empty($avatars) ? fake()->randomElement($avatars) : null,
             'created_by' => null,
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
     public function unverified(): static
     {
         return $this->state(fn(array $attributes) => [
@@ -50,9 +59,6 @@ class UserFactory extends Factory
         ]);
     }
 
-    /**
-     * Indicate that the user is an admin.
-     */
     public function admin(): static
     {
         return $this->state(fn(array $attributes) => [
@@ -60,9 +66,6 @@ class UserFactory extends Factory
         ]);
     }
 
-    /**
-     * Indicate that the user was created by another user (e.g. an admin).
-     */
     public function createdBy(User $user): static
     {
         return $this->state(fn(array $attributes) => [

@@ -97,17 +97,16 @@
                 : 'opacity-80 hover:bg-gray-750'
             }}">
 
-                            {{-- Imagem --}}
-                            <div class="relative block mb-3 overflow-hidden rounded-lg bg-gray-900">
+                            <div class="relative block mb-3 overflow-hidden rounded-lg bg-gray-900 h-48 w-full">
 
                                 <img
                                     src="{{ productPhotoUrl($product->photo) }}"
                                     alt="{{ $product->name }}"
-                                    class="w-full h-32 object-contain transition-all duration-300
-                        {{ $inStock
-                            ? 'group-hover:scale-110'
-                            : 'grayscale opacity-50'
-                        }}">
+                                    class="w-full h-full object-cover transition-all duration-300
+    {{ $inStock
+        ? 'group-hover:scale-110'
+        : 'grayscale opacity-50'
+    }}">
 
                                 @unless($inStock)
                                 {{-- Overlay fora de estoque --}}
@@ -120,17 +119,16 @@
 
                             </div>
 
-                            {{-- Nome --}}
+
                             <h3 class="text-sm text-gray-300 line-clamp-2">
                                 {{ $product->name }}
                             </h3>
 
-                            {{-- Preço --}}
+
                             <p class="text-lg font-bold text-white mt-2">
                                 {{ formatPrice($product->price) }}
                             </p>
 
-                            {{-- Botão --}}
                             @if(!$inStock)
 
                             <span class="flex items-center justify-center gap-2 w-full bg-gray-700 text-gray-400 text-sm py-2 rounded-full mt-3 cursor-not-allowed border border-gray-600/50">
