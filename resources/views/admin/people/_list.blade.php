@@ -56,6 +56,12 @@
 
                             @forelse ($people as $user)
 
+                            @php
+                            $canManage = ! $user->is_admin
+                            || $user->id === auth()->id()
+                            || $user->created_by === auth()->id();
+                            @endphp
+
                             <tr class="border-b border-gray-800/40 last:border-0 hover:bg-white/[0.02]">
 
                                 <td class="px-5 py-4">
@@ -96,6 +102,8 @@
                                             <x-icons.eye />
                                         </button>
 
+                                        @if ($canManage)
+
                                         <button
                                             @click='openEdit(@json(array_merge($user->toArray(), [
                                                 "photo_url" => userPhotoUrl($user->photo),
@@ -108,6 +116,8 @@
                                         <button @click='openDelete(@json($user))' title="Excluir" class="hover:text-red-400">
                                             <x-icons.trash />
                                         </button>
+
+                                        @endif
 
                                     </div>
                                 </td>

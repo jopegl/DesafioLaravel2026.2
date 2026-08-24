@@ -13,6 +13,11 @@ class AdminController extends Controller
     {
         $this->authorize('accessAdminsList', User::class);
         $admins = User::withDetails()->admins(auth()->id())->search($request->search)->paginate(10);
+        $admins->getCollection()->transform(function (User $admin) {
+            $admin->canManage = auth()->user()->can('manageAdmins', $admin);
+            return $admin;
+        });
+
         return view('admin.admins.index', compact('admins'));
     }
 
@@ -40,6 +45,7 @@ class AdminController extends Controller
 
     public function update(UpdateAdminRequest $request, User $admin)
     {
+        $this->authorize('manageAdmins', $admin);
         $data = $request->validated();
 
         if ($request->hasFile('photo')) {

@@ -127,7 +127,7 @@ class User extends Authenticatable
 
     public function scopeAdmins(Builder $query, string $id)
     {
-        return $query->where('is_admin', true)->where('created_by', $id);
+        return $query->where('is_admin', true);
     }
 
     public function scopeNotAdmins(Builder $query)
@@ -141,6 +141,9 @@ class User extends Authenticatable
             return $query;
         }
 
-        return $query->where('name', 'like', "%{$term}%")->orWhere('email', 'like', "{$term}");;
+        return $query->where(function ($q) use ($term) {
+            $q->where('name', 'like', "%{$term}%")
+                ->orWhere('email', 'like', "%{$term}%");
+        });
     }
 }
