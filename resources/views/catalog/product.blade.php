@@ -80,12 +80,15 @@
 
                 @elseif(!Auth::user()->is_admin)
 
-                <form action="{{ route('cart-items.store') }}" method="POST" class="mb-6">
+                <form action="{{ route('cart-items.store') }}" method="POST" class="mb-6"
+                    x-data="{ loading: false }"
+                    @submit="loading = true">
                     @csrf
 
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
 
                     <div x-data="{ qty: 1 }" class="flex items-center gap-4 mb-6">
+
                         <div class="flex items-center border border-gray-700 rounded-lg overflow-hidden">
 
                             <button
@@ -115,9 +118,13 @@
 
                     <button
                         type="submit"
-                        @disabled($product->quantity <= 0)
-                            class="w-full md:w-auto px-10 py-3 bg-cyan-400 text-black font-semibold rounded-lg hover:bg-cyan-300 transition disabled:opacity-40 disabled:cursor-not-allowed">
-                            Adicionar ao carrinho
+                        :disabled="loading || {{ $product->quantity <= 0 ? 'true' : 'false' }}"
+                        class="w-full md:w-auto px-10 py-3 bg-cyan-400 text-black font-semibold rounded-lg hover:bg-cyan-300 transition disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2">
+                        <svg x-show="loading" x-cloak class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                        <span x-text="loading ? 'Adicionando...' : 'Adicionar ao carrinho'"></span>
                     </button>
 
                 </form>

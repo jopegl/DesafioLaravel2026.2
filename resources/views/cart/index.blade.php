@@ -57,7 +57,6 @@
 
                         <p class="w-16 text-right font-medium">R$ {{ number_format($item->product->price, 2, ',', '.') }}</p>
 
-                        {{-- Remover item --}}
                         <form action="{{ route('cart-items.destroy', $item) }}" method="POST">
                             @csrf
                             @method('DELETE')
@@ -87,23 +86,33 @@
 
                 <div class="space-y-3 mt-6">
 
-                    <form action="{{ route('mercadopago.process') }}" method="POST">
+                    <form action="{{ route('mercadopago.process') }}" method="POST"
+                        x-data="{ loading: false }"
+                        @submit="loading = true">
                         @csrf
-
                         <button type="submit"
-                            @if($cartItems->isEmpty()) disabled @endif
-                            class="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-neutral-700 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition">
-                            Pagar com Mercado Pago
+                            :disabled="loading || {{ $cartItems->isEmpty() ? 'true' : 'false' }}"
+                            class="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-neutral-700 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition inline-flex items-center justify-center gap-2">
+                            <svg x-show="loading" x-cloak class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                            </svg>
+                            <span x-text="loading ? 'Redirecionando...' : 'Pagar com Mercado Pago'"></span>
                         </button>
                     </form>
 
-                    <form action="{{ route('pagbank.process') }}" method="POST">
+                    <form action="{{ route('pagbank.process') }}" method="POST"
+                        x-data="{ loading: false }"
+                        @submit="loading = true">
                         @csrf
-
                         <button type="submit"
-                            @if($cartItems->isEmpty()) disabled @endif
-                            class="w-full bg-green-500 hover:bg-green-600 disabled:bg-neutral-700 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition">
-                            Pagar com PagBank
+                            :disabled="loading || {{ $cartItems->isEmpty() ? 'true' : 'false' }}"
+                            class="w-full bg-green-500 hover:bg-green-600 disabled:bg-neutral-700 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition inline-flex items-center justify-center gap-2">
+                            <svg x-show="loading" x-cloak class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                            </svg>
+                            <span x-text="loading ? 'Redirecionando...' : 'Pagar com PagBank'"></span>
                         </button>
                     </form>
 
