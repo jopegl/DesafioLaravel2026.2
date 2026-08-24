@@ -6,6 +6,7 @@ use App\Http\Requests\StoreAdminRequest;
 use App\Http\Requests\UpdateAdminRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -60,6 +61,10 @@ class AdminController extends Controller
     public function destroy(User $admin)
     {
         $this->authorize('manageAdmins', $admin);
+
+        if ($admin->id === auth()->id()) {
+            return redirect()->back()->with('error', 'Para excluir seu usuário, acesse a página de edição de perfil');
+        }
 
         $admin->delete();
         return redirect()->route('admins.index')->with('success', 'Administrador removido.');

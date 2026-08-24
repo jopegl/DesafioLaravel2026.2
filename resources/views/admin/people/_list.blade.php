@@ -108,9 +108,11 @@
                                             <x-icons.pencil />
                                         </button>
 
+                                        @if(!(auth()->id() === $user->id))
                                         <button @click='openDelete(@json($user))' title="Excluir" class="hover:text-red-400">
                                             <x-icons.trash />
                                         </button>
+                                        @endif
 
                                         @endif
 
