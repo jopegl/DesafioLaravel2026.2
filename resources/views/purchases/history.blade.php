@@ -87,7 +87,7 @@
                                 </td>
                                 <td class="px-5 py-4 text-gray-400">{{ $purchase->quantity }}</td>
                                 <td class="px-5 py-4">{{ formatPrice($purchase->total_price) }}</td>
-                                <td class="px-5 py-4 text-gray-400">{{ $purchase->purchase_date?->format('d-M-Y') ?? '—' }}</td>
+                                <td class="px-5 py-4 text-gray-400">{{ formatDate($purchase->purchase_date) ?? '—' }}</td>
                             </tr>
                             @empty
                             <tr>
