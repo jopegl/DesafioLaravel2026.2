@@ -15,6 +15,7 @@ class IndexController extends Controller
 
 
         $products = Product::query()
+            ->when(auth()->check(), fn($q) => $q->where('user_id', '!=', auth()->id()))
             ->search($request->search)
             ->inCategory($request->category)
             ->priceBetween($request->price_min, $request->price_max)
