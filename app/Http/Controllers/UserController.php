@@ -14,6 +14,10 @@ class UserController extends Controller
     {
         $this->authorize('accessUsersList', User::class);
         $users = User::withDetails()->notAdmins()->search($request->search)->latest()->paginate(10);
+        $users->getCollection()->transform(function (User $user) {
+            $user->canManage = true;
+            return $user;
+        });
         return view('admin.users.index', compact('users'));
     }
 
