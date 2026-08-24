@@ -86,13 +86,10 @@
                 {{-- Grid de produtos --}}
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                     @forelse ($products as $product)
-                    @php
-                    $inStock = productInStock($product);
-                    @endphp
 
                     <a href="{{ route('product.page', $product) }}">
                         <div class="group bg-gray-800 rounded-xl p-4 flex flex-col transition-all duration-300
-            {{ $inStock
+            {{ productInStock($product)
                 ? 'hover:-translate-y-1 hover:shadow-lg hover:shadow-primary-500/20 hover:bg-gray-700'
                 : 'opacity-80 hover:bg-gray-750'
             }}">
@@ -103,12 +100,12 @@
                                     src="{{ productPhotoUrl($product->photo) }}"
                                     alt="{{ $product->name }}"
                                     class="w-full h-full object-cover transition-all duration-300
-    {{ $inStock
+    {{ productInStock($product)
         ? 'group-hover:scale-110'
         : 'grayscale opacity-50'
     }}">
 
-                                @unless($inStock)
+                                @unless(productInStock($product))
                                 {{-- Overlay fora de estoque --}}
                                 <div class="absolute inset-0 flex items-center justify-center bg-black/30">
                                     <span class="px-3 py-1.5 rounded-full bg-gray-900/90 border border-red-400/30 text-red-300 text-xs font-semibold uppercase tracking-wide shadow-lg">
@@ -129,7 +126,7 @@
                                 {{ formatPrice($product->price) }}
                             </p>
 
-                            @if(!$inStock)
+                            @if(!productInStock($product))
 
                             <span class="flex items-center justify-center gap-2 w-full bg-gray-700 text-gray-400 text-sm py-2 rounded-full mt-3 cursor-not-allowed border border-gray-600/50">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
