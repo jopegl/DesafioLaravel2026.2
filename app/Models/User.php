@@ -146,4 +146,14 @@ class User extends Authenticatable
                 ->orWhere('email', 'like', "%{$term}%");
         });
     }
+
+    public function toViewPayload(): array
+    {
+        return array_merge($this->toArray(), [
+            'photo_url' => userPhotoUrl($this->photo),
+            'formatted_phone' => formatPhone($this->phone),
+            'cpf' => formatCPF($this->cpf),
+            'birth_date' => formatDate($this->birth_date)
+        ]);
+    }
 }

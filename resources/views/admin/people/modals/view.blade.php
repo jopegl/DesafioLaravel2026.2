@@ -19,6 +19,11 @@
             </div>
 
             <div>
+                <p class="text-gray-400 text-xs mb-1">CPF</p>
+                <p class="text-white text-sm" x-text="selected.cpf || '—'"></p>
+            </div>
+
+            <div>
                 <p class="text-gray-400 text-xs mb-1">E-mail</p>
                 <p class="text-white text-sm break-all" x-text="selected.email"></p>
             </div>
@@ -30,7 +35,7 @@
                 </div>
                 <div>
                     <p class="text-gray-400 text-xs mb-1">Nascimento</p>
-                    <p class="text-white text-sm" x-text="formatDate(selected.birth_date)"></p>
+                    <p class="text-white text-sm" x-text="selected.birth_date"></p>
                 </div>
             </div>
 

@@ -44,6 +44,7 @@
                             <tr class="text-gray-400 border-b border-gray-800/60">
                                 <th class="px-5 py-4 font-medium w-20"></th>
                                 <th class="px-5 py-4 font-medium">Nome</th>
+                                <th class="px-5 py-4 font-medium">CPF</th>
                                 <th class="px-5 py-4 font-medium">E-mail</th>
                                 <th class="px-5 py-4 font-medium">Telefone</th>
                                 <th class="px-5 py-4 font-medium">Endereço</th>
@@ -53,10 +54,7 @@
                         </thead>
 
                         <tbody class="text-gray-200">
-
                             @forelse ($people as $user)
-
-
                             <tr class="border-b border-gray-800/40 last:border-0 hover:bg-white/[0.02]">
 
                                 <td class="px-5 py-4">
@@ -66,6 +64,11 @@
 
                                 <td class="px-5 py-4 max-w-[160px] truncate" title="{{ $user->name }}">
                                     {{ $user->name }}
+                                </td>
+
+
+                                <td class="px-5 py-4 text-gray-400">
+                                    {{ formatCPF($user->cpf) }}
                                 </td>
 
                                 <td class="px-5 py-4 text-gray-400 max-w-[180px] truncate" title="{{ $user->email }}">
@@ -88,22 +91,17 @@
 
                                 <td class="px-5 py-4">
                                     <div class="flex items-center justify-end gap-3 text-cyan-400">
-
-                                        <button
-                                            @click='openView(@json(array_merge($user->toArray(), [
-                                                    "photo_url" => userPhotoUrl($user->photo),
-                                                    "formatted_phone" => formatPhone($user->phone)
-                                                ])))'>
+                                        <button @click='openView(@json($user->toViewPayload()))'>
                                             <x-icons.eye />
                                         </button>
 
-                                        @if ($user->canManage)
 
+                                        @if ($user->canManage)
                                         <button
                                             @click='openEdit(@json(array_merge($user->toArray(), [
-                                                "photo_url" => userPhotoUrl($user->photo),
-                                                "cpf" => $user->cpf
-                                            ])))'
+                        "photo_url" => userPhotoUrl($user->photo),
+                        "cpf" => $user->cpf
+                    ])))'
                                             title="Editar" class="hover:text-cyan-300">
                                             <x-icons.pencil />
                                         </button>
@@ -113,26 +111,20 @@
                                             <x-icons.trash />
                                         </button>
                                         @endif
-
                                         @endif
 
                                     </div>
                                 </td>
 
                             </tr>
-
                             @empty
-
                             <tr>
-                                <td colspan="7" class="px-5 py-10 text-center text-gray-500">
+                                <td colspan="8" class="px-5 py-10 text-center text-gray-500">
                                     Nenhum {{ $singular }} cadastrado até o momento.
                                 </td>
                             </tr>
-
                             @endforelse
-
                         </tbody>
-
                     </table>
 
                 </div>
