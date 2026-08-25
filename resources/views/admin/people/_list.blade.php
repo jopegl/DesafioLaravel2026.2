@@ -51,7 +51,7 @@
                                 @if(request()->routeIs('users.*'))
                                 <th class="px-5 py-4 font-medium">Saldo</th>
                                 @endif
-                                <th class="px-5 py-4 font-medium">Cadastrado em</th>
+                                <th class="px-5 py-4 font-medium">Nascimento</th>
                                 <th class="px-5 py-4 font-medium text-right">Ações</th>
                             </tr>
                         </thead>
@@ -96,7 +96,7 @@
                                 </td>
                                 @endif
 
-                                <td class="px-5 py-4 text-gray-400">{{ formatDate($user->created_at) }}</td>
+                                <td class="px-5 py-4 text-gray-400">{{ formatDate($user->birth_date) }}</td>
 
                                 <td class="px-5 py-4">
                                     <div class="flex items-center justify-end gap-3 text-cyan-400">
