@@ -78,13 +78,13 @@
 
                         <div class="flex flex-col sm:flex-row gap-4">
                             <div class="flex-1">
-                                <label class="block text-gray-400 text-xs mb-1">Telefone</label>
-                                <input type="text" name="phone" value="{{ old('phone', $user->phone) }}"
+                                <label class="block text-gray-400 text-xs mb-1">Telefone *</label>
+                                <input type="text" name="phone" required value="{{ old('phone', $user->phone) }}"
                                     class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400">
                             </div>
                             <div class="flex-1">
-                                <label class="block text-gray-400 text-xs mb-1">Nascimento</label>
-                                <input type="date" name="birth_date" value="{{ old('birth_date', $user->birth_date?->format('Y-m-d')) }}"
+                                <label class="block text-gray-400 text-xs mb-1">Nascimento *</label>
+                                <input type="date" name="birth_date" required value="{{ old('birth_date', $user->birth_date?->format('Y-m-d')) }}"
                                     class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400">
                             </div>
                         </div>

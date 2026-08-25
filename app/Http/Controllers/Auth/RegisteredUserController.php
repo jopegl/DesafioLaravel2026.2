@@ -27,6 +27,8 @@ class RegisteredUserController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'cpf' => $data['cpf'],
+            'phone' => $data['phone'],
+            'birth_date' => $data['birth_date'],
             'password' => Hash::make($data['password']),
         ]);
 

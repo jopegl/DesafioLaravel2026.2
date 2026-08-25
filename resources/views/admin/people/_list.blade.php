@@ -48,6 +48,9 @@
                                 <th class="px-5 py-4 font-medium">E-mail</th>
                                 <th class="px-5 py-4 font-medium">Telefone</th>
                                 <th class="px-5 py-4 font-medium">Endereço</th>
+                                @if(request()->routeIs('users.*'))
+                                <th class="px-5 py-4 font-medium">Saldo</th>
+                                @endif
                                 <th class="px-5 py-4 font-medium">Cadastrado em</th>
                                 <th class="px-5 py-4 font-medium text-right">Ações</th>
                             </tr>
@@ -87,6 +90,12 @@
                                     @endif
                                 </td>
 
+                                @if(!$user->is_admin)
+                                <td class="px-5 py-4 font-semibold text-emerald-400">
+                                    R$ {{ number_format($user->balance ?? 0, 2, ',', '.') }}
+                                </td>
+                                @endif
+
                                 <td class="px-5 py-4 text-gray-400">{{ formatDate($user->created_at) }}</td>
 
                                 <td class="px-5 py-4">
@@ -119,7 +128,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="8" class="px-5 py-10 text-center text-gray-500">
+                                <td colspan="9" class="px-5 py-10 text-center text-gray-500">
                                     Nenhum {{ $singular }} cadastrado até o momento.
                                 </td>
                             </tr>

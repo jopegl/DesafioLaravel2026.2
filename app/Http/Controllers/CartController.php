@@ -62,10 +62,7 @@ class CartController extends Controller
             auth()->user()->cartItems()->create($data);
         }
 
-        return back()->with(
-            'success',
-            'Produto adicionado ao carrinho!'
-        );
+        return redirect()->route('cart.index')->with('success', 'Produto adicionado ao carrinho!');
     }
 
     public function update(

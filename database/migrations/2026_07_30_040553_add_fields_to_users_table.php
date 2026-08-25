@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('state', 2)->nullable();
             $table->string('complement')->nullable();
-            $table->string('phone')->nullable();
-            $table->date('birth_date')->nullable();
+            $table->string('phone');
+            $table->date('birth_date');
             $table->string('cpf')->unique()->nullable();
             $table->decimal('balance', 10, 2)->default(0);
             $table->string('photo')->nullable();
