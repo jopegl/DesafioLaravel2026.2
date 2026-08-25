@@ -22,7 +22,7 @@ class UpdateUserRequest extends FormRequest
             'name'       => ['required', 'string', 'max:255'],
             'email'      => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($userId)],
             'cpf' => ['required', 'string', 'size:11', Rule::unique('users', 'cpf')->ignore($userId), new Cpf],
-            'phone'      => ['required', 'string', 'max:20'],
+            'phone'      => ['required', 'string', 'numeric', 'digits_between:10,11'],
             'birth_date' => ['required', 'date', 'before:today'],
             'photo'      => ['nullable', 'image', 'max:2048'],
             'password'   => ['nullable', 'confirmed', Password::defaults()],

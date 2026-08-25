@@ -153,7 +153,8 @@ class User extends Authenticatable
             'photo_url' => userPhotoUrl($this->photo),
             'formatted_phone' => formatPhone($this->phone),
             'cpf' => formatCPF($this->cpf),
-            'birth_date' => formatDate($this->birth_date)
+            'birth_date' => formatDate($this->birth_date),
+            'balance' => formatPrice($this->balance)
         ]);
     }
 }

@@ -20,7 +20,7 @@ class StoreAdminRequest extends FormRequest
             'name'       => ['required', 'string', 'max:255'],
             'email'      => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'cpf' => ['required', 'string', 'size:11', 'unique:users,cpf', new Cpf],
-            'phone'      => ['required', 'string', 'max:20'],
+            'phone'      => ['required', 'string', 'numeric', 'digits_between:10,11'],
             'birth_date' => ['required', 'date', 'before:today'],
             'photo'      => ['nullable', 'image', 'max:2048'], // 2mb
             'password'   => ['required', 'confirmed', Password::defaults()],

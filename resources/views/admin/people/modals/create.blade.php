@@ -39,7 +39,7 @@
         <div class="flex gap-4">
             <div class="flex-1">
                 <label class="block text-gray-400 text-xs mb-1">Telefone *</label>
-                <input type="text" name="phone" required
+                <input type="text" name="phone" maxlenght="11" required
                     class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400">
             </div>
             <div class="flex-1">

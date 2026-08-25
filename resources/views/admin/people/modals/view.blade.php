@@ -28,6 +28,15 @@
                 <p class="text-white text-sm break-all" x-text="selected.email"></p>
             </div>
 
+            @if(request()->routeIs('users.*'))
+
+            <div>
+                <p class="text-gray-400 text-xs mb-1">Saldo</p>
+                <p class="text-white text-sm break-all" x-text="selected.balance"></p>
+            </div>
+
+            @endif
+
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <p class="text-gray-400 text-xs mb-1">Telefone</p>

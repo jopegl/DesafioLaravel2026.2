@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use MercadoPago\Client\Common\RequestOptions;
 use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\Client\Preference\PreferenceClient;
@@ -76,29 +75,27 @@ class MercadoPagoController extends Controller
 
     private function registerSale(User $buyer, Collection $cartItems, string $mpReferenceId): void
     {
-        DB::transaction(function () use ($buyer, $cartItems, $mpReferenceId) {
-            foreach ($cartItems as $item) {
-                $product = $item->product;
+        foreach ($cartItems as $item) {
+            $product = $item->product;
 
-                Sale::create([
-                    'product_id'    => $product->id,
-                    'buyer_id'      => $buyer->id,
-                    'seller_id'     => $product->user_id,
-                    'category_id'   => $product->category_id,
-                    'quantity'      => $item->quantity,
-                    'unit_price'    => $product->price,
-                    'total_price'   => $product->price * $item->quantity,
-                    'purchase_date' => now(),
-                    'mp_payment_id' => $mpReferenceId,
-                    'is_paid'       => true,
-                ]);
+            Sale::create([
+                'product_id' => $product->id,
+                'buyer_id' => $buyer->id,
+                'seller_id' => $product->user_id,
+                'category_id' => $product->category_id,
+                'quantity' => $item->quantity,
+                'unit_price' => $product->price,
+                'total_price' => $product->price * $item->quantity,
+                'purchase_date' => now(),
+                'mp_payment_id' => $mpReferenceId,
+                "is_paid" => true
+            ]);
 
-                $product->user->increment('balance', $product->price * $item->quantity);
-                $product->decrement('quantity', $item->quantity);
-            }
+            $product->user->increment('balance', $product->price * $item->quantity);
+            $product->decrement('quantity', $item->quantity);
+        }
 
-            $buyer->cartItems()->delete();
-        });
+        $buyer->cartItems()->delete();
     }
 
     public function success()

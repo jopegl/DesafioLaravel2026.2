@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class PagBankController extends Controller
 {
@@ -62,6 +61,9 @@ class PagBankController extends Controller
             'reference_id' => $referenceId,
             'items' => $items,
             'customer_modifiable' => true,
+            'curl' => [
+                CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
+            ],
         ]);
 
         if ($response->failed()) {
@@ -94,29 +96,27 @@ class PagBankController extends Controller
 
     private function registerSale(User $buyer, Collection $cartItems, string $checkoutId): void
     {
-        DB::transaction(function () use ($buyer, $cartItems, $checkoutId) {
-            foreach ($cartItems as $item) {
-                $product = $item->product;
+        foreach ($cartItems as $item) {
+            $product = $item->product;
 
-                Sale::create([
-                    'product_id'          => $product->id,
-                    'buyer_id'            => $buyer->id,
-                    'seller_id'           => $product->user_id,
-                    'category_id'         => $product->category_id,
-                    'quantity'            => $item->quantity,
-                    'unit_price'          => $product->price,
-                    'total_price'         => $product->price * $item->quantity,
-                    'purchase_date'       => now(),
-                    'pagbank_checkout_id' => $checkoutId,
-                    'is_paid'             => true,
-                ]);
+            Sale::create([
+                'product_id' => $product->id,
+                'buyer_id' => $buyer->id,
+                'seller_id' => $product->user_id,
+                'category_id' => $product->category_id,
+                'quantity' => $item->quantity,
+                'unit_price' => $product->price,
+                'total_price' => $product->price * $item->quantity,
+                'purchase_date' => now(),
+                'pagbank_checkout_id' => $checkoutId,
+                "is_paid" => true
+            ]);
 
-                $product->user->increment('balance', $product->price * $item->quantity);
-                $product->decrement('quantity', $item->quantity);
-            }
+            $product->user->increment('balance', $product->price * $item->quantity);
+            $product->decrement('quantity', $item->quantity);
+        }
 
-            $buyer->cartItems()->delete();
-        });
+        $buyer->cartItems()->delete();
     }
 
     public function callback(Request $request)
