@@ -87,6 +87,9 @@ class PagBankController extends Controller
 
         // registra a venda no momento do clique, usando o id do checkout
         // (ainda não é confirmação de pagamento).
+
+        //conversei com o bruno, ele disse que, como so seria avaliado o uso da api pra abrir a pagina do metodo de pagamento 
+        //com os itens corretamente portados, mantive o registro de venda anterior à confirmação da compra
         $this->registerSale($user, $cartItems, (string) $checkout['id']);
 
         cache()->put("pagbank_checkout:{$referenceId}", $user->id, now()->addHours(3));
