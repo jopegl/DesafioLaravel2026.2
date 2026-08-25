@@ -68,7 +68,7 @@
 
                     <div>
                         <label class="block text-gray-400 required text-xs mb-1">CPF (somente números)</label>
-                        <input type="text" name="cpf" maxlength="14" :value="selected.cpf"
+                        <input type="text" name="cpf" maxlength="14" required :value="selected.cpf"
                             class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400">
                     </div>
 
