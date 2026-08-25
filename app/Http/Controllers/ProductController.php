@@ -113,6 +113,7 @@ class ProductController extends Controller
             'group_by_field' => 'created_at',
             'group_by_period' => 'month',
             'chart_color'    => '0,122,255',
+            'filter_days'    => 365,
         ];
 
         return new LaravelChart($chart_options);
