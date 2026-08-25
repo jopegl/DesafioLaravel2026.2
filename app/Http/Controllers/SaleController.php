@@ -21,7 +21,7 @@ class SaleController extends Controller
             ->orderByDesc('purchase_date')
             ->paginate(8);
 
-        $graphic = $this->generateGraphic();
+        $graphic = ! $user->is_admin ? $this->generateGraphic() : null;
 
         return view('sales.index', compact('sales', 'graphic'));
     }

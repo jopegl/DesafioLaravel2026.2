@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class CepController extends Controller
 {
@@ -17,19 +18,27 @@ class CepController extends Controller
             return response()->json(['error' => 'CEP inválido'], 422);
         }
 
-        $response = Http::get("https://viacep.com.br/ws/{$cleanZipCode}/json/");
+        try {
+            $response = Http::timeout(5)->get("https://viacep.com.br/ws/{$cleanZipCode}/json/");
 
-        if ($response->failed()) {
-            return response()->json(['error' => 'Não foi possível consultar o CEP'], 503);
+            if ($response->failed()) {
+                return response()->json(['error' => 'Não foi possível consultar o CEP'], 503);
+            }
+
+            $data = $response->json();
+
+            if (isset($data['erro'])) {
+                return response()->json(['error' => 'CEP não encontrado'], 404);
+            }
+
+            return response()->json($data);
+        } catch (Throwable $e) {
+            Log::error('Erro na requisição ao ViaCEP', [
+                'cep' => $cleanZipCode,
+                'message' => $e->getMessage(),
+            ]);
+
+            return response()->json(['error' => 'Serviço de CEP indisponível no momento'], 500);
         }
-
-        $data = $response->json();
-
-        // 'erro' here is ViaCEP's own response field, not ours — keep as-is.
-        if (isset($data['erro'])) {
-            return response()->json(['error' => 'CEP não encontrado'], 404);
-        }
-
-        return response()->json($data);
     }
 }

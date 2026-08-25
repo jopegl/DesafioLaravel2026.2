@@ -33,17 +33,17 @@ class Sale extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class)->withTrashed();
     }
 
     public function buyer()
     {
-        return $this->belongsTo(User::class, 'buyer_id');
+        return $this->belongsTo(User::class, 'buyer_id')->withTrashed();
     }
 
     public function seller()
     {
-        return $this->belongsTo(User::class, 'seller_id');
+        return $this->belongsTo(User::class, 'seller_id')->withTrashed();
     }
 
     public function category()
@@ -66,12 +66,7 @@ class Sale extends Model
 
     public function scopeWithDetails(Builder $query): Builder
     {
-        return $query->with([
-            'product'  => fn($q) => $q->withTrashed(),
-            'buyer'    => fn($q) => $q->withTrashed(),
-            'seller'   => fn($q) => $q->withTrashed(),
-            'category'
-        ]);
+        return $query->with(['product', 'buyer', 'seller', 'category']);
     }
 
 

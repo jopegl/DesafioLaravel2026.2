@@ -17,7 +17,6 @@ class ProductController extends Controller
     {
         $user = Auth::user();
 
-
         $priceMin = $request->filled('price_min') ? max(0, $request->price_min) : null;
         $priceMax = $request->filled('price_max') ? max(0, $request->price_max) : null;
 
@@ -30,13 +29,16 @@ class ProductController extends Controller
             ->paginate(8);
 
         $categories = Category::all();
-        $graphic = $this->generateGraphic();
+
+        $graphic = $user->is_admin ? $this->generateGraphic() : null;
 
         return view('products.index', compact('products', 'categories', 'graphic'));
     }
 
     public function store(StoreProductRequest $request)
     {
+        $this->authorize('create', Product::class);
+
         $validatedData = $request->validated();
 
         if ($request->hasFile('photo')) {
@@ -53,17 +55,15 @@ class ProductController extends Controller
             ->with('success', 'Produto cadastrado com sucesso!');
     }
 
-
-    public function show(Product $product) //pagina de produto 
+    public function show(Product $product)
     {
-        if ($product != null)
-            return view('catalog.product', compact('product'));
-        return null;
+        return view('catalog.product', compact('product'));
     }
-
 
     public function update(UpdateProductRequest $request, Product $product)
     {
+        $this->authorize('update', $product);
+
         $validatedData = $request->validated();
 
         if ($request->hasFile('photo')) {
@@ -86,7 +86,6 @@ class ProductController extends Controller
 
     public function delete(Product $product)
     {
-
         $this->authorize('delete', $product);
 
         $product->delete();
@@ -106,19 +105,16 @@ class ProductController extends Controller
 
     private function generateGraphic()
     {
-        $user = Auth::user();
-
         $chart_options = [
-            'chart_title'       => 'Produtos Cadastrados por Mes',
-            'model'              => Product::class,
-            'chart_type'         => 'bar',
-            'report_type'        => 'group_by_date',
-            'group_by_field'     => 'created_at',
-            'group_by_period'    => 'month',
-            'chart_color'         => '0,122,255',
+            'chart_title'    => 'Produtos Cadastrados por Mes',
+            'model'          => Product::class,
+            'chart_type'     => 'bar',
+            'report_type'    => 'group_by_date',
+            'group_by_field' => 'created_at',
+            'group_by_period' => 'month',
+            'chart_color'    => '0,122,255',
         ];
 
-        $chart = new LaravelChart($chart_options);
-        return $chart;
+        return new LaravelChart($chart_options);
     }
 }

@@ -24,6 +24,7 @@ class AdminController extends Controller
 
     public function store(StoreAdminRequest $request)
     {
+        $this->authorize('create', User::class);
         $data = $request->validated();
         $data['created_by'] = auth()->id();
         $data['is_admin'] = true;
@@ -50,6 +51,9 @@ class AdminController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('photo')) {
+            if ($admin->photo) {
+                Storage::disk('public')->delete($admin->photo);
+            }
             $data['photo'] = $request->file('photo')->store('users', 'public');
         }
 

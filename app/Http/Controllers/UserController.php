@@ -23,6 +23,7 @@ class UserController extends Controller
 
     public function store(StoreUserRequest $request)
     {
+        $this->authorize('create', User::class);
         $data = $request->validated();
         $data['created_by'] = auth()->id();
 
@@ -46,16 +47,19 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
-
+        $this->authorize('update', $user);
         $data = $request->validated();
 
         if ($request->hasFile('photo')) {
+            if ($user->photo) {
+                Storage::disk('public')->delete($user->photo);
+            }
             $data['photo'] = $request->file('photo')->store('users', 'public');
         }
 
         $user->update($data);
 
-        return redirect()->route('users.index')->with('success', 'Usuário criado.');
+        return redirect()->route('users.index')->with('success', 'Usuário atualizado.');
     }
 
     public function destroy(User $user)
