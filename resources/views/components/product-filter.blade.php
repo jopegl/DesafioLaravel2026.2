@@ -39,11 +39,11 @@
             <div>
                 <label class="block text-xs text-gray-400 mb-2">Faixa de preço</label>
                 <div class="flex items-center gap-2">
-                    <input type="number" name="price_min" value="{{ request('price_min') }}"
+                    <input type="number" min="0" step="0.01" name="price_min" value="{{ request('price_min') }}"
                         placeholder="Min"
                         class="bg-gray-700 text-white text-sm rounded-md border-gray-600 w-full focus:border-primary-500 focus:ring-primary-500">
                     <span class="text-gray-500">—</span>
-                    <input type="number" name="price_max" value="{{ request('price_max') }}"
+                    <input type="number" min="0" step="0.01" name="price_max" value="{{ request('price_max') }}"
                         placeholder="Max"
                         class="bg-gray-700 text-white text-sm rounded-md border-gray-600 w-full focus:border-primary-500 focus:ring-primary-500">
                 </div>

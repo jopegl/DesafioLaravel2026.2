@@ -17,10 +17,14 @@ class ProductController extends Controller
     {
         $user = Auth::user();
 
+
+        $priceMin = $request->filled('price_min') ? max(0, $request->price_min) : null;
+        $priceMax = $request->filled('price_max') ? max(0, $request->price_max) : null;
+
         $products = Product::visibleTo($user)
             ->search($request->search)
             ->inCategory($request->category)
-            ->priceBetween($request->price_min, $request->price_max)
+            ->priceBetween($priceMin, $priceMax)
             ->inStock($request->in_stock)
             ->sortBy($request->sort)
             ->paginate(8);
