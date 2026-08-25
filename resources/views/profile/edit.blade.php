@@ -34,7 +34,7 @@
 
                     <div class="mb-5">
                         <span class="block text-gray-400 text-xs mb-1">CPF</span>
-                        <span class="text-gray-300 text-sm">{{ $user->cpf }}</span>
+                        <span class="text-gray-300 text-sm">{{ formatCPF($user->cpf) }}</span>
                     </div>
 
                     <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="space-y-4">
@@ -182,7 +182,7 @@
                                     @endif
                                 </div>
                                 <p class="text-gray-400 text-xs">
-                                    {{ $address->neighborhood }}, {{ $address->city }}/{{ $address->state }} — CEP {{ $address->zip_code }}
+                                    {{ $address->neighborhood }}, {{ $address->city }}/{{ $address->state }} — CEP {{formatCEP($address->zip_code) }}
                                 </p>
                                 @if ($address->complement)
                                 <p class="text-gray-500 text-xs mt-0.5">{{ $address->complement }}</p>

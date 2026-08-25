@@ -67,3 +67,38 @@ if (! function_exists('formatDate')) {
         return Carbon::parse($date)->format('d/m/Y');
     }
 }
+
+if (! function_exists('formatCPF')) {
+    function formatCPF(?string $cpf): string
+    {
+        if (empty($cpf)) {
+            return '-';
+        }
+
+        $cpf = preg_replace('/\D/', '', $cpf);
+
+
+        if (strlen($cpf) !== 11) {
+            return '-';
+        }
+
+        return preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $cpf);
+    }
+}
+
+if (!function_exists('formatCEP')) {
+    function formatCEP(?string $cep): string
+    {
+        if (empty($cep)) {
+            return '-';
+        }
+
+        $cep = preg_replace('/\D/', '', $cep);
+
+        if (strlen($cep) !== 8) {
+            return '-';
+        }
+
+        return preg_replace('/(\d{5})(\d{3})/', '$1-$2', $cep);
+    }
+}
