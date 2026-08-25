@@ -30,7 +30,7 @@
                 </div>
                 <div>
                     <p class="text-gray-400 text-xs mb-1">Nascimento</p>
-                    <p class="text-white text-sm" x-text="selected.birth_date || '—'"></p>
+                    <p class="text-white text-sm" x-text="formatDate(selected.birth_date)"></p>
                 </div>
             </div>
 

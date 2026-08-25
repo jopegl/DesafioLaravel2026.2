@@ -21,5 +21,9 @@ export default function crudModals() {
             this.selected = item;
             this.showDelete = true;
         },
+        formatDate(value) {
+            if (!value) return '—';
+            return new Date(value).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+        },
     };
 }
