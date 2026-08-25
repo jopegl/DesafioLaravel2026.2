@@ -32,13 +32,19 @@ class StoreAddressRequest extends FormRequest
         if (! $this->user()->is_admin) {
             $this->request->remove('user_id');
         }
+
+        if ($this->filled('zip_code')) {
+            $this->merge([
+                'zip_code' => preg_replace('/[^0-9]/', '', $this->zip_code),
+            ]);
+        }
     }
 
     public function messages(): array
     {
         return [
-            'zip_code.size' => 'O CEP deve conter 8 dígitos (sem hífen).',
-            'state.size'    => 'Informe a UF com 2 letras (ex: SP).',
+            'zip_code.size'  => 'O CEP deve conter 8 dígitos (sem hífen).',
+            'state.size'     => 'Informe a UF com 2 letras (ex: SP).',
             'user_id.exists' => 'Usuário não encontrado.',
         ];
     }

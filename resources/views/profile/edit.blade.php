@@ -220,6 +220,16 @@
 
                 </div>
 
+                <div class="mt-8 bg-[#1c1f2a] rounded-xl border border-gray-800/60 p-8 flex flex-col items-center justify-center text-center">
+                    <span class="text-gray-400 text-sm mb-2">Saldo disponível</span>
+                    <span
+                        data-balance-counter
+                        data-target="{{ auth()->user()->balance }}"
+                        class="text-4xl sm:text-5xl font-bold text-emerald-400 tabular-nums">
+                        R$ 0,00
+                    </span>
+                </div>
+
 
                 <div class="bg-[#1c1f2a] rounded-xl border border-red-900/40 p-6">
 

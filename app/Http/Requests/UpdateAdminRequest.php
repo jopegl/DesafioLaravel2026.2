@@ -21,8 +21,8 @@ class UpdateAdminRequest extends FormRequest
         return [
             'name'       => ['required', 'string', 'max:255'],
             'email'      => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($userId)],
-            'cpf' => ['required', 'string', 'size:11', Rule::unique('users', 'cpf')->ignore($userId), new Cpf],
-            'phone'      => ['required', 'string', 'numeric', 'digits_between:10,11'],
+            'cpf'        => ['required', 'string', 'size:11', Rule::unique('users', 'cpf')->ignore($userId), new Cpf],
+            'phone'      => ['required', 'string', 'digits_between:10,11'],
             'birth_date' => ['required', 'date', 'before:today'],
             'photo'      => ['nullable', 'image', 'max:2048'],
             'password'   => ['nullable', 'confirmed', Password::defaults()],
@@ -39,6 +39,13 @@ class UpdateAdminRequest extends FormRequest
         if ($this->filled('cpf')) {
             $this->merge([
                 'cpf' => preg_replace('/[^0-9]/', '', $this->cpf),
+            ]);
+        }
+
+
+        if ($this->filled('phone')) {
+            $this->merge([
+                'phone' => preg_replace('/[^0-9]/', '', $this->phone),
             ]);
         }
     }

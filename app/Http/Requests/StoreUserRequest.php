@@ -19,8 +19,8 @@ class StoreUserRequest extends FormRequest
         return [
             'name'       => ['required', 'string', 'max:255'],
             'email'      => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'cpf' => ['required', 'string', 'size:11', 'unique:users,cpf', new Cpf],
-            'phone'      => ['required', 'string', 'numeric', 'digits_between:10,11'],
+            'cpf'        => ['required', 'string', 'size:11', 'unique:users,cpf', new Cpf],
+            'phone'      => ['required', 'string', 'digits_between:10,11'],
             'birth_date' => ['nullable', 'date', 'before:today'],
             'photo'      => ['nullable', 'image', 'max:2048'], // 2MB
             'password'   => ['required', 'confirmed', Password::defaults()],
@@ -34,6 +34,30 @@ class StoreUserRequest extends FormRequest
             'address.state'          => ['required_with:address.zip_code', 'nullable', 'string', 'size:2'],
             'address.complement'     => ['nullable', 'string', 'max:255'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+
+        if ($this->filled('cpf')) {
+            $this->merge([
+                'cpf' => preg_replace('/[^0-9]/', '', $this->cpf),
+            ]);
+        }
+
+        if ($this->filled('phone')) {
+            $this->merge([
+                'phone' => preg_replace('/[^0-9]/', '', $this->phone),
+            ]);
+        }
+
+        if ($this->filled('address.zip_code')) {
+            $this->merge([
+                'address' => array_merge($this->address ?? [], [
+                    'zip_code' => preg_replace('/[^0-9]/', '', $this->address['zip_code']),
+                ]),
+            ]);
+        }
     }
 
     public function messages(): array
