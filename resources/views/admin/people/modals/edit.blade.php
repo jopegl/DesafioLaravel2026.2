@@ -80,7 +80,7 @@
                         </div>
                         <div class="flex-1">
                             <label class="block text-gray-400 text-xs mb-1">Nascimento *</label>
-                            <input type="date" name="birth_date" required :value="selected.birth_date"
+                            <input type="date" name="birth_date" required :value="selected.birth_date ? selected.birth_date.slice(0, 10) : ''"
                                 class="w-full bg-[#15171e] border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-400">
                         </div>
                     </div>
