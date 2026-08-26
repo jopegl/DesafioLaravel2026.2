@@ -27,6 +27,10 @@ class MercadoPagoController extends Controller
         $user = Auth::user();
         $cartItems = $user->cartItems()->with('product')->get();
 
+        if ($user->is_admin) {
+            return back()->with('error', 'Você não pode comprar sendo admin');
+        }
+
         if ($cartItems->isEmpty()) {
             return back()->with('error', 'Seu carrinho está vazio.');
         }
