@@ -43,21 +43,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/contact-us', [ContactController::class, 'create'])->name('contact.create');
     Route::post('/contact-us', [ContactController::class, 'store'])->name('contact.store');
-
-
-    Route::prefix('mercadopago')->name('mercadopago.')->group(function () {
-        Route::post('/checkout', [MercadoPagoController::class, 'process'])->name('process');
-        Route::get('/success', [MercadoPagoController::class, 'success'])->name('success');
-        Route::get('/pendent', [MercadoPagoController::class, 'pending'])->name('pending');
-        Route::get('/failure', [MercadoPagoController::class, 'failure'])->name('failure');
-    });
-
-    Route::prefix('pagbank')->name('pagbank.')->group(function () {
-        Route::post('/checkout', [PagBankController::class, 'process'])
-            ->name('process');
-        Route::get('/callback', [PagBankController::class, 'callback'])
-            ->name('callback');
-    });
 });
 
 Route::middleware(['auth', 'user.only'])->group(function () {
@@ -72,11 +57,27 @@ Route::middleware(['auth', 'user.only'])->group(function () {
 
     Route::get('/dashboard/purchases', [PurchaseController::class, 'indexPurchaseHistory'])->name('purchases.index');
     Route::get('/dashboard/purchases/pdf', [PurchaseController::class, 'generatePdfPurchases'])->name('purchases.pdf');
+
+    Route::prefix('mercadopago')->name('mercadopago.')->group(function () {
+        Route::post('/checkout', [MercadoPagoController::class, 'process'])->name('process');
+        Route::get('/success', [MercadoPagoController::class, 'success'])->name('success');
+        Route::get('/pendent', [MercadoPagoController::class, 'pending'])->name('pending');
+        Route::get('/failure', [MercadoPagoController::class, 'failure'])->name('failure');
+    });
+
+    Route::prefix('pagbank')->name('pagbank.')->group(function () {
+        Route::post('/checkout', [PagBankController::class, 'process'])
+            ->name('process');
+        Route::get('/callback', [PagBankController::class, 'callback'])
+            ->name('callback');
+    });
+
+    Route::post('/mercadopago/webhook', [MercadoPagoController::class, 'webhook'])->name('mercadopago.webhook');
+    Route::post('/pagbank/webhook', [PagBankController::class, 'webhook'])->name('pagbank.webhook');
 });
 
 
-Route::post('/mercadopago/webhook', [MercadoPagoController::class, 'webhook'])->name('mercadopago.webhook');
-Route::post('/pagbank/webhook', [PagBankController::class, 'webhook'])->name('pagbank.webhook');
+
 
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/send-email', [EmailController::class, 'index'])->name('admin.email.index');
