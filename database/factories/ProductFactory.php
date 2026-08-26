@@ -39,7 +39,7 @@ class ProductFactory extends Factory
             'user_id' => User::factory(),
             'category_id' => Category::factory(),
             'name' => fake()->words(3, true),
-            'photo' => !empty($images) ? fake()->randomElement($images) : null,
+            'photo' => !empty($images) ? fake()->randomElement($images) : "products/test",
             'description' => fake()->paragraph(),
             'price' => fake()->randomFloat(2, 20, 3000),
             'quantity' => fake()->numberBetween(0, 50),
